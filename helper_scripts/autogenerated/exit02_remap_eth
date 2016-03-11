@@ -1,0 +1,12 @@
+MAP="
+     eth0=vagrant
+     eth1=eth0
+     eth2=swp45
+     eth3=swp46
+     eth4=swp47
+     eth5=swp48
+     eth6=swp50
+     eth7=swp50
+     eth8=swp51
+     eth9=swp52
+"
