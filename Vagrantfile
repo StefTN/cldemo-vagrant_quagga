@@ -56,6 +56,7 @@ Vagrant.configure("2") do |config|
                                 create_key: false,
                                 wbench_hostname: 'oob-mgmt-server',
                                 wbench_password: "X/1dWAy895j9TuMfJkjnXSvYKSJr1Ny0'",
+                                wbench_eth1_ip: '192.168.0.254',
                                 wbench_hosts: {
                                     leaf01: {
                                         ip: '192.168.0.11',
