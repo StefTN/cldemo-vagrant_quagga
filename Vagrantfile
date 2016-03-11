@@ -50,14 +50,8 @@ Vagrant.configure("2") do |config|
       end
 
       oob_mgmt_server.vm.provision "ansible" do |ansible|
-        ansible.playbook = "./ccw-wbenchvm-ansible/site.yml"
-        ansible.extra_vars = {  ravello: true,
-                                do_ztp: false,
-                                create_key: false,
-                                wbench_hostname: 'oob-mgmt-server',
-                                wbench_password: "X/1dWAy895j9TuMfJkjnXSvYKSJr1Ny0'",
-                                wbench_eth1_ip: '192.168.0.254',
-                                wbench_hosts: {
+        ansible.playbook = "./playbook/site.yml"
+        ansible.extra_vars = {wbench_hosts: {
                                     leaf01: {
                                         ip: '192.168.0.11',
                                         mac: 'a0:00:00:00:00:11'},

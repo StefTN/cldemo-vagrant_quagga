@@ -1,4 +1,4 @@
-cldemo Reference Topology 
+cldemo Reference Topology
 =========================
 This vagrant file and related support scripts can be used to bring up a virtual
 version of the Cumulus Linux Demo Reference Topology, the topology used for all
@@ -21,8 +21,6 @@ Instructions
 Before running, ensure that you have **ansible version 1.9.4 installed**. Either install it as root or run vagrant inside of a python virtualenv.
 
     git clone https://github.com/cumulusnetworks/cldemo-vagrant
-    cd cldemo-vagrant
-    git clone https://github.com/cumulusnetworks/ccw-wbenchvm-ansible
     vagrant up
 
 To access your various devices...
@@ -39,4 +37,3 @@ To reprovision a specific device
 To shut down all VMs forever.
 
     vagrant destroy -f
-
