@@ -1,3 +1,5 @@
 .vagrant/*
 ccw-wbenchvm-ansible/*
 cldemo-ansible/*
+ccw-wbenchvm-ansible*
+cldemo-ansible*
