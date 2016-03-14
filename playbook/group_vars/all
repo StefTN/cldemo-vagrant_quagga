@@ -22,4 +22,5 @@ cldemo_apt_server: 'cldemo.cumulusnetworks.com'
 ubuntu_apt_server: 'archive.ubuntu.com'
 
 do_ztp: false
+ztp_data: ""
 create_key: false
