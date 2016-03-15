@@ -63,6 +63,49 @@ Vagrant.configure("2") do |config|
       oob_mgmt_server.vm.provision :shell , inline: "sudo echo 'exit 0' >> /etc/rc.local "
       oob_mgmt_server.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
 
+      oob_mgmt_server.vm.provision "ansible" do |ansible|
+        ansible.playbook = "./playbook/site.yml"
+        ansible.extra_vars = {wbench_hosts: {
+                                    leaf01: {
+                                        ip: '192.168.0.11',
+                                        mac: 'a0:00:00:00:00:11'},
+                                    leaf02: {
+                                        ip: '192.168.0.12',
+                                        mac: 'a0:00:00:00:00:12'},
+                                    leaf03: {
+                                        ip: '192.168.0.13',
+                                        mac: 'a0:00:00:00:00:13'},
+                                    leaf04: {
+                                        ip: '192.168.0.14',
+                                        mac: 'a0:00:00:00:00:14'},
+                                    spine01: {
+                                        ip: '192.168.0.21',
+                                        mac: 'a0:00:00:00:00:21'},
+                                    spine02: {
+                                        ip: '192.168.0.22',
+                                        mac: 'a0:00:00:00:00:22'},
+                                    server01: {
+                                        ip: '192.168.0.31',
+                                        mac: 'a0:00:00:00:00:31'},
+                                    server02: {
+                                        ip: '192.168.0.32',
+                                        mac: 'a0:00:00:00:00:32'},
+                                    server03: {
+                                        ip: '192.168.0.33',
+                                        mac: 'a0:00:00:00:00:33'},
+                                    server04: {
+                                        ip: '192.168.0.34',
+                                        mac: 'a0:00:00:00:00:34'},
+                                    exit01: {
+                                        ip: '192.168.0.41',
+                                        mac: 'a0:00:00:00:00:41'},
+                                    exit02: {
+                                        ip: '192.168.0.42',
+                                        mac: 'a0:00:00:00:00:42'}
+                            }}
+      end
+  end
+
   end
 
   ##### DEFINE VM for oob-mgmt-switch #####
@@ -222,6 +265,8 @@ Vagrant.configure("2") do |config|
       server01.vm.provision :shell , inline: "sudo echo '/etc/init.d/rename_eth_swp start' >> /etc/rc.local "
       server01.vm.provision :shell , inline: "sudo echo 'exit 0' >> /etc/rc.local "
       server01.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      server01.vm.provision :shell , path: "./helper_scripts/extra_server_post_config.sh"
+
 
   end
 
@@ -275,6 +320,8 @@ Vagrant.configure("2") do |config|
       server02.vm.provision :shell , inline: "sudo echo '/etc/init.d/rename_eth_swp start' >> /etc/rc.local "
       server02.vm.provision :shell , inline: "sudo echo 'exit 0' >> /etc/rc.local "
       server02.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      server02.vm.provision :shell , path: "./helper_scripts/extra_server_post_config.sh"
+
 
   end
 
@@ -328,6 +375,8 @@ Vagrant.configure("2") do |config|
       server03.vm.provision :shell , inline: "sudo echo '/etc/init.d/rename_eth_swp start' >> /etc/rc.local "
       server03.vm.provision :shell , inline: "sudo echo 'exit 0' >> /etc/rc.local "
       server03.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      server03.vm.provision :shell , path: "./helper_scripts/extra_server_post_config.sh"
+
 
   end
 
@@ -381,6 +430,8 @@ Vagrant.configure("2") do |config|
       server04.vm.provision :shell , inline: "sudo echo '/etc/init.d/rename_eth_swp start' >> /etc/rc.local "
       server04.vm.provision :shell , inline: "sudo echo 'exit 0' >> /etc/rc.local "
       server04.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      server04.vm.provision :shell , path: "./helper_scripts/extra_server_post_config.sh"
+
 
   end
 
@@ -476,6 +527,8 @@ Vagrant.configure("2") do |config|
       leaf01.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
       leaf01.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
       leaf01.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      leaf01.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+
 
   end
 
@@ -571,6 +624,8 @@ Vagrant.configure("2") do |config|
       leaf02.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
       leaf02.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
       leaf02.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      leaf02.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+
 
   end
 
@@ -666,6 +721,8 @@ Vagrant.configure("2") do |config|
       leaf03.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
       leaf03.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
       leaf03.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      leaf03.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+
 
   end
 
@@ -761,6 +818,8 @@ Vagrant.configure("2") do |config|
       leaf04.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
       leaf04.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
       leaf04.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      leaf04.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+
 
   end
 
@@ -844,6 +903,8 @@ Vagrant.configure("2") do |config|
       spine01.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
       spine01.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
       spine01.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      spine01.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+
 
   end
 
@@ -927,6 +988,8 @@ Vagrant.configure("2") do |config|
       spine02.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
       spine02.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
       spine02.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      spine02.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+
 
   end
 
@@ -1010,6 +1073,8 @@ Vagrant.configure("2") do |config|
       exit01.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
       exit01.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
       exit01.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      exit01.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+
 
   end
 
@@ -1093,6 +1158,8 @@ Vagrant.configure("2") do |config|
       exit02.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
       exit02.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
       exit02.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      exit02.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+
 
   end
 
