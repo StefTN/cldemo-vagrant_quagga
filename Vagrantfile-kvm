@@ -104,7 +104,6 @@ Vagrant.configure("2") do |config|
                                         mac: 'a0:00:00:00:00:42'}
                             }}
       end
-  end
 
   end
 
