@@ -8,7 +8,7 @@
 #        -the "helper_scripts" directory that comes packaged with topology-converter.py
 Vagrant.configure("2") do |config|
   ##### GLOBAL OPTIONS #####
-
+  wbid = 1
   config.vm.provider "virtualbox" do |v|
     v.gui=false
   end
@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
       oob_mgmt_server.vm.box = "boxcutter/ubuntu1404"
 
           # Local_Interface: eth1 Topology_File_Line(41): "oob-mgmt-server":"eth1" -- "oob-mgmt-switch":"swp1"
-          oob_mgmt_server.vm.network "private_network", virtualbox__intnet: 'net41', auto_config: false
+          oob_mgmt_server.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_41", auto_config: false
 
       # Disabling the default synced folder
       oob_mgmt_server.vm.synced_folder ".", "/vagrant", disabled: true
@@ -102,43 +102,43 @@ Vagrant.configure("2") do |config|
         oob_mgmt_switch.vm.box = "CumulusCommunity/cumulus-vx"
 
             # Local_Interface: swp1 Topology_File_Line(41): "oob-mgmt-server":"eth1" -- "oob-mgmt-switch":"swp1"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net41', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_41", auto_config: false
 
             # Local_Interface: swp2 Topology_File_Line(42): "server01":"eth0" -- "oob-mgmt-switch":"swp2"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net42', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_42", auto_config: false
 
             # Local_Interface: swp3 Topology_File_Line(43): "server02":"eth0" -- "oob-mgmt-switch":"swp3"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net43', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_43", auto_config: false
 
             # Local_Interface: swp4 Topology_File_Line(44): "server03":"eth0" -- "oob-mgmt-switch":"swp4"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net44', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_44", auto_config: false
 
             # Local_Interface: swp5 Topology_File_Line(45): "server04":"eth0" -- "oob-mgmt-switch":"swp5"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net45', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_45", auto_config: false
 
             # Local_Interface: swp6 Topology_File_Line(46): "leaf01":"eth0" -- "oob-mgmt-switch":"swp6"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net46', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_46", auto_config: false
 
             # Local_Interface: swp7 Topology_File_Line(47): "leaf02":"eth0" -- "oob-mgmt-switch":"swp7"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net47', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_47", auto_config: false
 
             # Local_Interface: swp8 Topology_File_Line(48): "leaf03":"eth0" -- "oob-mgmt-switch":"swp8"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net48', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_48", auto_config: false
 
             # Local_Interface: swp9 Topology_File_Line(49): "leaf04":"eth0" -- "oob-mgmt-switch":"swp9"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net49', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_49", auto_config: false
 
             # Local_Interface: swp10 Topology_File_Line(50): "spine01":"eth0" -- "oob-mgmt-switch":"swp10"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net50', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_50", auto_config: false
 
             # Local_Interface: swp11 Topology_File_Line(51): "spine02":"eth0" -- "oob-mgmt-switch":"swp11"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net51', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_51", auto_config: false
 
             # Local_Interface: swp12 Topology_File_Line(52): "exit01":"eth0" -- "oob-mgmt-switch":"swp12"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net52', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_52", auto_config: false
 
             # Local_Interface: swp13 Topology_File_Line(53): "exit02":"eth0" -- "oob-mgmt-switch":"swp13"
-            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: 'net53', auto_config: false
+            oob_mgmt_switch.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_53", auto_config: false
 
         # Disabling the default synced folder
         oob_mgmt_switch.vm.synced_folder ".", "/vagrant", disabled: true
@@ -181,13 +181,13 @@ Vagrant.configure("2") do |config|
       server01.vm.box = "boxcutter/ubuntu1404"
 
           # Local_Interface: eth0 Topology_File_Line(42): "server01":"eth0" -- "oob-mgmt-switch":"swp2"
-          server01.vm.network "private_network", virtualbox__intnet: 'net42', auto_config: false, :mac => "A00000000031"
+          server01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_42", auto_config: false, :mac => "A00000000031"
 
           # Local_Interface: eth1 Topology_File_Line(15): "server01":"eth1" -- "leaf01":"swp1"
-          server01.vm.network "private_network", virtualbox__intnet: 'net15', auto_config: false
+          server01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_15", auto_config: false
 
           # Local_Interface: eth2 Topology_File_Line(16): "server01":"eth2" -- "leaf02":"swp1"
-          server01.vm.network "private_network", virtualbox__intnet: 'net16', auto_config: false
+          server01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_16", auto_config: false
 
       # Disabling the default synced folder
       server01.vm.synced_folder ".", "/vagrant", disabled: true
@@ -229,13 +229,13 @@ Vagrant.configure("2") do |config|
       server02.vm.box = "boxcutter/ubuntu1404"
 
           # Local_Interface: eth0 Topology_File_Line(43): "server02":"eth0" -- "oob-mgmt-switch":"swp3"
-          server02.vm.network "private_network", virtualbox__intnet: 'net43', auto_config: false, :mac => "A00000000032"
+          server02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_43", auto_config: false, :mac => "A00000000032"
 
           # Local_Interface: eth1 Topology_File_Line(17): "server02":"eth1" -- "leaf01":"swp2"
-          server02.vm.network "private_network", virtualbox__intnet: 'net17', auto_config: false
+          server02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_17", auto_config: false
 
           # Local_Interface: eth2 Topology_File_Line(18): "server02":"eth2" -- "leaf02":"swp2"
-          server02.vm.network "private_network", virtualbox__intnet: 'net18', auto_config: false
+          server02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_18", auto_config: false
 
       # Disabling the default synced folder
       server02.vm.synced_folder ".", "/vagrant", disabled: true
@@ -277,13 +277,13 @@ Vagrant.configure("2") do |config|
       server03.vm.box = "boxcutter/ubuntu1404"
 
           # Local_Interface: eth0 Topology_File_Line(44): "server03":"eth0" -- "oob-mgmt-switch":"swp4"
-          server03.vm.network "private_network", virtualbox__intnet: 'net44', auto_config: false, :mac => "A00000000033"
+          server03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_44", auto_config: false, :mac => "A00000000033"
 
           # Local_Interface: eth1 Topology_File_Line(19): "server03":"eth1" -- "leaf03":"swp1"
-          server03.vm.network "private_network", virtualbox__intnet: 'net19', auto_config: false
+          server03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_19", auto_config: false
 
           # Local_Interface: eth2 Topology_File_Line(20): "server03":"eth2" -- "leaf04":"swp1"
-          server03.vm.network "private_network", virtualbox__intnet: 'net20', auto_config: false
+          server03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_20", auto_config: false
 
       # Disabling the default synced folder
       server03.vm.synced_folder ".", "/vagrant", disabled: true
@@ -325,13 +325,13 @@ Vagrant.configure("2") do |config|
       server04.vm.box = "boxcutter/ubuntu1404"
 
           # Local_Interface: eth0 Topology_File_Line(45): "server04":"eth0" -- "oob-mgmt-switch":"swp5"
-          server04.vm.network "private_network", virtualbox__intnet: 'net45', auto_config: false, :mac => "A00000000034"
+          server04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_45", auto_config: false, :mac => "A00000000034"
 
           # Local_Interface: eth1 Topology_File_Line(21): "server04":"eth1" -- "leaf03":"swp2"
-          server04.vm.network "private_network", virtualbox__intnet: 'net21', auto_config: false
+          server04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_21", auto_config: false
 
           # Local_Interface: eth2 Topology_File_Line(22): "server04":"eth2" -- "leaf04":"swp2"
-          server04.vm.network "private_network", virtualbox__intnet: 'net22', auto_config: false
+          server04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_22", auto_config: false
 
       # Disabling the default synced folder
       server04.vm.synced_folder ".", "/vagrant", disabled: true
@@ -373,37 +373,37 @@ Vagrant.configure("2") do |config|
       leaf01.vm.box = "CumulusCommunity/cumulus-vx"
 
           # Local_Interface: eth0 Topology_File_Line(46): "leaf01":"eth0" -- "oob-mgmt-switch":"swp6"
-          leaf01.vm.network "private_network", virtualbox__intnet: 'net46', auto_config: false, :mac => "A00000000011"
+          leaf01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_46", auto_config: false, :mac => "A00000000011"
 
           # Local_Interface: swp1 Topology_File_Line(15): "server01":"eth1" -- "leaf01":"swp1"
-          leaf01.vm.network "private_network", virtualbox__intnet: 'net15', auto_config: false
+          leaf01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_15", auto_config: false
 
           # Local_Interface: swp2 Topology_File_Line(17): "server02":"eth1" -- "leaf01":"swp2"
-          leaf01.vm.network "private_network", virtualbox__intnet: 'net17', auto_config: false
+          leaf01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_17", auto_config: false
 
           # Local_Interface: swp45 Topology_File_Line(33): "leaf01":"swp45" -- "leaf01":"swp46"
-          leaf01.vm.network "private_network", virtualbox__intnet: 'net33', auto_config: false
+          leaf01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_33", auto_config: false
 
           # Local_Interface: swp46 Topology_File_Line(33): "leaf01":"swp45" -- "leaf01":"swp46"
-          leaf01.vm.network "private_network", virtualbox__intnet: 'net33', auto_config: false
+          leaf01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_33", auto_config: false
 
           # Local_Interface: swp47 Topology_File_Line(34): "leaf01":"swp47" -- "leaf01":"swp48"
-          leaf01.vm.network "private_network", virtualbox__intnet: 'net34', auto_config: false
+          leaf01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_34", auto_config: false
 
           # Local_Interface: swp48 Topology_File_Line(34): "leaf01":"swp47" -- "leaf01":"swp48"
-          leaf01.vm.network "private_network", virtualbox__intnet: 'net34', auto_config: false
+          leaf01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_34", auto_config: false
 
           # Local_Interface: swp49 Topology_File_Line(9): "leaf01":"swp49" -- "leaf02":"swp49"
-          leaf01.vm.network "private_network", virtualbox__intnet: 'net9', auto_config: false
+          leaf01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_9", auto_config: false
 
           # Local_Interface: swp50 Topology_File_Line(10): "leaf01":"swp50" -- "leaf02":"swp50"
-          leaf01.vm.network "private_network", virtualbox__intnet: 'net10', auto_config: false
+          leaf01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_10", auto_config: false
 
           # Local_Interface: swp51 Topology_File_Line(1): "leaf01":"swp51" -- "spine01":"swp1"
-          leaf01.vm.network "private_network", virtualbox__intnet: 'net1', auto_config: false
+          leaf01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_1", auto_config: false
 
           # Local_Interface: swp52 Topology_File_Line(5): "leaf01":"swp52" -- "spine02":"swp1"
-          leaf01.vm.network "private_network", virtualbox__intnet: 'net5', auto_config: false
+          leaf01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_5", auto_config: false
 
       # Disabling the default synced folder
       leaf01.vm.synced_folder ".", "/vagrant", disabled: true
@@ -447,37 +447,37 @@ Vagrant.configure("2") do |config|
       leaf02.vm.box = "CumulusCommunity/cumulus-vx"
 
           # Local_Interface: eth0 Topology_File_Line(47): "leaf02":"eth0" -- "oob-mgmt-switch":"swp7"
-          leaf02.vm.network "private_network", virtualbox__intnet: 'net47', auto_config: false, :mac => "A00000000012"
+          leaf02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_47", auto_config: false, :mac => "A00000000012"
 
           # Local_Interface: swp1 Topology_File_Line(16): "server01":"eth2" -- "leaf02":"swp1"
-          leaf02.vm.network "private_network", virtualbox__intnet: 'net16', auto_config: false
+          leaf02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_16", auto_config: false
 
           # Local_Interface: swp2 Topology_File_Line(18): "server02":"eth2" -- "leaf02":"swp2"
-          leaf02.vm.network "private_network", virtualbox__intnet: 'net18', auto_config: false
+          leaf02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_18", auto_config: false
 
           # Local_Interface: swp45 Topology_File_Line(35): "leaf02":"swp45" -- "leaf02":"swp46"
-          leaf02.vm.network "private_network", virtualbox__intnet: 'net35', auto_config: false
+          leaf02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_35", auto_config: false
 
           # Local_Interface: swp46 Topology_File_Line(35): "leaf02":"swp45" -- "leaf02":"swp46"
-          leaf02.vm.network "private_network", virtualbox__intnet: 'net35', auto_config: false
+          leaf02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_35", auto_config: false
 
           # Local_Interface: swp47 Topology_File_Line(36): "leaf02":"swp47" -- "leaf02":"swp48"
-          leaf02.vm.network "private_network", virtualbox__intnet: 'net36', auto_config: false
+          leaf02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_36", auto_config: false
 
           # Local_Interface: swp48 Topology_File_Line(36): "leaf02":"swp47" -- "leaf02":"swp48"
-          leaf02.vm.network "private_network", virtualbox__intnet: 'net36', auto_config: false
+          leaf02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_36", auto_config: false
 
           # Local_Interface: swp49 Topology_File_Line(9): "leaf01":"swp49" -- "leaf02":"swp49"
-          leaf02.vm.network "private_network", virtualbox__intnet: 'net9', auto_config: false
+          leaf02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_9", auto_config: false
 
           # Local_Interface: swp50 Topology_File_Line(10): "leaf01":"swp50" -- "leaf02":"swp50"
-          leaf02.vm.network "private_network", virtualbox__intnet: 'net10', auto_config: false
+          leaf02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_10", auto_config: false
 
           # Local_Interface: swp51 Topology_File_Line(2): "leaf02":"swp51" -- "spine01":"swp2"
-          leaf02.vm.network "private_network", virtualbox__intnet: 'net2', auto_config: false
+          leaf02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_2", auto_config: false
 
           # Local_Interface: swp52 Topology_File_Line(6): "leaf02":"swp52" -- "spine02":"swp2"
-          leaf02.vm.network "private_network", virtualbox__intnet: 'net6', auto_config: false
+          leaf02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_6", auto_config: false
 
       # Disabling the default synced folder
       leaf02.vm.synced_folder ".", "/vagrant", disabled: true
@@ -521,37 +521,37 @@ Vagrant.configure("2") do |config|
       leaf03.vm.box = "CumulusCommunity/cumulus-vx"
 
           # Local_Interface: eth0 Topology_File_Line(48): "leaf03":"eth0" -- "oob-mgmt-switch":"swp8"
-          leaf03.vm.network "private_network", virtualbox__intnet: 'net48', auto_config: false, :mac => "A00000000013"
+          leaf03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_48", auto_config: false, :mac => "A00000000013"
 
           # Local_Interface: swp1 Topology_File_Line(19): "server03":"eth1" -- "leaf03":"swp1"
-          leaf03.vm.network "private_network", virtualbox__intnet: 'net19', auto_config: false
+          leaf03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_19", auto_config: false
 
           # Local_Interface: swp2 Topology_File_Line(21): "server04":"eth1" -- "leaf03":"swp2"
-          leaf03.vm.network "private_network", virtualbox__intnet: 'net21', auto_config: false
+          leaf03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_21", auto_config: false
 
           # Local_Interface: swp45 Topology_File_Line(37): "leaf03":"swp45" -- "leaf03":"swp46"
-          leaf03.vm.network "private_network", virtualbox__intnet: 'net37', auto_config: false
+          leaf03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_37", auto_config: false
 
           # Local_Interface: swp46 Topology_File_Line(37): "leaf03":"swp45" -- "leaf03":"swp46"
-          leaf03.vm.network "private_network", virtualbox__intnet: 'net37', auto_config: false
+          leaf03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_37", auto_config: false
 
           # Local_Interface: swp47 Topology_File_Line(38): "leaf03":"swp47" -- "leaf03":"swp48"
-          leaf03.vm.network "private_network", virtualbox__intnet: 'net38', auto_config: false
+          leaf03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_38", auto_config: false
 
           # Local_Interface: swp48 Topology_File_Line(38): "leaf03":"swp47" -- "leaf03":"swp48"
-          leaf03.vm.network "private_network", virtualbox__intnet: 'net38', auto_config: false
+          leaf03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_38", auto_config: false
 
           # Local_Interface: swp49 Topology_File_Line(11): "leaf03":"swp49" -- "leaf04":"swp49"
-          leaf03.vm.network "private_network", virtualbox__intnet: 'net11', auto_config: false
+          leaf03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_11", auto_config: false
 
           # Local_Interface: swp50 Topology_File_Line(12): "leaf03":"swp50" -- "leaf04":"swp50"
-          leaf03.vm.network "private_network", virtualbox__intnet: 'net12', auto_config: false
+          leaf03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_12", auto_config: false
 
           # Local_Interface: swp51 Topology_File_Line(3): "leaf03":"swp51" -- "spine01":"swp3"
-          leaf03.vm.network "private_network", virtualbox__intnet: 'net3', auto_config: false
+          leaf03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_3", auto_config: false
 
           # Local_Interface: swp52 Topology_File_Line(7): "leaf03":"swp52" -- "spine02":"swp3"
-          leaf03.vm.network "private_network", virtualbox__intnet: 'net7', auto_config: false
+          leaf03.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_7", auto_config: false
 
       # Disabling the default synced folder
       leaf03.vm.synced_folder ".", "/vagrant", disabled: true
@@ -595,37 +595,37 @@ Vagrant.configure("2") do |config|
       leaf04.vm.box = "CumulusCommunity/cumulus-vx"
 
           # Local_Interface: eth0 Topology_File_Line(49): "leaf04":"eth0" -- "oob-mgmt-switch":"swp9"
-          leaf04.vm.network "private_network", virtualbox__intnet: 'net49', auto_config: false, :mac => "A00000000014"
+          leaf04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_49", auto_config: false, :mac => "A00000000014"
 
           # Local_Interface: swp1 Topology_File_Line(20): "server03":"eth2" -- "leaf04":"swp1"
-          leaf04.vm.network "private_network", virtualbox__intnet: 'net20', auto_config: false
+          leaf04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_20", auto_config: false
 
           # Local_Interface: swp2 Topology_File_Line(22): "server04":"eth2" -- "leaf04":"swp2"
-          leaf04.vm.network "private_network", virtualbox__intnet: 'net22', auto_config: false
+          leaf04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_22", auto_config: false
 
           # Local_Interface: swp45 Topology_File_Line(39): "leaf04":"swp45" -- "leaf04":"swp46"
-          leaf04.vm.network "private_network", virtualbox__intnet: 'net39', auto_config: false
+          leaf04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_39", auto_config: false
 
           # Local_Interface: swp46 Topology_File_Line(39): "leaf04":"swp45" -- "leaf04":"swp46"
-          leaf04.vm.network "private_network", virtualbox__intnet: 'net39', auto_config: false
+          leaf04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_39", auto_config: false
 
           # Local_Interface: swp47 Topology_File_Line(40): "leaf04":"swp47" -- "leaf04":"swp48"
-          leaf04.vm.network "private_network", virtualbox__intnet: 'net40', auto_config: false
+          leaf04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_40", auto_config: false
 
           # Local_Interface: swp48 Topology_File_Line(40): "leaf04":"swp47" -- "leaf04":"swp48"
-          leaf04.vm.network "private_network", virtualbox__intnet: 'net40', auto_config: false
+          leaf04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_40", auto_config: false
 
           # Local_Interface: swp49 Topology_File_Line(11): "leaf03":"swp49" -- "leaf04":"swp49"
-          leaf04.vm.network "private_network", virtualbox__intnet: 'net11', auto_config: false
+          leaf04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_11", auto_config: false
 
           # Local_Interface: swp50 Topology_File_Line(12): "leaf03":"swp50" -- "leaf04":"swp50"
-          leaf04.vm.network "private_network", virtualbox__intnet: 'net12', auto_config: false
+          leaf04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_12", auto_config: false
 
           # Local_Interface: swp51 Topology_File_Line(4): "leaf04":"swp51" -- "spine01":"swp4"
-          leaf04.vm.network "private_network", virtualbox__intnet: 'net4', auto_config: false
+          leaf04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_4", auto_config: false
 
           # Local_Interface: swp52 Topology_File_Line(8): "leaf04":"swp52" -- "spine02":"swp4"
-          leaf04.vm.network "private_network", virtualbox__intnet: 'net8', auto_config: false
+          leaf04.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_8", auto_config: false
 
       # Disabling the default synced folder
       leaf04.vm.synced_folder ".", "/vagrant", disabled: true
@@ -669,31 +669,31 @@ Vagrant.configure("2") do |config|
       spine01.vm.box = "CumulusCommunity/cumulus-vx"
 
           # Local_Interface: eth0 Topology_File_Line(50): "spine01":"eth0" -- "oob-mgmt-switch":"swp10"
-          spine01.vm.network "private_network", virtualbox__intnet: 'net50', auto_config: false, :mac => "A00000000021"
+          spine01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_50", auto_config: false, :mac => "A00000000021"
 
           # Local_Interface: swp1 Topology_File_Line(1): "leaf01":"swp51" -- "spine01":"swp1"
-          spine01.vm.network "private_network", virtualbox__intnet: 'net1', auto_config: false
+          spine01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_1", auto_config: false
 
           # Local_Interface: swp2 Topology_File_Line(2): "leaf02":"swp51" -- "spine01":"swp2"
-          spine01.vm.network "private_network", virtualbox__intnet: 'net2', auto_config: false
+          spine01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_2", auto_config: false
 
           # Local_Interface: swp3 Topology_File_Line(3): "leaf03":"swp51" -- "spine01":"swp3"
-          spine01.vm.network "private_network", virtualbox__intnet: 'net3', auto_config: false
+          spine01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_3", auto_config: false
 
           # Local_Interface: swp4 Topology_File_Line(4): "leaf04":"swp51" -- "spine01":"swp4"
-          spine01.vm.network "private_network", virtualbox__intnet: 'net4', auto_config: false
+          spine01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_4", auto_config: false
 
           # Local_Interface: swp29 Topology_File_Line(25): "exit02":"swp51" -- "spine01":"swp29"
-          spine01.vm.network "private_network", virtualbox__intnet: 'net25', auto_config: false
+          spine01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_25", auto_config: false
 
           # Local_Interface: swp30 Topology_File_Line(23): "exit01":"swp51" -- "spine01":"swp30"
-          spine01.vm.network "private_network", virtualbox__intnet: 'net23', auto_config: false
+          spine01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_23", auto_config: false
 
           # Local_Interface: swp31 Topology_File_Line(13): "spine01":"swp31" -- "spine02":"swp31"
-          spine01.vm.network "private_network", virtualbox__intnet: 'net13', auto_config: false
+          spine01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_13", auto_config: false
 
           # Local_Interface: swp32 Topology_File_Line(14): "spine01":"swp32" -- "spine02":"swp32"
-          spine01.vm.network "private_network", virtualbox__intnet: 'net14', auto_config: false
+          spine01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_14", auto_config: false
 
       # Disabling the default synced folder
       spine01.vm.synced_folder ".", "/vagrant", disabled: true
@@ -735,31 +735,31 @@ Vagrant.configure("2") do |config|
       spine02.vm.box = "CumulusCommunity/cumulus-vx"
 
           # Local_Interface: eth0 Topology_File_Line(51): "spine02":"eth0" -- "oob-mgmt-switch":"swp11"
-          spine02.vm.network "private_network", virtualbox__intnet: 'net51', auto_config: false, :mac => "A00000000022"
+          spine02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_51", auto_config: false, :mac => "A00000000022"
 
           # Local_Interface: swp1 Topology_File_Line(5): "leaf01":"swp52" -- "spine02":"swp1"
-          spine02.vm.network "private_network", virtualbox__intnet: 'net5', auto_config: false
+          spine02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_5", auto_config: false
 
           # Local_Interface: swp2 Topology_File_Line(6): "leaf02":"swp52" -- "spine02":"swp2"
-          spine02.vm.network "private_network", virtualbox__intnet: 'net6', auto_config: false
+          spine02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_6", auto_config: false
 
           # Local_Interface: swp3 Topology_File_Line(7): "leaf03":"swp52" -- "spine02":"swp3"
-          spine02.vm.network "private_network", virtualbox__intnet: 'net7', auto_config: false
+          spine02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_7", auto_config: false
 
           # Local_Interface: swp4 Topology_File_Line(8): "leaf04":"swp52" -- "spine02":"swp4"
-          spine02.vm.network "private_network", virtualbox__intnet: 'net8', auto_config: false
+          spine02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_8", auto_config: false
 
           # Local_Interface: swp29 Topology_File_Line(26): "exit02":"swp52" -- "spine02":"swp29"
-          spine02.vm.network "private_network", virtualbox__intnet: 'net26', auto_config: false
+          spine02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_26", auto_config: false
 
           # Local_Interface: swp30 Topology_File_Line(24): "exit01":"swp52" -- "spine02":"swp30"
-          spine02.vm.network "private_network", virtualbox__intnet: 'net24', auto_config: false
+          spine02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_24", auto_config: false
 
           # Local_Interface: swp31 Topology_File_Line(13): "spine01":"swp31" -- "spine02":"swp31"
-          spine02.vm.network "private_network", virtualbox__intnet: 'net13', auto_config: false
+          spine02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_13", auto_config: false
 
           # Local_Interface: swp32 Topology_File_Line(14): "spine01":"swp32" -- "spine02":"swp32"
-          spine02.vm.network "private_network", virtualbox__intnet: 'net14', auto_config: false
+          spine02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_14", auto_config: false
 
       # Disabling the default synced folder
       spine02.vm.synced_folder ".", "/vagrant", disabled: true
@@ -801,31 +801,31 @@ Vagrant.configure("2") do |config|
       exit01.vm.box = "CumulusCommunity/cumulus-vx"
 
           # Local_Interface: eth0 Topology_File_Line(52): "exit01":"eth0" -- "oob-mgmt-switch":"swp12"
-          exit01.vm.network "private_network", virtualbox__intnet: 'net52', auto_config: false, :mac => "A00000000041"
+          exit01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_52", auto_config: false, :mac => "A00000000041"
 
           # Local_Interface: swp45 Topology_File_Line(29): "exit01":"swp45" -- "exit01":"swp46"
-          exit01.vm.network "private_network", virtualbox__intnet: 'net29', auto_config: false
+          exit01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_29", auto_config: false
 
           # Local_Interface: swp46 Topology_File_Line(29): "exit01":"swp45" -- "exit01":"swp46"
-          exit01.vm.network "private_network", virtualbox__intnet: 'net29', auto_config: false
+          exit01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_29", auto_config: false
 
           # Local_Interface: swp47 Topology_File_Line(30): "exit01":"swp47" -- "exit01":"swp48"
-          exit01.vm.network "private_network", virtualbox__intnet: 'net30', auto_config: false
+          exit01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_30", auto_config: false
 
           # Local_Interface: swp48 Topology_File_Line(30): "exit01":"swp47" -- "exit01":"swp48"
-          exit01.vm.network "private_network", virtualbox__intnet: 'net30', auto_config: false
+          exit01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_30", auto_config: false
 
           # Local_Interface: swp49 Topology_File_Line(27): "exit01":"swp49" -- "exit01":"swp49"
-          exit01.vm.network "private_network", virtualbox__intnet: 'net27', auto_config: false
+          exit01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_27", auto_config: false
 
           # Local_Interface: swp49 Topology_File_Line(27): "exit01":"swp49" -- "exit01":"swp49"
-          exit01.vm.network "private_network", virtualbox__intnet: 'net27', auto_config: false
+          exit01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_27", auto_config: false
 
           # Local_Interface: swp51 Topology_File_Line(23): "exit01":"swp51" -- "spine01":"swp30"
-          exit01.vm.network "private_network", virtualbox__intnet: 'net23', auto_config: false
+          exit01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_23", auto_config: false
 
           # Local_Interface: swp52 Topology_File_Line(24): "exit01":"swp52" -- "spine02":"swp30"
-          exit01.vm.network "private_network", virtualbox__intnet: 'net24', auto_config: false
+          exit01.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_24", auto_config: false
 
       # Disabling the default synced folder
       exit01.vm.synced_folder ".", "/vagrant", disabled: true
@@ -867,31 +867,31 @@ Vagrant.configure("2") do |config|
       exit02.vm.box = "CumulusCommunity/cumulus-vx"
 
           # Local_Interface: eth0 Topology_File_Line(53): "exit02":"eth0" -- "oob-mgmt-switch":"swp13"
-          exit02.vm.network "private_network", virtualbox__intnet: 'net53', auto_config: false, :mac => "A00000000042"
+          exit02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_53", auto_config: false, :mac => "A00000000042"
 
           # Local_Interface: swp45 Topology_File_Line(31): "exit02":"swp45" -- "exit02":"swp46"
-          exit02.vm.network "private_network", virtualbox__intnet: 'net31', auto_config: false
+          exit02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_31", auto_config: false
 
           # Local_Interface: swp46 Topology_File_Line(31): "exit02":"swp45" -- "exit02":"swp46"
-          exit02.vm.network "private_network", virtualbox__intnet: 'net31', auto_config: false
+          exit02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_31", auto_config: false
 
           # Local_Interface: swp47 Topology_File_Line(32): "exit02":"swp47" -- "exit02":"swp48"
-          exit02.vm.network "private_network", virtualbox__intnet: 'net32', auto_config: false
+          exit02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_32", auto_config: false
 
           # Local_Interface: swp48 Topology_File_Line(32): "exit02":"swp47" -- "exit02":"swp48"
-          exit02.vm.network "private_network", virtualbox__intnet: 'net32', auto_config: false
+          exit02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_32", auto_config: false
 
           # Local_Interface: swp50 Topology_File_Line(28): "exit02":"swp50" -- "exit02":"swp50"
-          exit02.vm.network "private_network", virtualbox__intnet: 'net28', auto_config: false
+          exit02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_28", auto_config: false
 
           # Local_Interface: swp50 Topology_File_Line(28): "exit02":"swp50" -- "exit02":"swp50"
-          exit02.vm.network "private_network", virtualbox__intnet: 'net28', auto_config: false
+          exit02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_28", auto_config: false
 
           # Local_Interface: swp51 Topology_File_Line(25): "exit02":"swp51" -- "spine01":"swp29"
-          exit02.vm.network "private_network", virtualbox__intnet: 'net25', auto_config: false
+          exit02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_25", auto_config: false
 
           # Local_Interface: swp52 Topology_File_Line(26): "exit02":"swp52" -- "spine02":"swp29"
-          exit02.vm.network "private_network", virtualbox__intnet: 'net26', auto_config: false
+          exit02.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_26", auto_config: false
 
       # Disabling the default synced folder
       exit02.vm.synced_folder ".", "/vagrant", disabled: true

@@ -15,8 +15,7 @@
 #        -Ansible (v1.9+) installed: http://docs.ansible.com/ansible/intro_installation.html
 Vagrant.configure("2") do |config|
   ##### GLOBAL OPTIONS #####
-  # increase nic adapter count to be greater than 8
-  # for all VMs.
+  # You will need to uncomment and set wbid when you run.
   wbid = 1
   udp_port_lo = "#{100+wbid*2}"
   udp_port_hi = "#{101+wbid*2}"
