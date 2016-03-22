@@ -23,6 +23,9 @@
 - name: Clear hosts file
   copy: src=known_hosts dest=/home/{{wbench_user}}/.ssh/known_hosts mode=0600
 
+- name: chown root ssh to root
+  command: chown -R cumulus:cumulus /home/cumulus/.ssh
+
 - name: create root ssh directory
   file: path=/root/.ssh state=directory
 
