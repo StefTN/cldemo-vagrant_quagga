@@ -32,7 +32,7 @@ Vagrant.configure("2") do |config|
       oob_mgmt_server.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
 
       # Run Any Extra Config
-      oob_mgmt_server.vm.provision :shell , path: "./helper_scripts/1st_device_config.sh"
+      oob_mgmt_server.vm.provision :shell , path: "./helper_scripts/oob_server_config.sh"
 
       # Apply the interface re-map
       oob_mgmt_server.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -144,7 +144,7 @@ Vagrant.configure("2") do |config|
         oob_mgmt_switch.vm.synced_folder ".", "/vagrant", disabled: true
 
         # Run Any Extra Config
-        oob_mgmt_switch.vm.provision :shell , path: "./helper_scripts/2nd_device_config.sh"
+        oob_mgmt_switch.vm.provision :shell , path: "./helper_scripts/oob_switch_config.sh"
 
         # Apply the interface re-map
         oob_mgmt_switch.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -196,7 +196,7 @@ Vagrant.configure("2") do |config|
       server01.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
 
       # Run Any Extra Config
-      server01.vm.provision :shell , path: "./helper_scripts/extra_server_config.sh"
+      server01.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       server01.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -216,7 +216,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      server01.vm.provision :shell , path: "./helper_scripts/extra_server_post_config.sh"
+      server01.vm.provision :shell , path: "./helper_scripts/post_config_server.sh"
   end
 
   ##### DEFINE VM for server02 #####
@@ -244,7 +244,7 @@ Vagrant.configure("2") do |config|
       server02.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
 
       # Run Any Extra Config
-      server02.vm.provision :shell , path: "./helper_scripts/extra_server_config.sh"
+      server02.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       server02.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -264,7 +264,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      server02.vm.provision :shell , path: "./helper_scripts/extra_server_post_config.sh"
+      server02.vm.provision :shell , path: "./helper_scripts/post_config_server.sh"
   end
 
   ##### DEFINE VM for server03 #####
@@ -292,7 +292,7 @@ Vagrant.configure("2") do |config|
       server03.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
 
       # Run Any Extra Config
-      server03.vm.provision :shell , path: "./helper_scripts/extra_server_config.sh"
+      server03.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       server03.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -312,7 +312,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      server03.vm.provision :shell , path: "./helper_scripts/extra_server_post_config.sh"
+      server03.vm.provision :shell , path: "./helper_scripts/post_config_server.sh"
   end
 
   ##### DEFINE VM for server04 #####
@@ -340,7 +340,7 @@ Vagrant.configure("2") do |config|
       server04.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
 
       # Run Any Extra Config
-      server04.vm.provision :shell , path: "./helper_scripts/extra_server_config.sh"
+      server04.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       server04.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -360,7 +360,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      server04.vm.provision :shell , path: "./helper_scripts/extra_server_post_config.sh"
+      server04.vm.provision :shell , path: "./helper_scripts/post_config_server.sh"
   end
 
   ##### DEFINE VM for leaf01 #####
@@ -409,7 +409,7 @@ Vagrant.configure("2") do |config|
       leaf01.vm.synced_folder ".", "/vagrant", disabled: true
 
       # Run Any Extra Config
-      leaf01.vm.provision :shell , path: "./helper_scripts/extra_switch_config.sh"
+      leaf01.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       leaf01.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -434,7 +434,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      leaf01.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+      leaf01.vm.provision :shell , path: "./helper_scripts/post_config_switch.sh"
   end
 
   ##### DEFINE VM for leaf02 #####
@@ -483,7 +483,7 @@ Vagrant.configure("2") do |config|
       leaf02.vm.synced_folder ".", "/vagrant", disabled: true
 
       # Run Any Extra Config
-      leaf02.vm.provision :shell , path: "./helper_scripts/extra_switch_config.sh"
+      leaf02.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       leaf02.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -508,7 +508,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      leaf02.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+      leaf02.vm.provision :shell , path: "./helper_scripts/post_config_switch.sh"
   end
 
   ##### DEFINE VM for leaf03 #####
@@ -557,7 +557,7 @@ Vagrant.configure("2") do |config|
       leaf03.vm.synced_folder ".", "/vagrant", disabled: true
 
       # Run Any Extra Config
-      leaf03.vm.provision :shell , path: "./helper_scripts/extra_switch_config.sh"
+      leaf03.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       leaf03.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -582,7 +582,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      leaf03.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+      leaf03.vm.provision :shell , path: "./helper_scripts/post_config_switch.sh"
   end
 
   ##### DEFINE VM for leaf04 #####
@@ -631,7 +631,7 @@ Vagrant.configure("2") do |config|
       leaf04.vm.synced_folder ".", "/vagrant", disabled: true
 
       # Run Any Extra Config
-      leaf04.vm.provision :shell , path: "./helper_scripts/extra_switch_config.sh"
+      leaf04.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       leaf04.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -656,7 +656,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      leaf04.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+      leaf04.vm.provision :shell , path: "./helper_scripts/post_config_switch.sh"
   end
 
   ##### DEFINE VM for spine01 #####
@@ -699,7 +699,7 @@ Vagrant.configure("2") do |config|
       spine01.vm.synced_folder ".", "/vagrant", disabled: true
 
       # Run Any Extra Config
-      spine01.vm.provision :shell , path: "./helper_scripts/extra_switch_config.sh"
+      spine01.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       spine01.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -722,7 +722,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      spine01.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+      spine01.vm.provision :shell , path: "./helper_scripts/post_config_switch.sh"
   end
 
   ##### DEFINE VM for spine02 #####
@@ -765,7 +765,7 @@ Vagrant.configure("2") do |config|
       spine02.vm.synced_folder ".", "/vagrant", disabled: true
 
       # Run Any Extra Config
-      spine02.vm.provision :shell , path: "./helper_scripts/extra_switch_config.sh"
+      spine02.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       spine02.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -788,7 +788,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      spine02.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+      spine02.vm.provision :shell , path: "./helper_scripts/post_config_switch.sh"
   end
 
   ##### DEFINE VM for exit01 #####
@@ -831,7 +831,7 @@ Vagrant.configure("2") do |config|
       exit01.vm.synced_folder ".", "/vagrant", disabled: true
 
       # Run Any Extra Config
-      exit01.vm.provision :shell , path: "./helper_scripts/extra_switch_config.sh"
+      exit01.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       exit01.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -854,7 +854,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      exit01.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+      exit01.vm.provision :shell , path: "./helper_scripts/post_config_switch.sh"
   end
 
   ##### DEFINE VM for exit02 #####
@@ -897,7 +897,7 @@ Vagrant.configure("2") do |config|
       exit02.vm.synced_folder ".", "/vagrant", disabled: true
 
       # Run Any Extra Config
-      exit02.vm.provision :shell , path: "./helper_scripts/extra_switch_config.sh"
+      exit02.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
 
       # Apply the interface re-map
       exit02.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
@@ -920,7 +920,7 @@ Vagrant.configure("2") do |config|
       end
 
       # Run Postconfig
-      exit02.vm.provision :shell , path: "./helper_scripts/extra_switch_post_config.sh"
+      exit02.vm.provision :shell , path: "./helper_scripts/post_config_switch.sh"
   end
 
 end

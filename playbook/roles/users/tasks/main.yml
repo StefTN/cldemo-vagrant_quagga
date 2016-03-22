@@ -16,11 +16,9 @@
 
 - name: Use internal private key
   copy: src=internal_private_key dest=/home/{{wbench_user}}/.ssh/id_rsa mode=0600
-  when: not create_key
 
 - name: Use internal public key
   copy: src=internal_public_key dest=/home/{{wbench_user}}/.ssh/id_rsa.pub mode=0600
-  when: not create_key
 
 - name: Clear hosts file
   copy: src=known_hosts dest=/home/{{wbench_user}}/.ssh/known_hosts mode=0600

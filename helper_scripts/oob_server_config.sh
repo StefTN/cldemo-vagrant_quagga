@@ -23,6 +23,8 @@ echo "iface eth1 inet static" >> /etc/network/interfaces
 echo "    address 192.168.0.254" >> /etc/network/interfaces
 echo "    netmask 255.255.0.0" >> /etc/network/interfaces
 
+echo "cumulus ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/10_cumulus
+
 
 ifup eth1
 sed "s/PasswordAuthentication no/PasswordAuthentication yes/" -i /etc/ssh/sshd_config
