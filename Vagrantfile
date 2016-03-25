@@ -47,6 +47,8 @@ Vagrant.configure("2") do |config|
 
       oob_mgmt_server.vm.provider "virtualbox" do |vbox|
         vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+        vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+        vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
       end
 
       oob_mgmt_server.vm.provision "ansible" do |ansible|
@@ -213,6 +215,9 @@ Vagrant.configure("2") do |config|
         vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
         vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
         vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+        vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
+        vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
+        vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
       end
 
       # Run Postconfig
@@ -261,6 +266,9 @@ Vagrant.configure("2") do |config|
         vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
         vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
         vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+        vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
+        vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
+        vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
       end
 
       # Run Postconfig
@@ -309,6 +317,9 @@ Vagrant.configure("2") do |config|
         vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
         vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
         vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+        vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
+        vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
+        vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
       end
 
       # Run Postconfig
@@ -357,6 +368,9 @@ Vagrant.configure("2") do |config|
         vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
         vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
         vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+        vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
+        vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
+        vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
       end
 
       # Run Postconfig
