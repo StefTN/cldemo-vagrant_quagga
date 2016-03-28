@@ -13,4 +13,6 @@ MAP="
      eth11=swp11
      eth12=swp12
      eth13=swp13
+     eth14=swp14
+     eth15=swp15
 "

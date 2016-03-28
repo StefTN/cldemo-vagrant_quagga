@@ -1,0 +1,6 @@
+MAP="
+     eth0=vagrant
+     eth1=eth0
+     eth2=eth1
+     eth3=eth2
+"
