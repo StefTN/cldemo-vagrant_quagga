@@ -68,4 +68,6 @@ if __name__ == "__main__":
         outfile.close()
 
     template = jinja2.Template(open('templates/Vagrantfile.j2').read())
-    print(template.render(devices=devices))
+    outfile = open('./Vagrantfile', 'w')
+    outfile.write(template.render(devices=devices))
+    outfile.close()
