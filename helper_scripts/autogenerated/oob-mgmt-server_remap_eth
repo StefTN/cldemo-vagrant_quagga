@@ -1,4 +1,4 @@
 MAP="
-     eth0=eth0
-     eth1=eth1
+eth0=eth0
+eth1=eth1
 "

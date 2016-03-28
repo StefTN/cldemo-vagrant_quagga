@@ -1,5 +1,6 @@
-from jinja2 import Environment, PackageLoader
-import json, sys
+#! /usr/bin/env python
+
+import json, sys, jinja2
 
 class Cable(object):
     def __init__(self, net_id, src_host, src_iface, dest_host, dest_iface):
@@ -20,29 +21,33 @@ class Device(object):
         self.cabling = {}
 
 if __name__ == "__main__":
-    data = json.loads(open(sys.arvg[1]).read())
+    data = json.loads(open(sys.argv[1]).read())
     devices = []
     cabling = []
 
     for net_id, cable in enumerate(data['cabling']):
-        cabling.append(Cable(net_id
-                             device['src_host'],
-                             device['src_iface'],
-                             device['dest_host'],
-                             device['dest_iface']))
+        cabling.append(Cable(net_id,
+                             cable['src_host'],
+                             cable['src_iface'],
+                             cable['dest_host'],
+                             cable['dest_iface']))
     for device in data['devices']:
         d = Device(device['hostname'],
                    device['category'],
                    device['mgmt_ip'],
                    device['mac_map'],
                    device['eth_map'],
-                   device.get('vagrant', None)))
+                   device.get('vagrant', None))
         for cable in cabling:
             if d.hostname == cable.src_host:
                 d.cabling[cable.src_iface] = cable
-            elif d.hostname == cable.dest_host:
+            if d.hostname == cable.dest_host:
                 d.cabling[cable.dest_iface] = cable
         devices.append(d)
+
+    for device in devices:
+        if set(device.eth_map) != set(device.cabling.keys()):
+            print device.eth_map, device.cabling.keys()
 
     # create remap files
     for device in devices:
@@ -57,10 +62,10 @@ if __name__ == "__main__":
 
         for iface in device.eth_map:
             outtext += 'eth%d=%s\n'%(n, iface)
+            n += 1
         outtext += '"\n'
         outfile.write(outtext)
         outfile.close()
 
-    env = Environment(loader=PackageLoader('yourapplication', 'templates'))
-    template = env.get_template('Vagrantfile.j2')
+    template = jinja2.Template(open('templates/Vagrantfile.j2').read())
     print(template.render(devices=devices))
