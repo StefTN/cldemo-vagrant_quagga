@@ -15,12 +15,6 @@
     - ppa:brightbox/ruby-ng
     - ppa:ansible/ansible
 
-- name: copy deb that enables puppet repo to host
-  copy: src=puppetlabs-release-trusty.deb dest=/tmp/puppet_install.deb
-
-- name: install puppet repo deb
-  apt: deb=/tmp/puppet_install.deb
-
 - name: install curl, man, and bash-completion
   apt: name={{ item }}
   with_items:
