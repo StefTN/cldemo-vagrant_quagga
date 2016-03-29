@@ -116,7 +116,7 @@ end
 config.vm.define "{{ device.hostname }}" do |device|
     device.vm.provider "virtualbox" do |v|
       v.name = "{{ device.hostname }}"
-      v.memory = 256
+      v.memory = 512
     end
     device.vm.hostname = "{{ device.hostname }}"
     device.vm.box = "CumulusCommunity/cumulus-vx"

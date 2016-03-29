@@ -462,7 +462,7 @@ end
 config.vm.define "spine01" do |device|
     device.vm.provider "virtualbox" do |v|
       v.name = "spine01"
-      v.memory = 200
+      v.memory = 512
     end
     device.vm.hostname = "spine01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
