@@ -594,7 +594,7 @@ end
 config.vm.define "leaf01" do |device|
     device.vm.provider "virtualbox" do |v|
       v.name = "leaf01"
-      v.memory = 200
+      v.memory = 256
     end
     device.vm.hostname = "leaf01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
@@ -668,7 +668,7 @@ end
 config.vm.define "leaf02" do |device|
     device.vm.provider "virtualbox" do |v|
       v.name = "leaf02"
-      v.memory = 200
+      v.memory = 256
     end
     device.vm.hostname = "leaf02"
     device.vm.box = "CumulusCommunity/cumulus-vx"

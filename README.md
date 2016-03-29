@@ -28,7 +28,7 @@ Before running, ensure that you have **Ansible version 1.9.4** and **Vagrant ver
 To access your various devices...
 
     vagrant ssh oob-mgmt-server
-    sudo su cumulus
+    sudo su - cumulus
     ssh leaf01
 
 To reprovision a specific device
@@ -44,8 +44,7 @@ To run a cldemo.
 
     vagrant up
     vagrant ssh oob-mgmt-server
-    sudo su cumulus
-    cd ~
+    sudo su - cumulus
     git clone https://github.com/cumulusnetworks/cldemo-xxxxx
     cd cldemo-xxxxxx
     cat README.md

@@ -101,7 +101,7 @@ complex_remap() {
     for intf in $MAP;do
         from=`echo $intf | awk 'BEGIN { FS="=" }; { print $1 }'`
         to=`echo $intf | awk 'BEGIN { FS="=" }; { print $2 }'`
-        echo "     $from=$to" >> $LAST_REMAP_FILE        	    
+        echo "     $from=$to" >> $LAST_REMAP_FILE
 
         temp_from=temporary_${from:3}
 
@@ -112,7 +112,7 @@ complex_remap() {
         fi
 
         remap_and_check  $temp_from $to
-        ((count++)) 
+        ((count++))
     done
 
     #Remapping extra interfaces not found in DESIRED_REMAP_FILE
@@ -123,13 +123,13 @@ complex_remap() {
          #find next vacant eth interface
          ip link show eth$count &> /dev/null
          while [ "$?" != "1" ]; do
-             ((count++)) 
+             ((count++))
              ip link show eth$count &> /dev/null
          done
          to=eth$count
          if [ "$debug" = true ]; then echo " Remapping extra interface: $from --> $to"; fi
   	     remap_and_check $from $to
-         echo "     eth$num=$to" >> $LAST_REMAP_FILE  
+         echo "     eth$num=$to" >> $LAST_REMAP_FILE
     done
     echo -e '"' >> $LAST_REMAP_FILE
 
@@ -192,9 +192,9 @@ validate_last_remap_links_exist() {
 down_links() {
     #Downing ALL Links that are Up
     if [ "$debug" = true ]; then echo -e "\n>>>>>>> DOWNING INTERFACES <<<<<<<"; fi
-    links_that_are_up=$(ip link show up | cut -d ":" -f2 | grep "^ " | grep -v "\.")
+    links_that_are_up=$(ip link show up | grep -v "LOOPBACK" |  cut -d ":" -f2 | grep "^ " | grep -v "\.")
     for link in $links_that_are_up; do
-        if [ "$debug" = true ]; then 
+        if [ "$debug" = true ]; then
             echo " Bringing link $link down."
             /sbin/ifdown $link &> /dev/null #deprogramming interface if config present
             /sbin/ip link set $link down
@@ -209,9 +209,9 @@ up_links() {
     #Up-ing ALL Links that are present
     if [ "$debug" = true ]; then echo -e "\n>>>>>>> UPING INTERFACES <<<<<<<"; fi
     #  This is necessary to restore communications
-    post_links=$(ip link show | cut -d ":" -f2 | grep "^ " | grep -v "\.")
+    post_links=$(ip link show | grep -v "LOOPBACK" | cut -d ":" -f2 | grep "^ " | grep -v "\.")
     for link in $post_links; do
-        if [ "$debug" = true ]; then 
+        if [ "$debug" = true ]; then
             echo " Bringing link $link up (if config is available)"
             #/sbin/ifdown $link > /dev/null #deprogramming interface if config present
             /sbin/ifup $link > /dev/null  #reprogramming interface if config present
@@ -233,10 +233,10 @@ undo_remap(){
 }
 
 undo_complex() {
-    #Used in several places, this function undoes the remap operation 
+    #Used in several places, this function undoes the remap operation
     # Specified in the LAST_REMAP_FILE and leaves the machine in an
     # original unremapped state.
-    echo -e "\n>>>>>>> Undoing [Previous] Complex REMAP <<<<<<<"  
+    echo -e "\n>>>>>>> Undoing [Previous] Complex REMAP <<<<<<<"
     interim_remove_remap
     for intf in $LAST_MAP; do
         to=`echo $intf | awk 'BEGIN { FS="=" }; { print $1 }'`
@@ -246,18 +246,18 @@ undo_complex() {
         if [ "$from" != "$to" ]; then
             remap_and_check $from $to
         else
-            echo "    [skipping since no remap needed for this interface]"   
+            echo "    [skipping since no remap needed for this interface]"
         fi
     done
     rm $LAST_REMAP_FILE
 }
 
 undo_simple() {
-    #This function undoes the remap operation 
+    #This function undoes the remap operation
     # Specified in the LAST_REMAP_FILE and leaves the machine in an
     # original unremapped state.
     if [ "$cumulus" = true ]; then
-        echo -e "\n>>>>>>> Undoing Simple REMAP <<<<<<<"    
+        echo -e "\n>>>>>>> Undoing Simple REMAP <<<<<<<"
         links=$(ip link show | cut -d ":" -f2 | grep "^ " | grep -v "\." | grep swp)
         count=0
         for link in $links; do
@@ -302,7 +302,7 @@ interim_remove_remap() {
     if [ "$?" != "0" ]; then
         echo -e "ERROR: Cannot remove the REMAP as all desired interfaces do not exist!"
         #exit 1
-    fi  
+    fi
     for intf in $LAST_MAP; do
         to=`echo $intf | awk 'BEGIN { FS="=" }; { print $1 }'`
         from=`echo $intf | awk 'BEGIN { FS="=" }; { print $2 }'`
@@ -311,7 +311,7 @@ interim_remove_remap() {
         if [ "$from" != "$to" ]; then
             remap_and_check $from $to
         else
-            echo "    [skipping since no remap needed for this interface]"   
+            echo "    [skipping since no remap needed for this interface]"
         fi
     done
 }
@@ -340,7 +340,7 @@ should_remap_be_performed() {
         if [ "$start_state" = "simple" ] && [ "$undo" != true ]; then #decipher original interfaces in simple remap
             if [ "$from" != "eth0" ]; then
                 from="swp"${from:3}
-            fi    
+            fi
         #elif [ "$start_state" = "simple" ] && [ "$undo" = true ]; then #decipher original interfaces used in a LAST_REMAP_FILE
         elif [ "$undo" = true ]; then #decipher original interfaces used in a LAST_REMAP_FILE
             for interface in $LAST_MAP; do
@@ -354,7 +354,7 @@ should_remap_be_performed() {
         to=`echo $intf | awk 'BEGIN { FS="=" }; { print $2 }'`
         #echo "     DEBUG: Checking for interfaces in $from --> $to "
 
-        #Check to see which interfaces exist 
+        #Check to see which interfaces exist
         check_exist=$(ip link show $to &> /dev/null)
         to_not_exist=$?
         check_exist=$(ip link show $from &> /dev/null)
@@ -382,10 +382,10 @@ should_remap_be_performed() {
             return 1
         else
             #At least one "to" ints is not present and at least one of the from ints is not present
-            echo -e "\nERROR: Desired interfaces do not all exist however remap is not possible based on lack of required interfaces." 
+            echo -e "\nERROR: Desired interfaces do not all exist however remap is not possible based on lack of required interfaces."
             exit 1
         fi
-    fi       
+    fi
 }
 
 do_start() {
@@ -432,7 +432,7 @@ do_start() {
     cumulus=false
     if grep -q -i 'cumulus' /etc/lsb-release &> /dev/null; then
         cumulus=true
-        #Check for SWP ports, if present, some kind of remap has occurred. 
+        #Check for SWP ports, if present, some kind of remap has occurred.
         # (Assume Simple Remap Occurred if no LAST_REMAP_FILE present)
         if [ "$(ip link show | cut -d ':' -f2 | grep '^ ' | grep -c 'swp')" -gt "0" ]; then
             start_state=simple
@@ -461,7 +461,7 @@ case "$1" in
 	;;
   verbose|"")
 	log_action_begin_msg "Renaming interfaces -- verbose mode"
-    debug=true 
+    debug=true
 	do_start
 	log_action_end_msg 0
 	;;
@@ -476,4 +476,3 @@ case "$1" in
 esac
 
 :
-
