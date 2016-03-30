@@ -21,6 +21,7 @@
     - curl
     - man
     - bash-completion
+    - python-paramiko
 
 - name: run apt-get update
   apt: update_cache=yes
