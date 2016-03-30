@@ -13,9 +13,8 @@
   apt_repository:  repo={{item}}
   with_items:
     - ppa:brightbox/ruby-ng
-    - ppa:ansible/ansible
 
-- name: install curl, man, and bash-completion
+- name: install curl, man, bash-completion, and paramiko (for helpers)
   apt: name={{ item }}
   with_items:
     - curl
