@@ -7,7 +7,7 @@
             "mac_map": [],
             "eth_map": ["eth1"],
             "vagrant": "eth0",
-            "memory": 1024
+            "memory": 512
         },
         {
             "hostname": "oob-mgmt-switch",
@@ -33,7 +33,7 @@
             "mgmt_ip": "192.168.0.31",
             "mac_map": {"eth0": "A0:00:00:00:00:31"},
             "eth_map": ["eth0", "eth1", "eth2"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "server02",
@@ -41,7 +41,7 @@
             "mgmt_ip": "192.168.0.32",
             "mac_map": {"eth0": "A0:00:00:00:00:32"},
             "eth_map": ["eth0", "eth1", "eth2"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "server03",
@@ -49,7 +49,7 @@
             "mgmt_ip": "192.168.0.33",
             "mac_map": {"eth0": "A0:00:00:00:00:33"},
             "eth_map": ["eth0", "eth1", "eth2"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "server04",
@@ -57,7 +57,7 @@
             "mgmt_ip": "192.168.0.34",
             "mac_map": {"eth0": "A0:00:00:00:00:34"},
             "eth_map": ["eth0", "eth1", "eth2"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "edge01",
@@ -65,7 +65,7 @@
             "mgmt_ip": "192.168.0.51",
             "mac_map": {"eth0": "A0:00:00:00:00:51"},
             "eth_map": ["eth0", "eth1", "eth2"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "spine01",
@@ -73,7 +73,7 @@
             "mgmt_ip": "192.168.0.21",
             "mac_map": {"eth0": "A0:00:00:00:00:21"},
             "eth_map": ["eth0", "swp1", "swp2", "swp3", "swp4", "swp29", "swp30", "swp31", "swp32"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "spine02",
@@ -81,7 +81,7 @@
             "mgmt_ip": "192.168.0.22",
             "mac_map": {"eth0": "A0:00:00:00:00:22"},
             "eth_map": ["eth0", "swp1", "swp2", "swp3", "swp4", "swp29", "swp30", "swp31", "swp32"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "leaf01",
@@ -89,7 +89,7 @@
             "mgmt_ip": "192.168.0.11",
             "mac_map": {"eth0": "A0:00:00:00:00:11"},
             "eth_map": ["eth0", "swp1", "swp2", "swp45", "swp46", "swp47", "swp48", "swp49", "swp50", "swp51", "swp52"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "leaf02",
@@ -97,7 +97,7 @@
             "mgmt_ip": "192.168.0.12",
             "mac_map": {"eth0": "A0:00:00:00:00:12"},
             "eth_map": ["eth0", "swp1", "swp2", "swp45", "swp46", "swp47", "swp48", "swp49", "swp50", "swp51", "swp52"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "leaf03",
@@ -105,7 +105,7 @@
             "mgmt_ip": "192.168.0.13",
             "mac_map": {"eth0": "A0:00:00:00:00:13"},
             "eth_map": ["eth0", "swp1", "swp2", "swp45", "swp46", "swp47", "swp48", "swp49", "swp50", "swp51", "swp52"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "leaf04",
@@ -113,7 +113,7 @@
             "mgmt_ip": "192.168.0.14",
             "mac_map": {"eth0": "A0:00:00:00:00:14"},
             "eth_map": ["eth0", "swp1", "swp2", "swp45", "swp46", "swp47", "swp48", "swp49", "swp50", "swp51", "swp52"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "exit01",
@@ -121,7 +121,7 @@
             "mgmt_ip": "192.168.0.41",
             "mac_map": {"eth0": "A0:00:00:00:00:41"},
             "eth_map": ["eth0", "swp1", "swp44", "swp45", "swp46", "swp47", "swp48", "swp49", "swp50", "swp51", "swp52"],
-            "memory": 512
+            "memory": 256
         },
         {
             "hostname": "exit02",
@@ -129,7 +129,7 @@
             "mgmt_ip": "192.168.0.42",
             "mac_map": {"eth0": "A0:00:00:00:00:42"},
             "eth_map": ["eth0", "swp1", "swp44", "swp45", "swp46", "swp47", "swp48", "swp49", "swp50", "swp51", "swp52"],
-            "memory": 512
+            "memory": 256
         }
     ],
     "cabling": [

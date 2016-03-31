@@ -11,13 +11,14 @@ class Cable(object):
         self.dest_iface = dest_iface
 
 class Device(object):
-    def __init__(self, hostname, category, mgmt_ip, mac_map, eth_map, vagrant=False):
+    def __init__(self, hostname, category, mgmt_ip, mac_map, eth_map, memory, vagrant=False):
         self.hostname = hostname
         self.category = category
         self.mac_map = mac_map
         self.eth_map = eth_map
         self.mgmt_ip = mgmt_ip
         self.vagrant = vagrant
+        self.memory = memory
         self.cabling = {}
 
 if __name__ == "__main__":
@@ -37,6 +38,7 @@ if __name__ == "__main__":
                    device['mgmt_ip'],
                    device['mac_map'],
                    device['eth_map'],
+                   device['memory'],
                    device.get('vagrant', None))
         for cable in cabling:
             if d.hostname == cable.src_host:
