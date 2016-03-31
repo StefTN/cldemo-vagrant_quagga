@@ -19,7 +19,9 @@ education or evaluation. If you run into trouble, feel free to share your story 
 
 Instructions
 ------------
-Before running, ensure that you have **Ansible version 1.9.4** and **Vagrant version 1.8.4** installed. This includes the Python Ansible package installable via Pip.
+Before running, ensure that you have **Ansible version 1.9.4** and
+**Vagrant version 1.8.4** installed. This includes the Python Ansible package
+installable via Pip.
 
     git clone https://github.com/cumulusnetworks/cldemo-vagrant
     vagrant plugin install cumulus-vagrant
@@ -49,6 +51,38 @@ To run a cldemo.
     cd cldemo-xxxxxx
     cat README.md
     # follow instructions
+
+
+Running Smaller Topologies
+--------------------------
+Demos do not necessarily need the full reference topology. You can bring up a
+subset of the topology using the following commands.
+
+    # two-switch: good for quick and dirty prototyping
+    vagrant up oob-mgmt-server oob-mgmt-switch leaf01 leaf02
+
+    # half-rack: used for most cldemos
+    vagrant up oob-mgmt-server oob-mgmt-switch leaf01 leaf02 spine01 spine02 server01 server02
+
+    # full-rack: usually used to demonstrate quagga on the host with dual-attached servers
+    vagrant up oob-mgmt-server oob-mgmt-switch leaf01 leaf02 leaf03 leaf04 spine01 spine02 server01 server02 server03 server04
+
+    # extended: includes exit leaves, an edge device, and a simulated internet node
+    vagrant up
+
+The full reference topology provisions 16 devices totalling 8 GB of memory.
+To reduce the memory load, you can run `python build-topology topology-extended-lite.json`,
+which will create VX instances with 256 MB of RAM instead of 512 GB, bringing
+the total to 6 GB. The 'lite' topology can be used for many of the Ansible
+demos that don't involve installing agents on the switches, but demos such as
+the Puppet demo won't work.
+
+
+Customizing the Topology
+------------------------
+You can customize the topology using the python script `build-topology.py`. This
+script reads a JSON file (see `topology-extended.json` for an example) and
+produces a Vagrantfile to match the topology.
 
 
 Libvirt Instructions
