@@ -34,7 +34,7 @@ Vagrant.configure("2") do |config|
       oob_mgmt_server.vm.synced_folder '.', '/vagrant', :disabled => true
 
       oob_mgmt_server.vm.provider :libvirt do |v|
-        v.memory = 400
+        v.memory = 1024
       end
       oob_mgmt_server.vm.hostname = "oob-mgmt-server"
       oob_mgmt_server.vm.box = "boxcutter/ubuntu1404"
@@ -120,7 +120,7 @@ Vagrant.configure("2") do |config|
       oob_mgmt_switch.vm.synced_folder '.', '/vagrant', :disabled => true
 
       oob_mgmt_switch.vm.provider :libvirt do |v|
-        v.memory = 200
+        v.memory = 256
       end
       oob_mgmt_switch.vm.hostname = "oob-mgmt-switch"
       oob_mgmt_switch.vm.box = "CumulusCommunity/cumulus-vx"
@@ -227,7 +227,7 @@ Vagrant.configure("2") do |config|
       server01.vm.synced_folder '.', '/vagrant', :disabled => true
 
       server01.vm.provider :libvirt do |v|
-        v.memory = 400
+        v.memory = 512
       end
       server01.vm.hostname = "server01"
       server01.vm.box = "boxcutter/ubuntu1404"
@@ -282,7 +282,7 @@ Vagrant.configure("2") do |config|
       server02.vm.synced_folder '.', '/vagrant', :disabled => true
 
       server02.vm.provider :libvirt do |v|
-        v.memory = 400
+        v.memory = 512
       end
       server02.vm.hostname = "server02"
       server02.vm.box = "boxcutter/ubuntu1404"
@@ -337,7 +337,7 @@ Vagrant.configure("2") do |config|
       server03.vm.synced_folder '.', '/vagrant', :disabled => true
 
       server03.vm.provider :libvirt do |v|
-        v.memory = 400
+        v.memory = 512
       end
       server03.vm.hostname = "server03"
       server03.vm.box = "boxcutter/ubuntu1404"
@@ -392,7 +392,7 @@ Vagrant.configure("2") do |config|
       server04.vm.synced_folder '.', '/vagrant', :disabled => true
 
       server04.vm.provider :libvirt do |v|
-        v.memory = 400
+        v.memory = 512
       end
       server04.vm.hostname = "server04"
       server04.vm.box = "boxcutter/ubuntu1404"
@@ -447,7 +447,7 @@ Vagrant.configure("2") do |config|
       leaf01.vm.synced_folder '.', '/vagrant', :disabled => true
 
       leaf01.vm.provider :libvirt do |v|
-        v.memory = 200
+        v.memory = 512
       end
       leaf01.vm.hostname = "leaf01"
       leaf01.vm.box = "CumulusCommunity/cumulus-vx"
@@ -544,7 +544,7 @@ Vagrant.configure("2") do |config|
       leaf02.vm.synced_folder '.', '/vagrant', :disabled => true
 
       leaf02.vm.provider :libvirt do |v|
-        v.memory = 200
+        v.memory = 512
       end
       leaf02.vm.hostname = "leaf02"
       leaf02.vm.box = "CumulusCommunity/cumulus-vx"
@@ -641,7 +641,7 @@ Vagrant.configure("2") do |config|
       leaf03.vm.synced_folder '.', '/vagrant', :disabled => true
 
       leaf03.vm.provider :libvirt do |v|
-        v.memory = 200
+        v.memory = 512
       end
       leaf03.vm.hostname = "leaf03"
       leaf03.vm.box = "CumulusCommunity/cumulus-vx"
@@ -738,7 +738,7 @@ Vagrant.configure("2") do |config|
       leaf04.vm.synced_folder '.', '/vagrant', :disabled => true
 
       leaf04.vm.provider :libvirt do |v|
-        v.memory = 200
+        v.memory = 512
       end
       leaf04.vm.hostname = "leaf04"
       leaf04.vm.box = "CumulusCommunity/cumulus-vx"
@@ -835,7 +835,7 @@ Vagrant.configure("2") do |config|
       spine01.vm.synced_folder '.', '/vagrant', :disabled => true
 
       spine01.vm.provider :libvirt do |v|
-        v.memory = 200
+        v.memory = 512
       end
       spine01.vm.hostname = "spine01"
       spine01.vm.box = "CumulusCommunity/cumulus-vx"
@@ -920,7 +920,7 @@ Vagrant.configure("2") do |config|
       spine02.vm.synced_folder '.', '/vagrant', :disabled => true
 
       spine02.vm.provider :libvirt do |v|
-        v.memory = 200
+        v.memory = 512
       end
       spine02.vm.hostname = "spine02"
       spine02.vm.box = "CumulusCommunity/cumulus-vx"
@@ -1005,7 +1005,7 @@ Vagrant.configure("2") do |config|
       exit01.vm.synced_folder '.', '/vagrant', :disabled => true
 
       exit01.vm.provider :libvirt do |v|
-        v.memory = 200
+        v.memory = 512
       end
       exit01.vm.hostname = "exit01"
       exit01.vm.box = "CumulusCommunity/cumulus-vx"
@@ -1090,7 +1090,7 @@ Vagrant.configure("2") do |config|
       exit02.vm.synced_folder '.', '/vagrant', :disabled => true
 
       exit02.vm.provider :libvirt do |v|
-        v.memory = 200
+        v.memory = 512
       end
       exit02.vm.hostname = "exit02"
       exit02.vm.box = "CumulusCommunity/cumulus-vx"
@@ -1176,7 +1176,7 @@ Vagrant.configure("2") do |config|
       edge01.vm.synced_folder '.', '/vagrant', :disabled => true
 
       edge01.vm.provider :libvirt do |v|
-        v.memory = 400
+        v.memory = 512
       end
       edge01.vm.hostname = "edge01"
       edge01.vm.box = "boxcutter/ubuntu1404"
