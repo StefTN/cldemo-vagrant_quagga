@@ -73,3 +73,7 @@ if __name__ == "__main__":
     outfile = open('./Vagrantfile', 'w')
     outfile.write(template.render(devices=devices))
     outfile.close()
+    template = jinja2.Template(open('templates/Vagrantfile-kvm.j2').read())
+    outfile = open('./Vagrantfile-kvm', 'w')
+    outfile.write(template.render(devices=devices))
+    outfile.close()

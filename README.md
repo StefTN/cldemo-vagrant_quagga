@@ -109,8 +109,8 @@ Using KVM to provision the topology is an advanced topic and not documented. The
     sudo apt-get install autoconf python-dev git libvirt-dev libvirt-bin qemu-utils qemu-kvm -y
     wget https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.deb
     sudo dpkg -i vagrant_1.8.1_x86_64.deb
-    vagrant box install CumulusCommunity/cumulus-vx
-    vagrant box install boxcutter/ubuntu1404
+    vagrant box add CumulusCommunity/cumulus-vx
+    vagrant box add boxcutter/ubuntu1404
     vagrant plugin install vagrant-cumulus
     vagrant plugin install vagrant-libvirt
     vagrant plugin install vagrant-mutate
