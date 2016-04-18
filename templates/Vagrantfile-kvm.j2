@@ -21,22 +21,24 @@ Vagrant.configure("2") do |config|
       device.vm.hostname = "{{ device.hostname }}"
       device.vm.box = "boxcutter/ubuntu1404"
 
-    {% for cable in device.eth_map %}
-    {% if device.hostname == device.cabling[cable].src_host and cable == device.cabling[cable].src_iface %}
-    device.vm.network "private_network",
-      :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
-      :libvirt__tunnel_local_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
-      auto_config: false
-    {% endif %}
-    {% if device.hostname == device.cabling[cable].dest_host and cable == device.cabling[cable].dest_iface %}
-    device.vm.network "private_network",
-      :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
-      :libvirt__tunnel_local_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
-      auto_config: false
-    {% endif %}
-    {% endfor %}
+      {% for cable in device.eth_map %}
+      {% if device.hostname == device.cabling[cable].src_host and cable == device.cabling[cable].src_iface %}
+      device.vm.network "private_network",
+        :libvirt__tunnel_type => 'udp',
+        :libvirt__tunnel_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
+        :libvirt__tunnel_local_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
+        {% if cable in device.mac_map %}:mac => "{{ device.mac_map[cable]|replace(':', '') }}",{% endif %}
+        auto_config: false
+      {% endif %}
+      {% if device.hostname == device.cabling[cable].dest_host and cable == device.cabling[cable].dest_iface %}
+      device.vm.network "private_network",
+        :libvirt__tunnel_type => 'udp',
+        :libvirt__tunnel_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
+        :libvirt__tunnel_local_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
+        {% if cable in device.mac_map %}:mac => "{{ device.mac_map[cable]|replace(':', '') }}",{% endif %}
+        auto_config: false
+      {% endif %}
+      {% endfor %}
 
       device.vm.synced_folder ".", "/vagrant", disabled: true
       device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
@@ -78,6 +80,7 @@ config.vm.define "{{ device.hostname }}" do |device|
       :libvirt__tunnel_type => 'udp',
       :libvirt__tunnel_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
       :libvirt__tunnel_local_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
+      {% if cable in device.mac_map %}:mac => "{{ device.mac_map[cable]|replace(':', '') }}",{% endif %}
       auto_config: false
     {% endif %}
     {% if device.hostname == device.cabling[cable].dest_host and cable == device.cabling[cable].dest_iface %}
@@ -85,6 +88,7 @@ config.vm.define "{{ device.hostname }}" do |device|
       :libvirt__tunnel_type => 'udp',
       :libvirt__tunnel_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
       :libvirt__tunnel_local_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
+      {% if cable in device.mac_map %}:mac => "{{ device.mac_map[cable]|replace(':', '') }}",{% endif %}
       auto_config: false
     {% endif %}
     {% endfor %}
@@ -116,6 +120,7 @@ config.vm.define "{{ device.hostname }}" do |device|
       :libvirt__tunnel_type => 'udp',
       :libvirt__tunnel_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
       :libvirt__tunnel_local_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
+      {% if cable in device.mac_map %}:mac => "{{ device.mac_map[cable]|replace(':', '') }}",{% endif %}
       auto_config: false
     {% endif %}
     {% if device.hostname == device.cabling[cable].dest_host and cable == device.cabling[cable].dest_iface %}
@@ -123,6 +128,7 @@ config.vm.define "{{ device.hostname }}" do |device|
       :libvirt__tunnel_type => 'udp',
       :libvirt__tunnel_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
       :libvirt__tunnel_local_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
+      {% if cable in device.mac_map %}:mac => "{{ device.mac_map[cable]|replace(':', '') }}",{% endif %}
       auto_config: false
     {% endif %}
     {% endfor %}
@@ -154,6 +160,7 @@ config.vm.define "{{ device.hostname }}" do |device|
       :libvirt__tunnel_type => 'udp',
       :libvirt__tunnel_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
       :libvirt__tunnel_local_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
+      {% if cable in device.mac_map %}:mac => "{{ device.mac_map[cable]|replace(':', '') }}",{% endif %}
       auto_config: false
     {% endif %}
     {% if device.hostname == device.cabling[cable].dest_host and cable == device.cabling[cable].dest_iface %}
@@ -161,6 +168,7 @@ config.vm.define "{{ device.hostname }}" do |device|
       :libvirt__tunnel_type => 'udp',
       :libvirt__tunnel_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
       :libvirt__tunnel_local_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
+      {% if cable in device.mac_map %}:mac => "{{ device.mac_map[cable]|replace(':', '') }}",{% endif %}
       auto_config: false
     {% endif %}
     {% endfor %}
@@ -194,6 +202,7 @@ config.vm.define "{{ device.hostname }}" do |device|
       :libvirt__tunnel_type => 'udp',
       :libvirt__tunnel_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
       :libvirt__tunnel_local_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
+      {% if cable in device.mac_map %}:mac => "{{ device.mac_map[cable]|replace(':', '') }}",{% endif %}
       auto_config: false
     {% endif %}
     {% if device.hostname == device.cabling[cable].dest_host and cable == device.cabling[cable].dest_iface %}
@@ -201,6 +210,7 @@ config.vm.define "{{ device.hostname }}" do |device|
       :libvirt__tunnel_type => 'udp',
       :libvirt__tunnel_port => "#{udp_port_hi}{{ device.cabling[cable].net_id }}",
       :libvirt__tunnel_local_port => "#{udp_port_lo}{{ device.cabling[cable].net_id }}",
+      {% if cable in device.mac_map %}:mac => "{{ device.mac_map[cable]|replace(':', '') }}",{% endif %}
       auto_config: false
     {% endif %}
     {% endfor %}
