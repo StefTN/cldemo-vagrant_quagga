@@ -30,9 +30,10 @@ education or evaluation. If you run into trouble, feel free to share your story 
 
 Instructions
 ------------
-Before running, ensure that you have **Ansible version 1.9.4** and
-**Vagrant version 1.8.4** installed. This includes the Python Ansible package
-installable via Pip.
+Before running, ensure that you have **Ansible** and **Vagrant** installed. Last
+tested with Vagrant 1.8.4 and Ansible 2.0.1. Be sure that you have installed these
+tools using the official recommended repositories, not using your distro's
+package manager.
 
 To bring up the entire reference topology...
 
