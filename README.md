@@ -42,7 +42,9 @@ To bring up the entire reference topology...
     vagrant plugin install cumulus-vagrant
     vagrant up
 
-To access your various devices...
+To access your various devices, you *must* access them via the out-of-band
+management server. You can not directly access in-band devices using vagrant.
+To do so...
 
     vagrant ssh oob-mgmt-server
     sudo su - cumulus
