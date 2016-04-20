@@ -1,5 +1,5 @@
-Virtualizing a Network with Cumulus VX and Vagrant
-==================================================
+Virtualizing a Network with Cumulus VX
+======================================
 [Cumulus VX](https://cumulusnetworks.com/cumulus-vx/) is a virtual machine
 produced by Cumulus Networks to simulate the user experience of configuring a
 switch using the Cumulus Linux network operating system.
