@@ -28,12 +28,14 @@ installing via the preferred sources is recommended. This example was last
 tested with **Vagrant 1.8** and **Ansible 2.0.1**.
 
 
-Provision the topology
-----------------------
+Provision the topology and log in
+---------------------------------
     git clone https://github.com/cumulusnetworks/cldemo-vagrant
     cd cldemo-vagrant
     vagrant plugin install cumulus-vagrant
     vagrant up
+    vagrant ssh oob-mgmt-server
+    sudo su - cumulus
 
 ### What's happening?
 Vagrant topologies are described in a Vagrantfile, which is a Ruby program that
@@ -42,6 +44,8 @@ tells Vagrant which devices to create and how to configure their networks.
 using Virtualbox. It will also use Ansible to configure the out-of-band
 management network.
 
+The following tasks are completed to make using the topology more convenient.
+
  * DHCP, DNS, and Apache are installed and configured on the oob-mgmt-server
  * Static MAC address entries are added to DHCP on the oob-mgmt-server for all devices
  * A bridge is created on the oob-mgmt-switch to connect all devices eth0 interfaces together
@@ -49,35 +53,16 @@ management network.
  * Public keys for the cumulus user are installed on all of the devices, allowing passwordless ssh
  * A NOPASSWD stanza is added for the cumulus user in the sudoers file of all devices
 
+After the topology comes up, we use `vagrant ssh` to log in to the management
+device and switch to the `cumulus` user. The `cumulus` user is able to access
+other devices in the network using its SSH key, and has passwordless sudo
+enabled on all devices to make it easy to run administrative commands. **Most
+demos assume that you are logged into the out of band management server as the
+`cumulus` user**.
 
-SSH into a device
------------------
-    vagrant ssh oob-mgmt-server
-    sudo su - cumulus
-    ssh leaf01
-
-### What's happening?
-This topology tries to accurately simulate the experience of accessing a network
-via an out-of-band interface. This means that it is not possible to directly
-use `vagrant ssh` to access a device. Use `vagrant ssh` to connect to the
-management server, and then switch to the `cumulus` user, who will be able to
-use key-based SSH to log into any other device in the network without a
-password.
-
-
-Destroy the topology
---------------------
-    vagrant destroy -f
-
-### What's happening?
-This command will destroy all VMs in the topology. This topology does not
-support halting or suspending VMs using Vagrant. If you want to preserve your
-work, you must use one of these two options:
-
- * Save your configuration using some form of automation tool, such as Puppet, Ansible, or Chef
- * Use Virtualbox Manager to halt and resume your VMs
-   * VBoxManage controlvm leaf01 poweroff
-   * VBoxManage startvm leaf01 --type headless
+Note that due to the way we simulate the out of band network, it is not possible
+to use `vagrant ssh` to access in-band devices like leaf01 and leaf02. These
+devices **must** be accessed via the out-of-band management server.
 
 
 Factory-reset a device
@@ -86,18 +71,25 @@ Factory-reset a device
     vagrant up leaf01
 
 ### What's happening?
-The topology built using this Vagrantfile does not support halting or restarting
-VMs. You must either reboot the VM by SSHing to it and issuing a `reboot`
-command, or destroy the device and reprovision it.
+The topology built using this Vagrantfile does not support `vagrant halt` or
+`vagrant resume` for in-band devices. This means that in order to keep your
+configuration across Vagrant sessions, you should either save your configuration
+in a repository using an automation tool such as Ansible, Puppet, or Chef
+(preferred) or use the hypervisor's halt and resume functionality.
+
+For VirtualBox, these commands are:
+    * VBoxManage controlvm leaf01 poweroff
+    * VBoxManage startvm leaf01 --type headless
+
+
+Destroy the entire topology
+---------------------------
+    vagrant destroy -f
 
 
 Provision a Smaller Topology
 ----------------------------
     vagrant up oob-mgmt-server oob-mgmt-switch leaf01 leaf02 spine01 spine02 server01 server02
-
-### What's happening?
-In many topologies, it is not necessary to provision the entire reference
-topology. Most demos only need some of the devices.
 
 
 Customizing the Topology
