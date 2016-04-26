@@ -663,8 +663,8 @@ config.vm.define "spine01" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_hi}0",
-      :libvirt__tunnel_local_port => "#{udp_port_lo}0",
+      :libvirt__tunnel_port => "#{udp_port_hi}00",
+      :libvirt__tunnel_local_port => "#{udp_port_lo}00",
       
       auto_config: false
     
@@ -673,8 +673,8 @@ config.vm.define "spine01" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_hi}1",
-      :libvirt__tunnel_local_port => "#{udp_port_lo}1",
+      :libvirt__tunnel_port => "#{udp_port_hi}01",
+      :libvirt__tunnel_local_port => "#{udp_port_lo}01",
       
       auto_config: false
     
@@ -683,8 +683,8 @@ config.vm.define "spine01" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_hi}2",
-      :libvirt__tunnel_local_port => "#{udp_port_lo}2",
+      :libvirt__tunnel_port => "#{udp_port_hi}02",
+      :libvirt__tunnel_local_port => "#{udp_port_lo}02",
       
       auto_config: false
     
@@ -693,8 +693,8 @@ config.vm.define "spine01" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_hi}3",
-      :libvirt__tunnel_local_port => "#{udp_port_lo}3",
+      :libvirt__tunnel_port => "#{udp_port_hi}03",
+      :libvirt__tunnel_local_port => "#{udp_port_lo}03",
       
       auto_config: false
     
@@ -780,8 +780,8 @@ config.vm.define "spine02" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_hi}4",
-      :libvirt__tunnel_local_port => "#{udp_port_lo}4",
+      :libvirt__tunnel_port => "#{udp_port_hi}04",
+      :libvirt__tunnel_local_port => "#{udp_port_lo}04",
       
       auto_config: false
     
@@ -790,8 +790,8 @@ config.vm.define "spine02" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_hi}5",
-      :libvirt__tunnel_local_port => "#{udp_port_lo}5",
+      :libvirt__tunnel_port => "#{udp_port_hi}05",
+      :libvirt__tunnel_local_port => "#{udp_port_lo}05",
       
       auto_config: false
     
@@ -800,8 +800,8 @@ config.vm.define "spine02" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_hi}6",
-      :libvirt__tunnel_local_port => "#{udp_port_lo}6",
+      :libvirt__tunnel_port => "#{udp_port_hi}06",
+      :libvirt__tunnel_local_port => "#{udp_port_lo}06",
       
       auto_config: false
     
@@ -810,8 +810,8 @@ config.vm.define "spine02" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_hi}7",
-      :libvirt__tunnel_local_port => "#{udp_port_lo}7",
+      :libvirt__tunnel_port => "#{udp_port_hi}07",
+      :libvirt__tunnel_local_port => "#{udp_port_lo}07",
       
       auto_config: false
     
@@ -956,8 +956,8 @@ config.vm.define "leaf01" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_lo}8",
-      :libvirt__tunnel_local_port => "#{udp_port_hi}8",
+      :libvirt__tunnel_port => "#{udp_port_lo}08",
+      :libvirt__tunnel_local_port => "#{udp_port_hi}08",
       
       auto_config: false
     
@@ -966,8 +966,8 @@ config.vm.define "leaf01" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_lo}9",
-      :libvirt__tunnel_local_port => "#{udp_port_hi}9",
+      :libvirt__tunnel_port => "#{udp_port_lo}09",
+      :libvirt__tunnel_local_port => "#{udp_port_hi}09",
       
       auto_config: false
     
@@ -976,8 +976,8 @@ config.vm.define "leaf01" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_lo}0",
-      :libvirt__tunnel_local_port => "#{udp_port_hi}0",
+      :libvirt__tunnel_port => "#{udp_port_lo}00",
+      :libvirt__tunnel_local_port => "#{udp_port_hi}00",
       
       auto_config: false
     
@@ -986,8 +986,8 @@ config.vm.define "leaf01" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_lo}4",
-      :libvirt__tunnel_local_port => "#{udp_port_hi}4",
+      :libvirt__tunnel_port => "#{udp_port_lo}04",
+      :libvirt__tunnel_local_port => "#{udp_port_hi}04",
       
       auto_config: false
     
@@ -1094,8 +1094,8 @@ config.vm.define "leaf02" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_hi}8",
-      :libvirt__tunnel_local_port => "#{udp_port_lo}8",
+      :libvirt__tunnel_port => "#{udp_port_hi}08",
+      :libvirt__tunnel_local_port => "#{udp_port_lo}08",
       
       auto_config: false
     
@@ -1104,8 +1104,8 @@ config.vm.define "leaf02" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_hi}9",
-      :libvirt__tunnel_local_port => "#{udp_port_lo}9",
+      :libvirt__tunnel_port => "#{udp_port_hi}09",
+      :libvirt__tunnel_local_port => "#{udp_port_lo}09",
       
       auto_config: false
     
@@ -1113,8 +1113,8 @@ config.vm.define "leaf02" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_lo}1",
-      :libvirt__tunnel_local_port => "#{udp_port_hi}1",
+      :libvirt__tunnel_port => "#{udp_port_lo}01",
+      :libvirt__tunnel_local_port => "#{udp_port_hi}01",
       
       auto_config: false
     
@@ -1123,8 +1123,8 @@ config.vm.define "leaf02" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_lo}5",
-      :libvirt__tunnel_local_port => "#{udp_port_hi}5",
+      :libvirt__tunnel_port => "#{udp_port_lo}05",
+      :libvirt__tunnel_local_port => "#{udp_port_hi}05",
       
       auto_config: false
     
@@ -1250,8 +1250,8 @@ config.vm.define "leaf03" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_lo}2",
-      :libvirt__tunnel_local_port => "#{udp_port_hi}2",
+      :libvirt__tunnel_port => "#{udp_port_lo}02",
+      :libvirt__tunnel_local_port => "#{udp_port_hi}02",
       
       auto_config: false
     
@@ -1260,8 +1260,8 @@ config.vm.define "leaf03" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_lo}6",
-      :libvirt__tunnel_local_port => "#{udp_port_hi}6",
+      :libvirt__tunnel_port => "#{udp_port_lo}06",
+      :libvirt__tunnel_local_port => "#{udp_port_hi}06",
       
       auto_config: false
     
@@ -1387,8 +1387,8 @@ config.vm.define "leaf04" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_lo}3",
-      :libvirt__tunnel_local_port => "#{udp_port_hi}3",
+      :libvirt__tunnel_port => "#{udp_port_lo}03",
+      :libvirt__tunnel_local_port => "#{udp_port_hi}03",
       
       auto_config: false
     
@@ -1397,8 +1397,8 @@ config.vm.define "leaf04" do |device|
     
     device.vm.network "private_network",
       :libvirt__tunnel_type => 'udp',
-      :libvirt__tunnel_port => "#{udp_port_lo}7",
-      :libvirt__tunnel_local_port => "#{udp_port_hi}7",
+      :libvirt__tunnel_port => "#{udp_port_lo}07",
+      :libvirt__tunnel_local_port => "#{udp_port_hi}07",
       
       auto_config: false
     
