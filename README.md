@@ -94,14 +94,9 @@ Provision a Smaller Topology
 
 Customizing the Topology
 ------------------------
-    python build-topology.py topology-extended-lite.json
-
-### What's happening?
-A utility script called `build-topology.py` is provided that allows you to
-specify a JSON file that contains device and cabling definitions and outputs a
-Vagrantfile. The JSON specification allows you to specify which interfaces on
-the device to simulate, how much memory to allocate, and which cables are
-connected to which devices.
-
-Before building a new topology, be sure to destroy your active topology using
-`vagrant destroy -f`.
+This Vagrant topology is built using [Topology Converter](https://github.com/cumulusnetworks/topology_converter).
+To create your own topology for demo development, edit the file `topology.dot`
+and add the devices or cables you need and run
+[topology_converter.py](https://github.com/CumulusNetworks/topology_converter/blob/master/topology_converter.py)
+in this directory. For more details on how to make customized topologies, read
+that project's documentation.
