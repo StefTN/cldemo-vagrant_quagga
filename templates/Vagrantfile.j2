@@ -1,184 +1,99 @@
+# Created by Topology-Converter v{{ version }}
+#    using topology data from: {{ topology_file }}
+#    NOTE: in order to use this Vagrantfile you will need:
+#       -Vagrant(v1.7+) installed: http://www.vagrantup.com/downloads
+#       -Cumulus Plugin for Vagrant installed: $ vagrant plugin install vagrant-cumulus
+#       -the "helper_scripts" directory that comes packaged with topology-converter.py
+{% if provider == 'virtualbox' %}#       -Virtualbox installed: https://www.virtualbox.org/wiki/Downloads
+
+{% elif provider == 'libvirt' %}#        -Libvirt Installed -- guide to come
+#       -Vagrant-Libvirt Plugin installed: $ vagrant plugin install vagrant-libvirt
+#       -Boxes which have been mutated to support Libvirt -- see guide below:
+#            https://community.cumulusnetworks.com/cumulus/topics/converting-cumulus-vx-virtualbox-vagrant-box-gt-libvirt-vagrant-box
+#       -Start with \"vagrant up --provider=libvirt --no-parallel\n")
+
+raise "vagrant-libvirt plugin must be installed, try $ vagrant plugin install vagrant-libvirt" unless Vagrant.has_plugin? "vagrant-libvirt"
+{% endif %}raise "vagrant-cumulus plugin must be installed, try $ vagrant plugin install vagrant-cumulus" unless Vagrant.has_plugin? "vagrant-cumulus"
 
 Vagrant.configure("2") do |config|
-  wbid = 1
+  wbid = {{ epoch_time }}
+{% if provider == 'virtualbox' %}
   config.vm.provider "virtualbox" do |v|
     v.gui=false
-  end
+{% elif provider == 'libvirt' %}
+  config.vm.provider :libvirt do |domain|
+    # increase nic adapter count to be greater than 8 for all VMs.
+    domain.nic_adapter_count = 55{% endif %}
+  end{% if generate_ansible_hostfile == True %}
 
+  #Generating Ansible Host File at following location:
+  #    ./.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "./helper_scripts/empty_playbook.yml"
+  end{% endif %}
 
 {% for device in devices %}
-{% if device.category == 'oob-mgmt-server' %}
+  ##### DEFINE VM for {{ device.hostname }} #####
   config.vm.define "{{ device.hostname }}" do |device|
-      device.vm.provider "virtualbox" do |v|
-        v.name = "{{ device.hostname }}"
-        v.memory = {{ device.memory }}
-      end
-      device.vm.hostname = "{{ device.hostname }}"
-      device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.hostname = "{{ device.hostname }}"
+    device.vm.box = "{{ device.os }}"
+{% if provider == 'virtualbox' %}    device.vm.provider "virtualbox" do |v|
+      v.name = "{{ epoch_time }}_{{ device.hostname }}"{% elif provider == 'libvirt' %}    # disabling sync folder support on all VMs
+    #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
+    device.vm.synced_folder '.', '/vagrant', :disabled => true
+    device.vm.provider :libvirt do |v|{% endif %}
+      v.memory = {{ device.memory }}
+    end{% if synced_folder == False %}
+  config.vm.synced_folder ".", "/vagrant", disabled: true{% endif %}{% if device.ubuntu == True %}
+      # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+      device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"{% endif %}
+{% for link in device.interfaces %}
+      # link for {{ link }} --> {{ device.interfaces[link].remote_device }}:{{ device.interfaces[link].remote_interface }}
+      {% if provider == 'virtualbox' %}device.vm.network "private_network", virtualbox__intnet: "{wbid}_{{ device.interfaces[link].network }}", auto_config: false , :mac => "{{ device.interfaces[link].mac|replace(':', '') }}"
+      {% elif provider == 'libvirt' %}device.vm.network "private_network",
+            :mac => "{{ device.interfaces[link].mac|replace(':', '') }}",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '{{ device.interfaces[link].local_ip }}',
+            :libvirt__tunnel_local_port => '{{ device.interfaces[link].local_port }}',
+            :libvirt__tunnel_ip => '{{ device.interfaces[link].remote_ip }}',
+            :libvirt__tunnel_port => '{{ device.interfaces[link].remote_port }}',
+            :libvirt__iface_name => '{{ link }}',
+            auto_config: false{% endif %}{% endfor %}
 
-    {% for cable in device.eth_map %}
-    device.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_{{ device.cabling[cable].net_id }}", auto_config: false {% if cable in device.mac_map %}, :mac => "{{ device.mac_map[cable]|replace(':', '') }}"{% endif %}
-    {% endfor %}
+{% if provider == 'virtualbox' %}    device.vm.provider "virtualbox" do |vbox|
+{% for i in range(2, 2+device.interfaces.__len__()) %}      vbox.customize ['modifyvm', :id, '--nicpromisc{{i}}', 'allow-vms']
+{% endfor %}
+{% for i in range(1, 2+device.interfaces.__len__()) %}      vbox.customize ["modifyvm", :id, "--nictype{{i}}", "virtio"]
+{% endfor %}
+    end{% endif %}
 
-      device.vm.synced_folder ".", "/vagrant", disabled: true
-      device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
-      device.vm.provision :shell , path: "./helper_scripts/oob_server_config.sh"
-      device.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
-      device.vm.provision "file", source: "./helper_scripts/autogenerated/{{ device.hostname }}_remap_eth", destination: "/home/vagrant/remap_eth"
-      device.vm.provision :shell , inline: "mv /home/vagrant/rename_eth_swp /etc/init.d/rename_eth_swp"
-      device.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
-      device.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
-      device.vm.provision :shell , inline: "sudo sed -i '/exit 0/d' /etc/rc.local "
-      device.vm.provision :shell , inline: "sudo echo '/etc/init.d/rename_eth_swp start' >> /etc/rc.local "
-      device.vm.provision :shell , inline: "sudo echo 'exit 0' >> /etc/rc.local "
-      device.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
+      # Run Any Extra Config
+{% if device.config is defined %}      device.vm.provision :shell , path: "{{ device.config }}"{% endif %}
 
-      device.vm.provider "virtualbox" do |vbox|
-        {% for i in range(2, 2+device.eth_map.__len__()) %}
-        vbox.customize ['modifyvm', :id, '--nicpromisc{{i}}', 'allow-vms']
-        {% endfor %}
-        {% for i in range(1, 2+device.eth_map.__len__()) %}
-        vbox.customize ["modifyvm", :id, "--nictype{{i}}", "virtio"]
-        {% endfor %}
-      end
+{% if device.playbook is defined %}      device.vm.provision "ansible" do |ansible|
+          ansible.playbook = "./playbook/site.yml"
+          ansible.extra_vars = {wbench_hosts: {
+              {% for device2 in devices %}
+                  {{ device2.hostname}}: {ip: "{{device2.mgmt_ip}}", mac: "{{ device2.interfaces['eth0'].mac }}"},
+              {% endfor %}
+                              }}
+        end{% endif %}
 
-      device.vm.provision "ansible" do |ansible|
-        ansible.playbook = "./playbook/site.yml"
-        ansible.extra_vars = {wbench_hosts: {
-            {% for device2 in devices %}
-            {% if "eth0" in device2.mac_map %}
-                {{ device2.hostname}}: {ip: "{{device2.mgmt_ip}}", mac: "{{device2.mac_map['eth0']}}"},
-            {% endif %}
-            {% endfor %}
-                            }}
-      end
+      # Apply the interface re-map
+{% if device.os == 'CumulusCommunity/cumulus-vx' %}        #Disable default remap on Cumulus VX
+      device.vm.provision :shell , inline: "mv /etc/init.d/rename_eth_swp /etc/init.d/rename_eth_swp.old"{% endif %}
+      device.vm.provision "file", source: "{{ script_storage }}/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
+      device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
+{% for link in device.interfaces %}      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a {{ device.interfaces[link].mac }} {{ link }}"
+{% endfor %}
+
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm {% if device.vagrant==false %}-nv{% endif%}"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
+      device.vm.provision :shell , inline: "reboot"
+
+
+
   end
-{% elif device.category == 'oob-mgmt-switch' %}
-config.vm.define "{{ device.hostname }}" do |device|
-    device.vm.provider "virtualbox" do |v|
-      v.name = "{{ device.hostname }}"
-      v.memory = {{ device.memory }}
-    end
-    device.vm.hostname = "{{ device.hostname }}"
-    device.vm.box = "CumulusCommunity/cumulus-vx"
-
-        {% for cable in device.eth_map %}
-        device.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_{{ device.cabling[cable].net_id }}", auto_config: false {% if cable in device.mac_map %}, :mac => "{{ device.mac_map[cable]|replace(':', '') }}"{% endif %}
-        {% endfor %}
-
-    # Disabling the default synced folder
-    device.vm.synced_folder ".", "/vagrant", disabled: true
-    device.vm.provision :shell , path: "./helper_scripts/oob_switch_config.sh"
-    device.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
-    device.vm.provision "file", source: "./helper_scripts/autogenerated/{{ device.hostname }}_remap_eth", destination: "/home/vagrant/remap_eth"
-    device.vm.provision :shell , inline: "mv /home/vagrant/rename_eth_swp /etc/init.d/rename_eth_swp"
-    device.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
-    device.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
-    device.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
-
-    device.vm.provider "virtualbox" do |vbox|
-        {% for i in range(2, 2+device.eth_map.__len__()) %}
-        vbox.customize ['modifyvm', :id, '--nicpromisc{{i}}', 'allow-vms']
-        {% endfor %}
-    end
-end
-{% elif device.category == 'internet' %}
-
-config.vm.define "{{ device.hostname }}" do |device|
-    device.vm.provider "virtualbox" do |v|
-      v.name = "{{ device.hostname }}"
-      v.memory = {{ device.memory }}
-    end
-    device.vm.hostname = "{{ device.hostname }}"
-    device.vm.box = "CumulusCommunity/cumulus-vx"
-
-        {% for cable in device.eth_map %}
-        device.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_{{ device.cabling[cable].net_id }}", auto_config: false {% if cable in device.mac_map %}, :mac => "{{ device.mac_map[cable]|replace(':', '') }}"{% endif %}
-        {% endfor %}
-
-    device.vm.synced_folder ".", "/vagrant", disabled: true
-    device.vm.provision :shell , path: "./helper_scripts/internet_config.sh"
-    device.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
-    device.vm.provision "file", source: "./helper_scripts/autogenerated/{{ device.hostname }}_remap_eth", destination: "/home/vagrant/remap_eth"
-    device.vm.provision :shell , inline: "mv /home/vagrant/rename_eth_swp /etc/init.d/rename_eth_swp"
-    device.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
-    device.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
-    device.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
-
-    device.vm.provider "virtualbox" do |vbox|
-        {% for i in range(2, 2+device.eth_map.__len__()) %}
-        vbox.customize ['modifyvm', :id, '--nicpromisc{{i}}', 'allow-vms']
-        {% endfor %}
-    end
-end
-
-{% elif device.category == 'switch' %}
-config.vm.define "{{ device.hostname }}" do |device|
-    device.vm.provider "virtualbox" do |v|
-      v.name = "{{ device.hostname }}"
-      v.memory = {{ device.memory }}
-    end
-    device.vm.hostname = "{{ device.hostname }}"
-    device.vm.box = "CumulusCommunity/cumulus-vx"
-
-        {% for cable in device.eth_map %}
-        device.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_{{ device.cabling[cable].net_id }}", auto_config: false {% if cable in device.mac_map %}, :mac => "{{ device.mac_map[cable]|replace(':', '') }}"{% endif %}
-        {% endfor %}
-
-    # Disabling the default synced folder
-    device.vm.synced_folder ".", "/vagrant", disabled: true
-    device.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
-    device.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
-    device.vm.provision "file", source: "./helper_scripts/autogenerated/{{ device.hostname }}_remap_eth", destination: "/home/vagrant/remap_eth"
-    device.vm.provision :shell , inline: "mv /home/vagrant/rename_eth_swp /etc/init.d/rename_eth_swp"
-    device.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
-    device.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
-    device.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
-
-    device.vm.provider "virtualbox" do |vbox|
-        {% for i in range(2, 2+device.eth_map.__len__()) %}
-        vbox.customize ['modifyvm', :id, '--nicpromisc{{i}}', 'allow-vms']
-        {% endfor %}
-    end
-
-    device.vm.provision :shell , path: "./helper_scripts/post_config_switch.sh"
-end
-
-{% elif device.category == 'server' %}
-config.vm.define "{{ device.hostname }}" do |device|
-    device.vm.provider "virtualbox" do |v|
-      v.name = "{{ device.hostname }}"
-      v.memory = {{ device.memory }}
-    end
-    device.vm.hostname = "{{ device.hostname }}"
-    device.vm.box = "boxcutter/ubuntu1404"
-
-        {% for cable in device.eth_map %}
-        device.vm.network "private_network", virtualbox__intnet: "net_#{wbid}_{{ device.cabling[cable].net_id }}", auto_config: false {% if cable in device.mac_map %}, :mac => "{{ device.mac_map[cable]|replace(':', '') }}"{% endif %}
-        {% endfor %}
-
-    device.vm.synced_folder ".", "/vagrant", disabled: true
-    device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
-    device.vm.provision :shell , path: "./helper_scripts/pre_config.sh"
-    device.vm.provision "file", source: "./helper_scripts/rename_eth_swp", destination: "/home/vagrant/rename_eth_swp"
-    device.vm.provision "file", source: "./helper_scripts/autogenerated/{{ device.hostname }}_remap_eth", destination: "/home/vagrant/remap_eth"
-    device.vm.provision :shell , inline: "mv /home/vagrant/rename_eth_swp /etc/init.d/rename_eth_swp"
-    device.vm.provision :shell , inline: "mv /home/vagrant/remap_eth /etc/default/remap_eth"
-    device.vm.provision :shell , inline: "chmod 755 /etc/init.d/rename_eth_swp"
-    device.vm.provision :shell , inline: "sudo sed -i '/exit 0/d' /etc/rc.local "
-    device.vm.provision :shell , inline: "sudo echo '/etc/init.d/rename_eth_swp start' >> /etc/rc.local "
-    device.vm.provision :shell , inline: "sudo echo 'exit 0' >> /etc/rc.local "
-    device.vm.provision :shell , inline: "/etc/init.d/rename_eth_swp verbose"
-
-    device.vm.provider "virtualbox" do |vbox|
-        {% for i in range(2, 2+device.eth_map.__len__()) %}
-        vbox.customize ['modifyvm', :id, '--nicpromisc{{i}}', 'allow-vms']
-        {% endfor %}
-    end
-
-    device.vm.provision :shell , path: "./helper_scripts/post_config_server.sh"
-end
-{% endif %}
 {% endfor %}
 
 

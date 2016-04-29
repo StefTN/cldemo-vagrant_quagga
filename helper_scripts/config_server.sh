@@ -27,7 +27,7 @@ chmod 700 -R /home/cumulus
 chown cumulus:cumulus -R /home/cumulus
 chsh -s /bin/bash cumulus
 sed "s/PasswordAuthentication no/PasswordAuthentication yes/" -i /etc/ssh/sshd_config
-reboot
+
 
 echo "#################################"
 echo "   Finished"

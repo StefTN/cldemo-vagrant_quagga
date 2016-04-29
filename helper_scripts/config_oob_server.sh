@@ -5,7 +5,6 @@
 echo "#################################"
 echo "  Running OOB server config"
 echo "#################################"
-
 sudo su
 
 #Replace existing network interfaces file

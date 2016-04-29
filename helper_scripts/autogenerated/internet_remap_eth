@@ -1,6 +1,0 @@
-MAP="
-eth0=swp48
-eth1=eth0
-eth2=swp1
-eth3=swp2
-"
