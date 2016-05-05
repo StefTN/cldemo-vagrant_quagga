@@ -1,5 +1,5 @@
-# Created by Topology-Converter v4.0.3
-#    using topology data from: topology.dot
+# Created by Topology-Converter v4.0.5
+#    using topology data from: ./topology.dot
 #    NOTE: in order to use this Vagrantfile you will need:
 #       -Vagrant(v1.7+) installed: http://www.vagrantup.com/downloads
 #       -Cumulus Plugin for Vagrant installed: $ vagrant plugin install vagrant-cumulus
@@ -9,7 +9,7 @@
 raise "vagrant-cumulus plugin must be installed, try $ vagrant plugin install vagrant-cumulus" unless Vagrant.has_plugin? "vagrant-cumulus"
 
 Vagrant.configure("2") do |config|
-  wbid = 1461950669
+  wbid = 1462470800
 
   config.vm.provider "virtualbox" do |v|
     v.gui=false
@@ -23,10 +23,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "oob-mgmt-server"
     device.vm.box = "boxcutter/ubuntu1404"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_oob-mgmt-server"
+      v.name = "1462470800_oob-mgmt-server"
       v.memory = 1024
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth1 --> oob-mgmt-switch:swp1
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net52", auto_config: false , :mac => "44383900005B"
@@ -39,6 +39,9 @@ Vagrant.configure("2") do |config|
       vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
 
     end
+
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
 
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_oob_server.sh"
@@ -128,10 +131,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "oob-mgmt-switch"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_oob-mgmt-switch"
+      v.name = "1462470800_oob-mgmt-switch"
       v.memory = 256
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp10 --> spine01:eth0
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net30", auto_config: false , :mac => "443839000037"
@@ -215,6 +218,9 @@ Vagrant.configure("2") do |config|
 
     end
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_oob_switch.sh"
 
@@ -255,10 +261,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "exit02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_exit02"
+      v.name = "1462470800_exit02"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth0 --> oob-mgmt-switch:swp13
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net47", auto_config: false , :mac => "A00000000042"
@@ -312,6 +318,9 @@ Vagrant.configure("2") do |config|
 
     end
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -346,10 +355,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "exit01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_exit01"
+      v.name = "1462470800_exit01"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp1 --> edge01:eth1
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net45", auto_config: false , :mac => "443839000051"
@@ -403,6 +412,9 @@ Vagrant.configure("2") do |config|
 
     end
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -437,10 +449,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "spine02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_spine02"
+      v.name = "1462470800_spine02"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp32 --> spine01:swp32
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net35", auto_config: false , :mac => "443839000040"
@@ -494,6 +506,9 @@ Vagrant.configure("2") do |config|
 
     end
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -528,10 +543,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "spine01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_spine01"
+      v.name = "1462470800_spine01"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp32 --> spine02:swp32
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net35", auto_config: false , :mac => "44383900003F"
@@ -585,6 +600,9 @@ Vagrant.configure("2") do |config|
 
     end
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -619,10 +637,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "leaf04"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_leaf04"
+      v.name = "1462470800_leaf04"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp50 --> leaf03:swp50
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net4", auto_config: false , :mac => "443839000007"
@@ -686,6 +704,9 @@ Vagrant.configure("2") do |config|
 
     end
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -722,10 +743,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "leaf02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_leaf02"
+      v.name = "1462470800_leaf02"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp50 --> leaf01:swp50
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net1", auto_config: false , :mac => "443839000002"
@@ -789,6 +810,9 @@ Vagrant.configure("2") do |config|
 
     end
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -825,10 +849,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "leaf03"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_leaf03"
+      v.name = "1462470800_leaf03"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp50 --> leaf04:swp50
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net4", auto_config: false , :mac => "443839000006"
@@ -892,6 +916,9 @@ Vagrant.configure("2") do |config|
 
     end
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -928,10 +955,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "leaf01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_leaf01"
+      v.name = "1462470800_leaf01"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp50 --> leaf02:swp50
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net1", auto_config: false , :mac => "443839000001"
@@ -995,6 +1022,9 @@ Vagrant.configure("2") do |config|
 
     end
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -1031,10 +1061,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "edge01"
     device.vm.box = "boxcutter/ubuntu1404"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_edge01"
+      v.name = "1462470800_edge01"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth2 --> exit02:swp1
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net7", auto_config: false , :mac => "44383900000C"
@@ -1057,6 +1087,9 @@ Vagrant.configure("2") do |config|
       vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
 
     end
+
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
 
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
@@ -1085,10 +1118,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "server01"
     device.vm.box = "boxcutter/ubuntu1404"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_server01"
+      v.name = "1462470800_server01"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth2 --> leaf02:swp1
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net13", auto_config: false , :mac => "443839000017"
@@ -1111,6 +1144,9 @@ Vagrant.configure("2") do |config|
       vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
 
     end
+
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
 
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
@@ -1139,10 +1175,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "server03"
     device.vm.box = "boxcutter/ubuntu1404"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_server03"
+      v.name = "1462470800_server03"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth2 --> leaf04:swp1
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net55", auto_config: false , :mac => "443839000061"
@@ -1165,6 +1201,9 @@ Vagrant.configure("2") do |config|
       vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
 
     end
+
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
 
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
@@ -1193,10 +1232,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "server02"
     device.vm.box = "boxcutter/ubuntu1404"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_server02"
+      v.name = "1462470800_server02"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth2 --> leaf02:swp2
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net15", auto_config: false , :mac => "44383900001B"
@@ -1219,6 +1258,9 @@ Vagrant.configure("2") do |config|
       vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
 
     end
+
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
 
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
@@ -1247,10 +1289,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "server04"
     device.vm.box = "boxcutter/ubuntu1404"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_server04"
+      v.name = "1462470800_server04"
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth2 --> leaf04:swp2
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net26", auto_config: false , :mac => "443839000030"
@@ -1273,6 +1315,9 @@ Vagrant.configure("2") do |config|
       vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
 
     end
+
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
 
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
@@ -1301,10 +1346,10 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "internet"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1461950669_internet"
+      v.name = "1462470800_internet"
       v.memory = 256
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp2 --> exit02:swp44
       device.vm.network "private_network", virtualbox__intnet: "{wbid}_net38", auto_config: false , :mac => "443839000044"
@@ -1327,6 +1372,9 @@ Vagrant.configure("2") do |config|
       vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
 
     end
+
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
 
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_internet.sh"
