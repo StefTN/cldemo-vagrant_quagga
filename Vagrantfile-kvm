@@ -1,4 +1,4 @@
-# Created by Topology-Converter v4.0.3
+# Created by Topology-Converter v4.0.5
 #    using topology data from: topology.dot
 #    NOTE: in order to use this Vagrantfile you will need:
 #       -Vagrant(v1.7+) installed: http://www.vagrantup.com/downloads
@@ -14,7 +14,7 @@ raise "vagrant-libvirt plugin must be installed, try $ vagrant plugin install va
 raise "vagrant-cumulus plugin must be installed, try $ vagrant plugin install vagrant-cumulus" unless Vagrant.has_plugin? "vagrant-cumulus"
 
 Vagrant.configure("2") do |config|
-  wbid = 1461950628
+  wbid = 1462814926
 
   config.vm.provider :libvirt do |domain|
     # increase nic adapter count to be greater than 8 for all VMs.
@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 1024
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth1 --> oob-mgmt-switch:swp1
       device.vm.network "private_network",
@@ -49,6 +49,9 @@ Vagrant.configure("2") do |config|
             auto_config: false
 
 
+
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
 
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_oob_server.sh"
@@ -143,7 +146,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 256
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp10 --> spine01:eth0
       device.vm.network "private_network",
@@ -298,6 +301,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_oob_switch.sh"
 
@@ -343,7 +349,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth0 --> oob-mgmt-switch:swp13
       device.vm.network "private_network",
@@ -438,6 +444,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -477,7 +486,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp1 --> edge01:eth1
       device.vm.network "private_network",
@@ -572,6 +581,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -611,7 +623,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp32 --> spine01:swp32
       device.vm.network "private_network",
@@ -706,6 +718,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -745,7 +760,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp32 --> spine02:swp32
       device.vm.network "private_network",
@@ -840,6 +855,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -879,7 +897,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp50 --> leaf03:swp50
       device.vm.network "private_network",
@@ -994,6 +1012,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -1035,7 +1056,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp50 --> leaf01:swp50
       device.vm.network "private_network",
@@ -1150,6 +1171,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -1191,7 +1215,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp50 --> leaf04:swp50
       device.vm.network "private_network",
@@ -1306,6 +1330,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -1347,7 +1374,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp50 --> leaf02:swp50
       device.vm.network "private_network",
@@ -1462,6 +1489,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_switch.sh"
 
@@ -1503,7 +1533,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth2 --> exit02:swp1
       device.vm.network "private_network",
@@ -1538,6 +1568,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
 
@@ -1570,7 +1603,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth2 --> leaf02:swp1
       device.vm.network "private_network",
@@ -1605,6 +1638,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
 
@@ -1637,7 +1673,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth2 --> leaf04:swp1
       device.vm.network "private_network",
@@ -1672,6 +1708,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
 
@@ -1704,7 +1743,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth2 --> leaf02:swp2
       device.vm.network "private_network",
@@ -1739,6 +1778,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
 
@@ -1771,7 +1813,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 512
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth2 --> leaf04:swp2
       device.vm.network "private_network",
@@ -1806,6 +1848,9 @@ Vagrant.configure("2") do |config|
 
 
 
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
 
@@ -1838,7 +1883,7 @@ Vagrant.configure("2") do |config|
     device.vm.provider :libvirt do |v|
       v.memory = 256
     end
-  config.vm.synced_folder ".", "/vagrant", disabled: true
+    device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for swp2 --> exit02:swp44
       device.vm.network "private_network",
@@ -1872,6 +1917,9 @@ Vagrant.configure("2") do |config|
             auto_config: false
 
 
+
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
 
       # Run Any Extra Config
       device.vm.provision :shell , path: "./helper_scripts/config_internet.sh"
