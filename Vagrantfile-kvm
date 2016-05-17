@@ -14,7 +14,7 @@ raise "vagrant-libvirt plugin must be installed, try $ vagrant plugin install va
 raise "vagrant-cumulus plugin must be installed, try $ vagrant plugin install vagrant-cumulus" unless Vagrant.has_plugin? "vagrant-cumulus"
 
 Vagrant.configure("2") do |config|
-  wbid = 1462814926
+  wbid = 10
 
   config.vm.provider :libvirt do |domain|
     # increase nic adapter count to be greater than 8 for all VMs.
