@@ -27,12 +27,11 @@ available in your distribution's package manager may be out of date, so
 installing via the preferred sources is recommended. This example was last
 tested with **Vagrant 1.8** and **Ansible 2.0.1**.
 
-
 Provision the topology and log in
 ---------------------------------
     git clone https://github.com/cumulusnetworks/cldemo-vagrant
     cd cldemo-vagrant
-    vagrant plugin install cumulus-vagrant
+    vagrant plugin install vagrant-cumulus
     vagrant up
     vagrant ssh oob-mgmt-server
     sudo su - cumulus
