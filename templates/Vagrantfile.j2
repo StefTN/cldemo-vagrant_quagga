@@ -16,7 +16,7 @@ raise "vagrant-libvirt plugin must be installed, try $ vagrant plugin install va
 {% endif %}raise "vagrant-cumulus plugin must be installed, try $ vagrant plugin install vagrant-cumulus" unless Vagrant.has_plugin? "vagrant-cumulus"
 
 Vagrant.configure("2") do |config|
-  wbid = {{ epoch_time }}
+  wbid = 1
 {% if provider == 'virtualbox' %}
   config.vm.provider "virtualbox" do |v|
     v.gui=false
@@ -45,16 +45,16 @@ Vagrant.configure("2") do |config|
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
       device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"{% endif %}
 {% for link in device.interfaces %}
-      # link for {{ link }} --> {{ device.interfaces[link].remote_device }}:{{ device.interfaces[link].remote_interface }}
-      {% if provider == 'virtualbox' %}device.vm.network "private_network", virtualbox__intnet: "#{wbid}_{{ device.interfaces[link].network }}", auto_config: false , :mac => "{{ device.interfaces[link].mac|replace(':', '') }}"
+      # link for {{ link.local_interface }} --> {{ link.remote_device }}:{{ link.remote_interface }}
+      {% if provider == 'virtualbox' %}device.vm.network "private_network", virtualbox__intnet: "#{wbid}_{{ link.network }}", auto_config: false , :mac => "{{ link.mac|replace(':', '') }}"
       {% elif provider == 'libvirt' %}device.vm.network "private_network",
-            :mac => "{{ device.interfaces[link].mac|replace(':', '') }}",
+            :mac => "{{ link.mac|replace(':', '') }}",
             :libvirt__tunnel_type => 'udp',
-            :libvirt__tunnel_local_ip => '{{ device.interfaces[link].local_ip }}',
-            :libvirt__tunnel_local_port => '{{ device.interfaces[link].local_port }}',
-            :libvirt__tunnel_ip => '{{ device.interfaces[link].remote_ip }}',
-            :libvirt__tunnel_port => '{{ device.interfaces[link].remote_port }}',
-            :libvirt__iface_name => '{{ link }}',
+            :libvirt__tunnel_local_ip => '{{ link.local_ip }}',
+            :libvirt__tunnel_local_port => '{{ link.local_port }}',
+            :libvirt__tunnel_ip => '{{ link.remote_ip }}',
+            :libvirt__tunnel_port => '{{ link.remote_port }}',
+            :libvirt__iface_name => '{{ link.local_interface }}',
             auto_config: false{% endif %}{% endfor %}
 
 {% if provider == 'virtualbox' %}    device.vm.provider "virtualbox" do |vbox|
@@ -86,7 +86,7 @@ Vagrant.configure("2") do |config|
       device.vm.provision :shell , inline: "rm -f /etc/init.d/rename_eth_swp"{% endif %}
       device.vm.provision "file", source: "{{ script_storage }}/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-{% for link in device.interfaces %}      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a {{ device.interfaces[link].mac }} {{ link }}"
+{% for link in device.interfaces %}      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a {{ link.mac }} {{ link.local_interface }}"
 {% endfor %}
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm {% if device.vagrant %}{% if device.vagrant=='eth0' %}-nv{%else%}--vagrant-name={{device.vagrant}}{% endif%}{% endif%}"
