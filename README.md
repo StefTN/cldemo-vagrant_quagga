@@ -5,7 +5,7 @@
 
 
 Virtualizing a Network with Cumulus VX
-======================================
+---------------------------------------
 [Cumulus VX](https://cumulusnetworks.com/cumulus-vx/) is a virtual machine
 produced by Cumulus Networks to simulate the user experience of configuring a
 switch using the Cumulus Linux network operating system.
@@ -14,13 +14,13 @@ deploying large topologies of virtual machines. Vagrant and Cumulus VX can be
 used together to build virtual simulations of production networks to validate
 configurations, develop automation code, and simulate failure scenarios.
 
-## Using the Framework
-The Cumulus Linux Demo Framework is built upon the Reference Topology. Using this topology, it is possible to demonstrate any feature in Cumulus Linux. It may not be necessary to use all links or all devices but they're present if needed.
+Using the Framework
+========================
+The Cumulus Linux Demo Framework is built upon the Reference Topology. Using this topology, it is possible to demonstrate any feature in Cumulus Linux. It may not be necessary to use all links or all devices but they're present if needed by a particular demo.
 
 This example demonstrates how to build a two-tier spine-leaf network with a
 dedicated out-of-band management network. The topology built in this demo is
-the [reference topology](https://github.com/CumulusNetworks/cldemo-vagrant/blob/master/cldemo-topology.png)
-used for all Cumulus Networks documentation, demos, and course materials, so
+the reference topology used for all Cumulus Networks documentation, demos, and course materials, so
 many demos will require you to build a topology using the code available in this
 repository.
 
@@ -50,10 +50,9 @@ Note that due to the way we simulate the out of band network, it is not possible
 to use `vagrant ssh` to access in-band devices like leaf01 and leaf02. These
 devices **must** be accessed via the out-of-band management server.
 
-
 ### Prerequisites
 
-Before running this demo, install
+Before running this demo or any of the other demos in the list below, install
 [VirtualBox](https://www.virtualbox.org/manual/ch02.html),
 [Vagrant](https://www.vagrantup.com/downloads.html), and
 [Ansible](https://docs.ansible.com/ansible/intro_installation.html) using the
@@ -61,7 +60,6 @@ installation instructions from their website. The version of Vagrant and Ansible
 available in your distribution's package manager may be out of date, so
 installing via the preferred sources is recommended. This example was last
 tested with **Vagrant 1.8** and **Ansible 2.0.1**.
-
 
 ### Available Demos
 
@@ -81,8 +79,7 @@ Getting Started
 ------------------
 To use one of the demos above, follow the instructions in the README for each repository. 
 
-To use the reference topology by itself without any of the above demos, follow the instructions below.
-
+To use the reference topology by itself outside of the above demos, follow the instructions below.
 
 ## Provision the topology and logging in
 
