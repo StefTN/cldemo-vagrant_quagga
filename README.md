@@ -1,3 +1,8 @@
+# Cumulus Linux Demo Framework
+![Reference Topology](https://github.com/CumulusNetworks/cldemo-vagrant/blob/master/cldemo-topology.png "Reference Topology")
+[See the Layer 3 IP addressing](https://raw.githubusercontent.com/CumulusNetworks/cldemo-vagrant/master/cldemo_topology_l3.png)
+
+
 Virtualizing a Network with Cumulus VX
 ======================================
 [Cumulus VX](https://cumulusnetworks.com/cumulus-vx/) is a virtual machine
@@ -8,6 +13,9 @@ deploying large topologies of virtual machines. Vagrant and Cumulus VX can be
 used together to build virtual simulations of production networks to validate
 configurations, develop automation code, and simulate failure scenarios.
 
+## Using the Framework
+The Cumulus Linux Demo Framework is built upon the Reference Topology. Using this topology, it is possible to demonstrate any feature in Cumulus Linux. It may not be necessary to use all links or all devices but they're present if needed.
+
 This example demonstrates how to build a two-tier spine-leaf network with a
 dedicated out-of-band management network. The topology built in this demo is
 the [reference topology](https://github.com/CumulusNetworks/cldemo-vagrant/blob/master/cldemo-topology.png)
@@ -15,28 +23,6 @@ used for all Cumulus Networks documentation, demos, and course materials, so
 many demos will require you to build a topology using the code available in this
 repository.
 
-
-Prerequisites
--------------
-Before running this demo, install
-[VirtualBox](https://www.virtualbox.org/manual/ch02.html),
-[Vagrant](https://www.vagrantup.com/downloads.html), and
-[Ansible](https://docs.ansible.com/ansible/intro_installation.html) using the
-installation instructions from their website. The version of Vagrant and Ansible
-available in your distribution's package manager may be out of date, so
-installing via the preferred sources is recommended. This example was last
-tested with **Vagrant 1.8** and **Ansible 2.0.1**.
-
-Provision the topology and log in
----------------------------------
-    git clone https://github.com/cumulusnetworks/cldemo-vagrant
-    cd cldemo-vagrant
-    vagrant plugin install vagrant-cumulus
-    vagrant up
-    vagrant ssh oob-mgmt-server
-    sudo su - cumulus
-
-### What's happening?
 Vagrant topologies are described in a Vagrantfile, which is a Ruby program that
 tells Vagrant which devices to create and how to configure their networks.
 `vagrant up` will execute the Vagrantfile and create the reference topology
@@ -64,12 +50,50 @@ to use `vagrant ssh` to access in-band devices like leaf01 and leaf02. These
 devices **must** be accessed via the out-of-band management server.
 
 
-Factory-reset a device
-----------------------
-    vagrant destroy -f leaf01
-    vagrant up leaf01
+### Prerequisites
 
-### What's happening?
+Before running this demo, install
+[VirtualBox](https://www.virtualbox.org/manual/ch02.html),
+[Vagrant](https://www.vagrantup.com/downloads.html), and
+[Ansible](https://docs.ansible.com/ansible/intro_installation.html) using the
+installation instructions from their website. The version of Vagrant and Ansible
+available in your distribution's package manager may be out of date, so
+installing via the preferred sources is recommended. This example was last
+tested with **Vagrant 1.8** and **Ansible 2.0.1**.
+
+
+### Available Demos
+
+Typically demos are built upon the Reference Topology shown here using this repository as a starting point and layering device configuration on top.
+
+* **[Cldemo-docker-quagga](https://github.com/CumulusNetworks/cldemo-docker-quagga)** -- This demo shows off two ways of putting Quagga into a Docker container to do Layer 3 networking on the hosts.
+* **[Cldemo-automation-puppet](https://github.com/CumulusNetworks/cldemo-automation-puppet)** -- This demo demonstrates how to write a manifest using Puppet to configure switches running Cumulus Linux and servers running Ubuntu.
+* **[Cldemo-automation-ansible](https://github.com/CumulusNetworks/cldemo-automation-ansible)** -- This demo demonstrates how to write a playbook using Ansible to configure switches running Cumulus Linux and servers running Ubuntu.
+* **[Cldemo-automation-chef](https://github.com/CumulusNetworks/cldemo-automation-chef)** -- This demo demonstrates how to write a set of cookbooks using Chef to configure switches running Cumulus Linux and servers running Ubuntu. 
+* **[Cldemo-onie-ztp-ptm](https://github.com/CumulusNetworks/cldemo-onie-ztp-ptm)** -- This demo demonstrates how to configure an out of band management network to automatically install and configure Cumulus Linux using Zero Touch Provisioning, and validate the cabling of the switches using Prescriptive Topology Manager.
+* **[Cldemo-config-routing](https://github.com/CumulusNetworks/cldemo-config-routing)** -- This Github repository contains the configuration files necessary for setting up Layer 3 routing on a CLOS topology using Cumulus Linux and Quagga.
+* **[Cldemo-rdnbr-ansible](https://github.com/CumulusNetworks/cldemo-rdnbr-ansible)** -- COMING SOON -- This demo shows a topology using 'redistribute-neighbor' to add host reachability directly into a BGP routed fabric. 
+* **[Cldemo-roh-ansible](https://github.com/CumulusNetworks/cldemo-roh-ansible)** -- COMING SOON -- This demo shows a topology using 'Routing on the Host' to add host reachability directly into a BGP routed fabric.
+* **[Cldemo-config-mlag](https://github.com/CumulusNetworks/cldemo-config-mlag)** -- COMING SOON
+
+Getting Started
+------------------
+To use one of the demos above, follow the instructions in the README for each repository. 
+
+To use the reference topology by itself without any of the above demos, follow the instructions below.
+
+
+## Provision the topology and logging in
+
+    git clone https://github.com/cumulusnetworks/cldemo-vagrant
+    cd cldemo-vagrant
+    vagrant plugin install vagrant-cumulus
+    vagrant up
+    vagrant ssh oob-mgmt-server
+    sudo su - cumulus
+
+
+### Managing the VMs in the Topology
 The topology built using this Vagrantfile does not support `vagrant halt` or
 `vagrant resume` for in-band devices. This means that in order to keep your
 configuration across Vagrant sessions, you should either save your configuration
@@ -79,6 +103,11 @@ in a repository using an automation tool such as Ansible, Puppet, or Chef
 For VirtualBox, these commands are:
     * VBoxManage controlvm leaf01 poweroff
     * VBoxManage startvm leaf01 --type headless
+
+Factory-reset a device
+----------------------
+    vagrant destroy -f leaf01
+    vagrant up leaf01
 
 
 Destroy the entire topology
@@ -99,3 +128,11 @@ and add the devices or cables you need and run
 [topology_converter.py](https://github.com/CumulusNetworks/topology_converter/blob/master/topology_converter.py)
 in this directory. For more details on how to make customized topologies, read
 that project's documentation.
+
+![Cumulus icon](http://cumulusnetworks.com/static/cumulus/img/logo_2014.png)
+
+### Cumulus Linux
+
+Cumulus Linux is a software distribution that runs on top of industry standard networking hardware. It enables the latest Linux applications and automation tools on networking gear while delivering new levels of innovation and ﬂexibility to the data center.
+
+For further details please see: [cumulusnetworks.com](http://www.cumulusnetworks.com)
