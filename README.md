@@ -1,6 +1,7 @@
 # Cumulus Linux Demo Framework
 ![Reference Topology](https://github.com/CumulusNetworks/cldemo-vagrant/blob/master/cldemo_topology.png "Reference Topology")
-[See the Layer 3 IP addressing](https://raw.githubusercontent.com/CumulusNetworks/cldemo-vagrant/master/cldemo_topology_l3.png)
+
+**[See the Layer 3 IP addressing](https://raw.githubusercontent.com/CumulusNetworks/cldemo-vagrant/master/cldemo_topology_l3.png)**
 
 
 Virtualizing a Network with Cumulus VX
