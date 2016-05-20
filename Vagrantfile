@@ -19,20 +19,248 @@ if grep -q -i 'cumulus' /etc/lsb-release &> /dev/null; then
         chmod 755 /bin/cl-acltool
 
         echo "  adding fake cl-license..."
-        echo -e "#!/bin/bash\nexit 0" > /bin/cl-license
+        cat > /bin/cl-license <<'EOF'
+#! /bin/bash
+#-------------------------------------------------------------------------------
+#
+# Copyright 2013 Cumulus Networks, Inc.  All rights reserved
+#
+
+URL_RE='^http://.*/.*'
+
+#Legacy symlink
+if echo "$0" | grep -q "cl-license-install$"; then
+    exec cl-license -i $*
+fi
+
+LIC_DIR="/etc/cumulus"
+PERSIST_LIC_DIR="/mnt/persist/etc/cumulus"
+
+#Print current license, if any.
+if [ -z "$1" ]; then
+    if [ ! -f "$LIC_DIR/.license.txt" ]; then
+        echo "No license installed!" >&2
+        exit 20
+    fi
+    cat "$LIC_DIR/.license.txt"
+    exit 0
+fi
+
+#Must be root beyond this point
+if (( EUID != 0 )); then
+   echo "You must have root privileges to run this command." 1>&2
+   exit 100
+fi
+
+#Delete license
+if [ x"$1" == "x-d" ]; then
+    rm -f "$LIC_DIR/.license.txt"
+    rm -f "$PERSIST_LIC_DIR/.license.txt"
+
+    echo License file uninstalled.
+    exit 0
+fi
+
+function usage {
+    echo "Usage: $0 (-i (license_file | URL) | -d)" >&2
+    echo "    -i  Install a license, via stdin, file, or URL." >&2
+    echo "    -d  Delete the current installed license." >&2
+    echo >&2
+    echo " cl-license prints, installs or deletes a license on this switch." >&2
+}
+
+if [ x"$1" != 'x-i' ]; then
+    usage
+    exit 100
+fi
+shift
+if [ ! -f "$1" ]; then
+    if [ -n "$1" ]; then
+        if ! echo "$1" | grep -q "$URL_RE"; then
+            usage
+            echo "file $1 not found or not readable." >&2
+            exit 100
+        fi
+    fi
+fi
+
+function clean_tmp {
+    rm $1
+}
+
+if [ -z "$1" ]; then
+    LIC_FILE=`mktemp lic.XXXXXX`
+    trap "clean_tmp $LIC_FILE" EXIT
+    echo "Paste license text here, then hit ctrl-d" >&2
+    cat >$LIC_FILE
+else
+    if echo "$1" | grep -q "$URL_RE"; then
+        LIC_FILE=`mktemp lic.XXXXXX`
+        trap "clean_tmp $LIC_FILE" EXIT
+        if ! wget "$1" -O $LIC_FILE; then
+            echo "Couldn't download $1 via HTTP!" >&2
+            exit 10
+        fi
+    else
+        LIC_FILE="$1"
+    fi
+fi
+
+/usr/sbin/switchd -lic "$LIC_FILE"
+SWITCHD_RETCODE=$?
+if [ $SWITCHD_RETCODE -eq 99 ]; then
+    more /usr/share/cumulus/EULA.txt
+    echo "I (on behalf of the entity who will be using the software) accept"
+    read -p "and agree to the EULA  (yes/no): "
+    if [ "$REPLY" != "yes" -a "$REPLY" != "y" ]; then
+        echo EULA not agreed to, aborting. >&2
+        exit 2
+    fi
+elif [ $SWITCHD_RETCODE -ne 0 ]; then
+    echo '******************************' >&2
+    echo ERROR: License file not valid. >&2
+    echo ERROR: No license installed. >&2
+    echo '******************************' >&2
+    exit 1
+fi
+
+mkdir -p "$LIC_DIR"
+cp "$LIC_FILE" "$LIC_DIR/.license.txt"
+chmod 644 "$LIC_DIR/.license.txt"
+
+mkdir -p "$PERSIST_LIC_DIR"
+cp "$LIC_FILE" "$PERSIST_LIC_DIR/.license.txt"
+chmod 644 "$PERSIST_LIC_DIR/.license.txt"
+
+echo License file installed.
+echo Reboot to enable functionality.
+EOF
         chmod 755 /bin/cl-license
 
         echo "  Disabling default remap on Cumulus VX..."
         mv -v /etc/init.d/rename_eth_swp /etc/init.d/rename_eth_swp.backup
+
+        echo "  Replacing fake switchd"
+        rm -rf /usr/bin/switchd
+        cat > /usr/sbin/switchd <<'EOF'
+#!/bin/bash
+PIDFILE=$1
+LICENSE_FILE=/etc/cumulus/.license
+RC=0
+
+# Make sure we weren't invoked with "-lic"
+if [ "$PIDFILE" == "-lic" ]; then
+  if [ "$2" != "" ]; then
+        LICENSE_FILE=$2
+  fi
+  if [ ! -e $LICENSE_FILE ]; then
+    echo "No license file." >&2
+    RC=1
+  fi
+else
+  tail -f /dev/null & CPID=$!
+  echo -n $CPID > $PIDFILE
+  wait $CPID
+fi
+
+exit $RC
+EOF
+        chmod 755 /usr/sbin/switchd
+
+        cat > /etc/init.d/switchd <<'EOF'
+#! /bin/bash
+### BEGIN INIT INFO
+# Provides:          switchd
+# Required-Start:
+# Required-Stop:
+# Should-Start:
+# Should-Stop:
+# X-Start-Before
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Controls fake switchd process
+### END INIT INFO
+
+# Author: Kristian Van Der Vliet <kristian@cumulusnetworks.com>
+#
+# Please remove the "Author" lines above and replace them
+# with your own name if you copy and modify this script.
+
+PATH=/sbin:/bin:/usr/bin
+
+NAME=switchd
+SCRIPTNAME=/etc/init.d/$NAME
+PIDFILE=/var/run/switchd.pid
+
+. /lib/init/vars.sh
+. /lib/lsb/init-functions
+
+do_start() {
+  echo "[ ok ] Starting Cumulus Networks switch chip daemon: switchd"
+  /usr/sbin/switchd $PIDFILE 2>/dev/null &
+}
+
+do_stop() {
+  if [ -e $PIDFILE ];then
+    kill -TERM $(cat $PIDFILE)
+    rm $PIDFILE
+  fi
+}
+
+do_status() {
+  if [ -e $PIDFILE ];then
+    echo "[ ok ] switchd is running."
+  else
+    echo "[FAIL] switchd is not running ... failed!" >&2
+    exit 3
+  fi
+}
+
+case "$1" in
+  start|"")
+	log_action_begin_msg "Starting switchd"
+	do_start
+	log_action_end_msg 0
+	;;
+  stop)
+  log_action_begin_msg "Stopping switchd"
+  do_stop
+  log_action_end_msg 0
+  ;;
+  status)
+  do_status
+  ;;
+  restart)
+	log_action_begin_msg "Re-starting switchd"
+  do_stop
+	do_start
+	log_action_end_msg 0
+	;;
+  reload|force-reload)
+	echo "Error: argument '$1' not supported" >&2
+	exit 3
+	;;
+  *)
+	echo "Usage: $SCRIPTNAME [start|stop|restart|status]" >&2
+	exit 3
+	;;
+esac
+
+:
+EOF
+        chmod 755 /etc/init.d/switchd
+        reboot
 
     elif [[ $DISTRIB_RELEASE =~ ^3.* ]]; then
         echo "  INFO: Detected a 3.x Based Release"
 
         echo "  Disabling default remap on Cumulus VX..."
         mv -v /etc/hw_init.d/S10rename_eth_swp.sh /etc/S10rename_eth_swp.sh.backup
-
+        reboot
     fi
     echo "### DONE ###"
+else
+    reboot
 fi
 SCRIPT
 
@@ -52,7 +280,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_oob-mgmt-server"
+      v.name = "1463763995_oob-mgmt-server"
       v.memory = 1024
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -88,6 +316,7 @@ Vagrant.configure("2") do |config|
               
               
               
+                  exit02: {ip: "192.168.0.42", mac: "A0:00:00:00:00:42"},
               
               
               
@@ -103,6 +332,247 @@ Vagrant.configure("2") do |config|
               
               
               
+              
+              
+              
+              
+              
+              
+              
+              
+                  exit01: {ip: "192.168.0.41", mac: "A0:00:00:00:00:41"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                  spine02: {ip: "192.168.0.22", mac: "A0:00:00:00:00:22"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                  spine01: {ip: "192.168.0.21", mac: "A0:00:00:00:00:21"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                  leaf04: {ip: "192.168.0.14", mac: "A0:00:00:00:00:14"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                  leaf02: {ip: "192.168.0.12", mac: "A0:00:00:00:00:12"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                  leaf03: {ip: "192.168.0.13", mac: "A0:00:00:00:00:13"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                  leaf01: {ip: "192.168.0.11", mac: "A0:00:00:00:00:11"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                  edge01: {ip: "192.168.0.51", mac: "A0:00:00:00:00:51"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                  server01: {ip: "192.168.0.31", mac: "A0:00:00:00:00:31"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                  server03: {ip: "192.168.0.33", mac: "A0:00:00:00:00:33"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                  server02: {ip: "192.168.0.32", mac: "A0:00:00:00:00:32"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+                  server04: {ip: "192.168.0.34", mac: "A0:00:00:00:00:34"},
               
               
               
@@ -117,7 +587,6 @@ Vagrant.configure("2") do |config|
         end
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005B eth1"
@@ -125,7 +594,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm -nv"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -137,7 +606,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_oob-mgmt-switch"
+      v.name = "1463763995_oob-mgmt-switch"
       v.memory = 256
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -233,7 +702,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005C swp1"
@@ -255,7 +723,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm -nv"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -267,7 +735,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_exit02"
+      v.name = "1463763995_exit02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -333,7 +801,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:42 eth0"
@@ -349,7 +816,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -361,7 +828,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_exit01"
+      v.name = "1463763995_exit01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -427,7 +894,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:41 eth0"
@@ -443,7 +909,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -455,7 +921,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_spine02"
+      v.name = "1463763995_spine02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -521,7 +987,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:22 eth0"
@@ -537,7 +1002,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -549,7 +1014,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_spine01"
+      v.name = "1463763995_spine01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -615,7 +1080,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:21 eth0"
@@ -631,7 +1095,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -643,7 +1107,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_leaf04"
+      v.name = "1463763995_leaf04"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -719,7 +1183,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:14 eth0"
@@ -737,7 +1200,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -749,7 +1212,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_leaf02"
+      v.name = "1463763995_leaf02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -825,7 +1288,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:12 eth0"
@@ -843,7 +1305,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -855,7 +1317,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_leaf03"
+      v.name = "1463763995_leaf03"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -931,7 +1393,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:13 eth0"
@@ -949,7 +1410,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -961,7 +1422,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_leaf01"
+      v.name = "1463763995_leaf01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1037,7 +1498,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:11 eth0"
@@ -1055,7 +1515,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -1067,7 +1527,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_edge01"
+      v.name = "1463763995_edge01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1105,7 +1565,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:51 eth0"
@@ -1115,7 +1574,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -1127,7 +1586,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_server01"
+      v.name = "1463763995_server01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1165,7 +1624,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:31 eth0"
@@ -1175,7 +1633,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -1187,7 +1645,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_server03"
+      v.name = "1463763995_server03"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1225,7 +1683,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:33 eth0"
@@ -1235,7 +1692,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -1247,7 +1704,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_server02"
+      v.name = "1463763995_server02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1285,7 +1742,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:32 eth0"
@@ -1295,7 +1751,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -1307,7 +1763,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_server04"
+      v.name = "1463763995_server04"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1345,7 +1801,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:34 eth0"
@@ -1355,7 +1810,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
@@ -1367,7 +1822,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463757730_internet"
+      v.name = "1463763995_internet"
       v.memory = 256
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1403,7 +1858,6 @@ Vagrant.configure("2") do |config|
 
 
       # Apply the interface re-map
-      device.vm.provision :shell , :inline => $script
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003D eth0"
@@ -1413,7 +1867,7 @@ Vagrant.configure("2") do |config|
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm --vagrant-name=swp48"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , inline: "reboot"
+      device.vm.provision :shell , :inline => $script
 
 
 
