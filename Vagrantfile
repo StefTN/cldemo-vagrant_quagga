@@ -157,6 +157,7 @@ if [ "$PIDFILE" == "-lic" ]; then
     echo "No license file." >&2
     RC=1
   fi
+  RC=0
 else
   tail -f /dev/null & CPID=$!
   echo -n $CPID > $PIDFILE
@@ -280,7 +281,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_oob-mgmt-server"
+      v.name = "1463774252_oob-mgmt-server"
       v.memory = 1024
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -606,7 +607,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_oob-mgmt-switch"
+      v.name = "1463774252_oob-mgmt-switch"
       v.memory = 256
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -735,7 +736,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_exit02"
+      v.name = "1463774252_exit02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -828,7 +829,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_exit01"
+      v.name = "1463774252_exit01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -921,7 +922,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_spine02"
+      v.name = "1463774252_spine02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1014,7 +1015,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_spine01"
+      v.name = "1463774252_spine01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1107,7 +1108,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_leaf04"
+      v.name = "1463774252_leaf04"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1212,7 +1213,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_leaf02"
+      v.name = "1463774252_leaf02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1317,7 +1318,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_leaf03"
+      v.name = "1463774252_leaf03"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1422,7 +1423,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_leaf01"
+      v.name = "1463774252_leaf01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1527,7 +1528,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_edge01"
+      v.name = "1463774252_edge01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1586,7 +1587,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_server01"
+      v.name = "1463774252_server01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1645,7 +1646,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_server03"
+      v.name = "1463774252_server03"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1704,7 +1705,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_server02"
+      v.name = "1463774252_server02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1763,7 +1764,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_server04"
+      v.name = "1463774252_server04"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1822,7 +1823,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463763995_internet"
+      v.name = "1463774252_internet"
       v.memory = 256
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
