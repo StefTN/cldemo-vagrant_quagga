@@ -14,22 +14,23 @@ deploying large topologies of virtual machines. Vagrant and Cumulus VX can be
 used together to build virtual simulations of production networks to validate
 configurations, develop automation code, and simulate failure scenarios.
 
-Using the Framework
-========================
-The Cumulus Linux Demo Framework is built upon the Reference Topology. Using this topology, it is possible to demonstrate any feature in Cumulus Linux. It may not be necessary to use all links or all devices but they're present if needed by a particular demo.
-
-This example demonstrates how to build a two-tier spine-leaf network with a
-dedicated out-of-band management network. The topology built in this demo is
-the reference topology used for all Cumulus Networks documentation, demos, and course materials, so
-many demos will require you to build a topology using the code available in this
-repository.
-
 Vagrant topologies are described in a Vagrantfile, which is a Ruby program that
 tells Vagrant which devices to create and how to configure their networks.
 `vagrant up` will execute the Vagrantfile and create the reference topology
 using Virtualbox. It will also use Ansible to configure the out-of-band
 management network.
 
+Using the Framework
+========================
+The Cumulus Linux Demo Framework is built upon a Vagrantfile which builds the Reference Topology (pictured above). Using this topology, it is possible to demonstrate any feature in Cumulus Linux. It may not be necessary to use all links or all devices but they're present if needed by a particular demo.
+
+This framework of demos is built on a two-tier spine-leaf [CLOS network](https://en.wikipedia.org/wiki/Clos_network) with a
+dedicated out-of-band management network. The topology built in this demo is
+the reference topology used for all Cumulus Networks documentation, demos, and course materials, so
+many demos will require you to build a topology using the code available in this
+repository.
+
+### Understanding What Is Provided
 The following tasks are completed to make using the topology more convenient.
 
  * DHCP, DNS, and Apache are installed and configured on the oob-mgmt-server
@@ -121,11 +122,11 @@ Provision a Smaller Topology
 Customizing the Topology
 ------------------------
 This Vagrant topology is built using [Topology Converter](https://github.com/cumulusnetworks/topology_converter).
-To create your own topology for demo development, edit the file `topology.dot`
+To create your own arbitrary topology, edit the file `topology.dot`
 and add the devices or cables you need and run
 [topology_converter.py](https://github.com/CumulusNetworks/topology_converter/blob/master/topology_converter.py)
 in this directory. For more details on how to make customized topologies, read
-that project's documentation.
+that project's [documentation](https://github.com/CumulusNetworks/topology_converter/tree/master/documentation).
 
 ![Cumulus icon](http://cumulusnetworks.com/static/cumulus/img/logo_2014.png)
 
