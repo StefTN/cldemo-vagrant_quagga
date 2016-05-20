@@ -164,6 +164,7 @@ if [ "$PIDFILE" == "-lic" ]; then
     echo "No license file." >&2
     RC=1
   fi
+  RC=0
 else
   tail -f /dev/null & CPID=$!
   echo -n $CPID > $PIDFILE
