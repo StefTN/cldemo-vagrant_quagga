@@ -32,6 +32,8 @@ graph vx {
 
  "spine01":"swp31" -- "spine02":"swp31"
  "spine01":"swp32" -- "spine02":"swp32"
+ "exit01":"swp31" -- "exit02":"swp31"
+ "exit01":"swp32" -- "exit02":"swp32"
 
  "server01":"eth1" -- "leaf01":"swp1"
  "server01":"eth2" -- "leaf02":"swp1"
