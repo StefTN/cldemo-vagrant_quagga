@@ -281,7 +281,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_oob-mgmt-server"
+      v.name = "1464098153_oob-mgmt-server"
       v.memory = 1024
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -296,8 +296,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -607,7 +605,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_oob-mgmt-switch"
+      v.name = "1464098153_oob-mgmt-switch"
       v.memory = 256
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -676,22 +674,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc16', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype5", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype6", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype7", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype8", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype9", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype10", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype11", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype12", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype13", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype14", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype15", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype16", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -736,7 +718,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_exit02"
+      v.name = "1464098153_exit02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -781,16 +763,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype5", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype6", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype7", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype8", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype9", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype10", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -829,7 +801,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_exit01"
+      v.name = "1464098153_exit01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -874,16 +846,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype5", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype6", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype7", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype8", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype9", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype10", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -922,7 +884,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_spine02"
+      v.name = "1464098153_spine02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -967,16 +929,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype5", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype6", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype7", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype8", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype9", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype10", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -1015,7 +967,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_spine01"
+      v.name = "1464098153_spine01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1060,16 +1012,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype5", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype6", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype7", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype8", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype9", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype10", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -1108,7 +1050,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_leaf04"
+      v.name = "1464098153_leaf04"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1161,18 +1103,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype5", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype6", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype7", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype8", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype9", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype10", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype11", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype12", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -1213,7 +1143,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_leaf02"
+      v.name = "1464098153_leaf02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1266,18 +1196,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype5", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype6", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype7", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype8", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype9", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype10", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype11", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype12", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -1318,7 +1236,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_leaf03"
+      v.name = "1464098153_leaf03"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1371,18 +1289,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype5", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype6", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype7", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype8", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype9", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype10", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype11", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype12", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -1423,7 +1329,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_leaf01"
+      v.name = "1464098153_leaf01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1476,18 +1382,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype5", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype6", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype7", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype8", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype9", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype10", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype11", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype12", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -1528,7 +1422,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_edge01"
+      v.name = "1464098153_edge01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1551,10 +1445,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -1587,7 +1477,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_server01"
+      v.name = "1464098153_server01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1610,10 +1500,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -1646,7 +1532,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_server03"
+      v.name = "1464098153_server03"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1669,10 +1555,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -1705,7 +1587,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_server02"
+      v.name = "1464098153_server02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1728,10 +1610,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -1764,7 +1642,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_server04"
+      v.name = "1464098153_server04"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1787,10 +1665,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -1823,7 +1697,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1463774252_internet"
+      v.name = "1464098153_internet"
       v.memory = 256
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1844,10 +1718,6 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
-
     end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
