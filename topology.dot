@@ -44,8 +44,8 @@ graph vx {
  "server03":"eth2" -- "leaf04":"swp1"
  "server04":"eth1" -- "leaf03":"swp2"
  "server04":"eth2" -- "leaf04":"swp2"
- "server05":"eth1" -- "leaf05":"swp2"
- "server05":"eth2" -- "leaf06":"swp2"
+ "server05":"eth1" -- "leaf05":"swp1"
+ "server05":"eth2" -- "leaf06":"swp1"
 
  "leaf05":"swp51" -- "spine01":"swp5"
  "leaf05":"swp52" -- "spine02":"swp5"
@@ -68,8 +68,8 @@ graph vx {
  "internet":"swp1" -- "leaf05":"swp44"
  "internet":"swp2" -- "leaf06":"swp44"
 
- "edge01":"eth1" -- "leaf05":"swp1"
- "edge01":"eth2" -- "leaf06":"swp1"
+ "edge01":"eth1" -- "leaf05":"swp2"
+ "edge01":"eth2" -- "leaf06":"swp2"
 
  "oob-mgmt-server":"eth1" -- "oob-mgmt-switch":"swp1"
  "server01":"eth0" -- "oob-mgmt-switch":"swp2" [left_mac="A0:00:00:00:00:31"]
