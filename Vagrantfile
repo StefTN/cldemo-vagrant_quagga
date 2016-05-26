@@ -281,7 +281,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_oob-mgmt-server"
+      v.name = "1464297373_oob-mgmt-server"
       v.memory = 1024
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -343,7 +343,11 @@ Vagrant.configure("2") do |config|
               
               
               
+              
+              
                   leaf05: {ip: "192.168.0.41", mac: "A0:00:00:00:00:41"},
+              
+              
               
               
               
@@ -579,6 +583,18 @@ Vagrant.configure("2") do |config|
               
               
               
+                  server05: {ip: "192.168.0.35", mac: "A0:00:00:00:00:35"},
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
+              
                   server04: {ip: "192.168.0.34", mac: "A0:00:00:00:00:34"},
               
               
@@ -611,9 +627,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "oob-mgmt-switch" do |device|
     device.vm.hostname = "oob-mgmt-switch"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.6"
+    device.vm.box_version = "2.5.7"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_oob-mgmt-switch"
+      v.name = "1464297373_oob-mgmt-switch"
       v.memory = 256
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -649,19 +665,22 @@ Vagrant.configure("2") do |config|
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net32", auto_config: false , :mac => "44383900003C"
       
       # link for swp11 --> spine02:eth0
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net59", auto_config: false , :mac => "443839000069"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net62", auto_config: false , :mac => "44383900006E"
       
       # link for swp12 --> leaf05:eth0
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net11", auto_config: false , :mac => "443839000013"
       
       # link for swp13 --> leaf06:eth0
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net54", auto_config: false , :mac => "443839000060"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net55", auto_config: false , :mac => "443839000062"
       
       # link for swp14 --> edge01:eth0
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net40", auto_config: false , :mac => "443839000048"
       
       # link for swp15 --> internet:eth0
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net25", auto_config: false , :mac => "44383900002F"
+      
+      # link for swp16 --> server05:eth0
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net58", auto_config: false , :mac => "443839000067"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -680,6 +699,7 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc14', 'allow-vms']
       vbox.customize ['modifyvm', :id, '--nicpromisc15', 'allow-vms']
       vbox.customize ['modifyvm', :id, '--nicpromisc16', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc17', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
     end
@@ -705,11 +725,12 @@ Vagrant.configure("2") do |config|
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000C swp8"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003F swp9"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003C swp10"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000069 swp11"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900006E swp11"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000013 swp12"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000060 swp13"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000062 swp13"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000048 swp14"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002F swp15"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000067 swp16"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm -nv"
@@ -724,18 +745,21 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf06" do |device|
     device.vm.hostname = "leaf06"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.6"
+    device.vm.box_version = "2.5.7"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_leaf06"
+      v.name = "1464297373_leaf06"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth0 --> oob-mgmt-switch:swp13
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net54", auto_config: false , :mac => "A00000000042"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net55", auto_config: false , :mac => "A00000000042"
       
       # link for swp1 --> edge01:eth2
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net48", auto_config: false , :mac => "443839000057"
+      
+      # link for swp2 --> server05:eth2
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net57", auto_config: false , :mac => "443839000066"
       
       # link for swp44 --> internet:swp2
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net43", auto_config: false , :mac => "44383900004E"
@@ -777,6 +801,7 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
       vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
       vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc13', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
     end
@@ -794,6 +819,7 @@ Vagrant.configure("2") do |config|
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:42 eth0"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000057 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000066 swp2"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004E swp44"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000045 swp45"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000046 swp46"
@@ -817,9 +843,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf05" do |device|
     device.vm.hostname = "leaf05"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.6"
+    device.vm.box_version = "2.5.7"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_leaf05"
+      v.name = "1464297373_leaf05"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -828,7 +854,10 @@ Vagrant.configure("2") do |config|
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net11", auto_config: false , :mac => "A00000000041"
       
       # link for swp1 --> edge01:eth1
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net56", auto_config: false , :mac => "443839000064"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net59", auto_config: false , :mac => "443839000069"
+      
+      # link for swp2 --> server05:eth1
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net54", auto_config: false , :mac => "443839000061"
       
       # link for swp44 --> internet:swp1
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net20", auto_config: false , :mac => "443839000025"
@@ -840,10 +869,10 @@ Vagrant.configure("2") do |config|
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net45", auto_config: false , :mac => "443839000051"
       
       # link for swp47 --> leaf05:swp48
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net55", auto_config: false , :mac => "443839000061"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net56", auto_config: false , :mac => "443839000063"
       
       # link for swp48 --> leaf05:swp47
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net55", auto_config: false , :mac => "443839000062"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net56", auto_config: false , :mac => "443839000064"
       
       # link for swp49 --> leaf06:swp49
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net52", auto_config: false , :mac => "44383900005C"
@@ -870,6 +899,7 @@ Vagrant.configure("2") do |config|
       vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
       vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
       vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc13', 'allow-vms']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
     end
@@ -886,12 +916,13 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:41 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000064 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000069 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000061 swp2"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000025 swp44"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000050 swp45"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000051 swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000061 swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000062 swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000063 swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000064 swp48"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005C swp49"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000034 swp50"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000032 swp51"
@@ -910,21 +941,21 @@ Vagrant.configure("2") do |config|
   config.vm.define "spine02" do |device|
     device.vm.hostname = "spine02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.6"
+    device.vm.box_version = "2.5.7"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_spine02"
+      v.name = "1464297373_spine02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
       # link for eth0 --> oob-mgmt-switch:swp11
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net59", auto_config: false , :mac => "A00000000022"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net62", auto_config: false , :mac => "A00000000022"
       
       # link for swp1 --> leaf01:swp52
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net22", auto_config: false , :mac => "443839000029"
       
       # link for swp2 --> leaf02:swp52
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net58", auto_config: false , :mac => "443839000068"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net61", auto_config: false , :mac => "44383900006D"
       
       # link for swp3 --> leaf03:swp52
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net17", auto_config: false , :mac => "44383900001F"
@@ -972,7 +1003,7 @@ Vagrant.configure("2") do |config|
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:22 eth0"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000029 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000068 swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900006D swp2"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001F swp3"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000053 swp4"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000B swp5"
@@ -993,9 +1024,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "spine01" do |device|
     device.vm.hostname = "spine01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.6"
+    device.vm.box_version = "2.5.7"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_spine01"
+      v.name = "1464297373_spine01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1076,9 +1107,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf04" do |device|
     device.vm.hostname = "leaf04"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.6"
+    device.vm.box_version = "2.5.7"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_leaf04"
+      v.name = "1464297373_leaf04"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1087,7 +1118,7 @@ Vagrant.configure("2") do |config|
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net34", auto_config: false , :mac => "A00000000014"
       
       # link for swp1 --> server03:eth2
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net57", auto_config: false , :mac => "443839000066"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net60", auto_config: false , :mac => "44383900006B"
       
       # link for swp2 --> server04:eth2
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net26", auto_config: false , :mac => "443839000031"
@@ -1145,7 +1176,7 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:14 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000066 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900006B swp1"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000031 swp2"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001C swp45"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001D swp46"
@@ -1169,9 +1200,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf02" do |device|
     device.vm.hostname = "leaf02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.6"
+    device.vm.box_version = "2.5.7"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_leaf02"
+      v.name = "1464297373_leaf02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1207,7 +1238,7 @@ Vagrant.configure("2") do |config|
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net23", auto_config: false , :mac => "44383900002A"
       
       # link for swp52 --> spine02:swp2
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net58", auto_config: false , :mac => "443839000067"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net61", auto_config: false , :mac => "44383900006C"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -1247,7 +1278,7 @@ Vagrant.configure("2") do |config|
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000010 swp49"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000002 swp50"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002A swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000067 swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900006C swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1262,9 +1293,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf03" do |device|
     device.vm.hostname = "leaf03"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.6"
+    device.vm.box_version = "2.5.7"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_leaf03"
+      v.name = "1464297373_leaf03"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1355,9 +1386,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf01" do |device|
     device.vm.hostname = "leaf01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.6"
+    device.vm.box_version = "2.5.7"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_leaf01"
+      v.name = "1464297373_leaf01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1450,7 +1481,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_edge01"
+      v.name = "1464297373_edge01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1461,7 +1492,7 @@ Vagrant.configure("2") do |config|
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net40", auto_config: false , :mac => "A00000000051"
       
       # link for eth1 --> leaf05:swp1
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net56", auto_config: false , :mac => "443839000063"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net59", auto_config: false , :mac => "443839000068"
       
       # link for eth2 --> leaf06:swp1
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net48", auto_config: false , :mac => "443839000056"
@@ -1487,7 +1518,7 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:51 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000063 eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000068 eth1"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000056 eth2"
 
 
@@ -1505,7 +1536,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_server01"
+      v.name = "1464297373_server01"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1560,7 +1591,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_server03"
+      v.name = "1464297373_server03"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1574,7 +1605,7 @@ Vagrant.configure("2") do |config|
       device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net21", auto_config: false , :mac => "443839000026"
       
       # link for eth2 --> leaf04:swp1
-      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net57", auto_config: false , :mac => "443839000065"
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net60", auto_config: false , :mac => "44383900006A"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -1598,7 +1629,7 @@ Vagrant.configure("2") do |config|
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:33 eth0"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000026 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000065 eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900006A eth2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1615,7 +1646,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_server02"
+      v.name = "1464297373_server02"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1664,13 +1695,68 @@ Vagrant.configure("2") do |config|
 
   end
 
+  ##### DEFINE VM for server05 #####
+  config.vm.define "server05" do |device|
+    device.vm.hostname = "server05"
+    device.vm.box = "boxcutter/ubuntu1404"
+    
+    device.vm.provider "virtualbox" do |v|
+      v.name = "1464297373_server05"
+      v.memory = 512
+    end
+    device.vm.synced_folder ".", "/vagrant", disabled: true
+      # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
+      device.vm.provision :shell , inline: "sudo sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf"
+
+      # link for eth0 --> oob-mgmt-switch:swp16
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net58", auto_config: false , :mac => "A00000000035"
+      
+      # link for eth1 --> leaf05:swp2
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net54", auto_config: false , :mac => "443839000060"
+      
+      # link for eth2 --> leaf06:swp2
+      device.vm.network "private_network", virtualbox__intnet: "#{wbid}_net57", auto_config: false , :mac => "443839000065"
+      
+
+    device.vm.provider "virtualbox" do |vbox|
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+
+      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+    end
+
+      # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
+      device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
+
+      # Run Any Extra Config
+      device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+
+
+
+      # Apply the interface re-map
+      device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
+      device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:35 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000060 eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000065 eth2"
+
+
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
+      device.vm.provision :shell , :inline => $script
+
+
+
+  end
+
   ##### DEFINE VM for server04 #####
   config.vm.define "server04" do |device|
     device.vm.hostname = "server04"
     device.vm.box = "boxcutter/ubuntu1404"
     
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_server04"
+      v.name = "1464297373_server04"
       v.memory = 512
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
@@ -1723,9 +1809,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "internet" do |device|
     device.vm.hostname = "internet"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.6"
+    device.vm.box_version = "2.5.7"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1464296658_internet"
+      v.name = "1464297373_internet"
       v.memory = 256
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
