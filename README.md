@@ -62,6 +62,15 @@ available in your distribution's package manager may be out of date, so
 installing via the preferred sources is recommended. This example was last
 tested with **Vagrant 1.8** and **Ansible 2.0.1**.
 
+On an Ubuntu 16.04 box, this can be done with the following commands:
+
+    sudo apt-get install git virtualbox software-properties-common
+    sudo apt-add-repository ppa:ansible/ansible
+    sudo apt-get update
+    wget https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.deb
+    sudo dpkgi -i vagrant_1.8.1_x86_64.deb 
+    sudo apt-get install ansible
+
 ### Available Demos
 
 Typically demos are built upon the Reference Topology shown here using this repository as a starting point and layering device configuration on top.
