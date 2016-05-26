@@ -299,12 +299,12 @@ Vagrant.configure("2") do |config|
 
       # link for eth1 --> oob-mgmt-switch:swp1
       device.vm.network "private_network",
-            :mac => "44383900005F",
+            :mac => "443839000036",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8054',
+            :libvirt__tunnel_local_port => '8029',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9054',
+            :libvirt__tunnel_port => '9029',
             :libvirt__iface_name => 'eth1',
             auto_config: false
 
@@ -327,7 +327,7 @@ Vagrant.configure("2") do |config|
               
               
               
-                  exit02: {ip: "192.168.0.42", mac: "A0:00:00:00:00:42"},
+                  leaf06: {ip: "192.168.0.42", mac: "A0:00:00:00:00:42"},
               
               
               
@@ -355,7 +355,7 @@ Vagrant.configure("2") do |config|
               
               
               
-                  exit01: {ip: "192.168.0.41", mac: "A0:00:00:00:00:41"},
+                  leaf05: {ip: "192.168.0.41", mac: "A0:00:00:00:00:41"},
               
               
               
@@ -608,7 +608,7 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005F eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000036 eth1"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm -nv"
@@ -634,32 +634,32 @@ Vagrant.configure("2") do |config|
 
       # link for swp1 --> oob-mgmt-server:eth1
       device.vm.network "private_network",
-            :mac => "443839000060",
+            :mac => "443839000037",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9054',
+            :libvirt__tunnel_local_port => '9029',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8054',
+            :libvirt__tunnel_port => '8029',
             :libvirt__iface_name => 'swp1',
             auto_config: false
       # link for swp2 --> server01:eth0
       device.vm.network "private_network",
-            :mac => "44383900004B",
+            :mac => "44383900004F",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9042',
+            :libvirt__tunnel_local_port => '9044',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8042',
+            :libvirt__tunnel_port => '8044',
             :libvirt__iface_name => 'swp2',
             auto_config: false
       # link for swp3 --> server02:eth0
       device.vm.network "private_network",
-            :mac => "443839000054",
+            :mac => "443839000059",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9047',
+            :libvirt__tunnel_local_port => '9050',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8047',
+            :libvirt__tunnel_port => '8050',
             :libvirt__iface_name => 'swp3',
             auto_config: false
       # link for swp4 --> server03:eth0
@@ -674,7 +674,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp5 --> server04:eth0
       device.vm.network "private_network",
-            :mac => "443839000056",
+            :mac => "443839000058",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '9049',
@@ -684,37 +684,37 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp6 --> leaf01:eth0
       device.vm.network "private_network",
-            :mac => "443839000025",
+            :mac => "443839000040",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9020',
+            :libvirt__tunnel_local_port => '9035',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8020',
+            :libvirt__tunnel_port => '8035',
             :libvirt__iface_name => 'swp6',
             auto_config: false
       # link for swp7 --> leaf02:eth0
       device.vm.network "private_network",
-            :mac => "443839000045",
+            :mac => "443839000047",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9038',
+            :libvirt__tunnel_local_port => '9039',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8038',
+            :libvirt__tunnel_port => '8039',
             :libvirt__iface_name => 'swp7',
             auto_config: false
       # link for swp8 --> leaf03:eth0
       device.vm.network "private_network",
-            :mac => "443839000034",
+            :mac => "44383900000C",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9028',
+            :libvirt__tunnel_local_port => '9007',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8028',
+            :libvirt__tunnel_port => '8007',
             :libvirt__iface_name => 'swp8',
             auto_config: false
       # link for swp9 --> leaf04:eth0
       device.vm.network "private_network",
-            :mac => "44383900003E",
+            :mac => "44383900003F",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '9034',
@@ -724,12 +724,12 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp10 --> spine01:eth0
       device.vm.network "private_network",
-            :mac => "443839000039",
+            :mac => "44383900003C",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9031',
+            :libvirt__tunnel_local_port => '9032',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8031',
+            :libvirt__tunnel_port => '8032',
             :libvirt__iface_name => 'swp10',
             auto_config: false
       # link for swp11 --> spine02:eth0
@@ -742,24 +742,24 @@ Vagrant.configure("2") do |config|
             :libvirt__tunnel_port => '8059',
             :libvirt__iface_name => 'swp11',
             auto_config: false
-      # link for swp12 --> exit01:eth0
+      # link for swp12 --> leaf05:eth0
       device.vm.network "private_network",
-            :mac => "443839000010",
+            :mac => "443839000013",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9009',
+            :libvirt__tunnel_local_port => '9011',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8009',
+            :libvirt__tunnel_port => '8011',
             :libvirt__iface_name => 'swp12',
             auto_config: false
-      # link for swp13 --> exit02:eth0
+      # link for swp13 --> leaf06:eth0
       device.vm.network "private_network",
-            :mac => "443839000055",
+            :mac => "443839000060",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9048',
+            :libvirt__tunnel_local_port => '9054',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8048',
+            :libvirt__tunnel_port => '8054',
             :libvirt__iface_name => 'swp13',
             auto_config: false
       # link for swp14 --> edge01:eth0
@@ -774,12 +774,12 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp15 --> internet:eth0
       device.vm.network "private_network",
-            :mac => "443839000040",
+            :mac => "44383900002F",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9035',
+            :libvirt__tunnel_local_port => '9025',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8035',
+            :libvirt__tunnel_port => '8025',
             :libvirt__iface_name => 'swp15',
             auto_config: false
 
@@ -796,21 +796,21 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000060 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004B swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000054 swp3"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000037 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004F swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000059 swp3"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000005 swp4"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000056 swp5"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000025 swp6"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000045 swp7"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000034 swp8"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003E swp9"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000039 swp10"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000058 swp5"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000040 swp6"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000047 swp7"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000C swp8"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003F swp9"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003C swp10"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000069 swp11"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000010 swp12"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000055 swp13"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000013 swp12"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000060 swp13"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000048 swp14"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000040 swp15"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002F swp15"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm -nv"
@@ -821,9 +821,9 @@ Vagrant.configure("2") do |config|
 
   end
 
-  ##### DEFINE VM for exit02 #####
-  config.vm.define "exit02" do |device|
-    device.vm.hostname = "exit02"
+  ##### DEFINE VM for leaf06 #####
+  config.vm.define "leaf06" do |device|
+    device.vm.hostname = "leaf06"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     # disabling sync folder support on all VMs
@@ -839,109 +839,109 @@ Vagrant.configure("2") do |config|
             :mac => "A00000000042",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8048',
+            :libvirt__tunnel_local_port => '8054',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9048',
+            :libvirt__tunnel_port => '9054',
             :libvirt__iface_name => 'eth0',
             auto_config: false
       # link for swp1 --> edge01:eth2
       device.vm.network "private_network",
-            :mac => "44383900000D",
+            :mac => "443839000057",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9007',
+            :libvirt__tunnel_local_port => '9048',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8007',
+            :libvirt__tunnel_port => '8048',
             :libvirt__iface_name => 'swp1',
             auto_config: false
       # link for swp44 --> internet:swp2
       device.vm.network "private_network",
-            :mac => "443839000047",
+            :mac => "44383900004E",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9039',
+            :libvirt__tunnel_local_port => '9043',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8039',
+            :libvirt__tunnel_port => '8043',
             :libvirt__iface_name => 'swp44',
             auto_config: false
-      # link for swp45 --> exit02:swp46
+      # link for swp45 --> leaf06:swp46
       device.vm.network "private_network",
-            :mac => "443839000037",
+            :mac => "443839000045",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8030',
+            :libvirt__tunnel_local_port => '8038',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9030',
+            :libvirt__tunnel_port => '9038',
             :libvirt__iface_name => 'swp45',
             auto_config: false
-      # link for swp46 --> exit02:swp45
+      # link for swp46 --> leaf06:swp45
       device.vm.network "private_network",
-            :mac => "443839000038",
+            :mac => "443839000046",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9030',
+            :libvirt__tunnel_local_port => '9038',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8030',
+            :libvirt__tunnel_port => '8038',
             :libvirt__iface_name => 'swp46',
             auto_config: false
-      # link for swp47 --> exit02:swp48
+      # link for swp47 --> leaf06:swp48
       device.vm.network "private_network",
-            :mac => "44383900003C",
+            :mac => "443839000049",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8033',
+            :libvirt__tunnel_local_port => '8041',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9033',
+            :libvirt__tunnel_port => '9041',
             :libvirt__iface_name => 'swp47',
             auto_config: false
-      # link for swp48 --> exit02:swp47
+      # link for swp48 --> leaf06:swp47
       device.vm.network "private_network",
-            :mac => "44383900003D",
+            :mac => "44383900004A",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9033',
+            :libvirt__tunnel_local_port => '9041',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8033',
+            :libvirt__tunnel_port => '8041',
             :libvirt__iface_name => 'swp48',
             auto_config: false
-      # link for swp49 --> exit01:swp49
-      device.vm.network "private_network",
-            :mac => "44383900002D",
-            :libvirt__tunnel_type => 'udp',
-            :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9024',
-            :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8024',
-            :libvirt__iface_name => 'swp49',
-            auto_config: false
-      # link for swp50 --> exit01:swp50
-      device.vm.network "private_network",
-            :mac => "44383900001A",
-            :libvirt__tunnel_type => 'udp',
-            :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9014',
-            :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8014',
-            :libvirt__iface_name => 'swp50',
-            auto_config: false
-      # link for swp51 --> spine01:swp29
-      device.vm.network "private_network",
-            :mac => "443839000026",
-            :libvirt__tunnel_type => 'udp',
-            :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8021',
-            :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9021',
-            :libvirt__iface_name => 'swp51',
-            auto_config: false
-      # link for swp52 --> spine02:swp29
+      # link for swp49 --> leaf05:swp49
       device.vm.network "private_network",
             :mac => "44383900005D",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8053',
+            :libvirt__tunnel_local_port => '9052',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9053',
+            :libvirt__tunnel_port => '8052',
+            :libvirt__iface_name => 'swp49',
+            auto_config: false
+      # link for swp50 --> leaf05:swp50
+      device.vm.network "private_network",
+            :mac => "443839000035",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9028',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8028',
+            :libvirt__iface_name => 'swp50',
+            auto_config: false
+      # link for swp51 --> spine01:swp6
+      device.vm.network "private_network",
+            :mac => "443839000018",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8014',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9014',
+            :libvirt__iface_name => 'swp51',
+            auto_config: false
+      # link for swp52 --> spine02:swp6
+      device.vm.network "private_network",
+            :mac => "443839000008",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8005',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9005',
             :libvirt__iface_name => 'swp52',
             auto_config: false
 
@@ -959,16 +959,16 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:42 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000D swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000047 swp44"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000037 swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000038 swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003C swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003D swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002D swp49"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001A swp50"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000026 swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005D swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000057 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004E swp44"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000045 swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000046 swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000049 swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004A swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005D swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000035 swp50"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000018 swp51"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000008 swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -979,9 +979,9 @@ Vagrant.configure("2") do |config|
 
   end
 
-  ##### DEFINE VM for exit01 #####
-  config.vm.define "exit01" do |device|
-    device.vm.hostname = "exit01"
+  ##### DEFINE VM for leaf05 #####
+  config.vm.define "leaf05" do |device|
+    device.vm.hostname = "leaf05"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "2.5.6"
     # disabling sync folder support on all VMs
@@ -997,92 +997,102 @@ Vagrant.configure("2") do |config|
             :mac => "A00000000041",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8009',
+            :libvirt__tunnel_local_port => '8011',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9009',
+            :libvirt__tunnel_port => '9011',
             :libvirt__iface_name => 'eth0',
             auto_config: false
       # link for swp1 --> edge01:eth1
       device.vm.network "private_network",
-            :mac => "443839000053",
+            :mac => "443839000064",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9046',
+            :libvirt__tunnel_local_port => '9056',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8046',
+            :libvirt__tunnel_port => '8056',
             :libvirt__iface_name => 'swp1',
             auto_config: false
       # link for swp44 --> internet:swp1
       device.vm.network "private_network",
-            :mac => "443839000009",
+            :mac => "443839000025",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9005',
+            :libvirt__tunnel_local_port => '9020',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8005',
+            :libvirt__tunnel_port => '8020',
             :libvirt__iface_name => 'swp44',
             auto_config: false
-      # link for swp45 --> exit01:swp46
+      # link for swp45 --> leaf05:swp46
       device.vm.network "private_network",
-            :mac => "44383900004C",
+            :mac => "443839000050",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8043',
+            :libvirt__tunnel_local_port => '8045',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9043',
+            :libvirt__tunnel_port => '9045',
             :libvirt__iface_name => 'swp45',
             auto_config: false
-      # link for swp46 --> exit01:swp45
+      # link for swp46 --> leaf05:swp45
       device.vm.network "private_network",
-            :mac => "44383900004D",
+            :mac => "443839000051",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9043',
+            :libvirt__tunnel_local_port => '9045',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8043',
+            :libvirt__tunnel_port => '8045',
             :libvirt__iface_name => 'swp46',
             auto_config: false
-      # link for swp47 --> exit01:swp48
+      # link for swp47 --> leaf05:swp48
       device.vm.network "private_network",
-            :mac => "443839000013",
+            :mac => "443839000061",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8011',
+            :libvirt__tunnel_local_port => '8055',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9011',
+            :libvirt__tunnel_port => '9055',
             :libvirt__iface_name => 'swp47',
             auto_config: false
-      # link for swp48 --> exit01:swp47
+      # link for swp48 --> leaf05:swp47
       device.vm.network "private_network",
-            :mac => "443839000014",
+            :mac => "443839000062",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9011',
+            :libvirt__tunnel_local_port => '9055',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8011',
+            :libvirt__tunnel_port => '8055',
             :libvirt__iface_name => 'swp48',
             auto_config: false
-      # link for swp49 --> exit02:swp49
+      # link for swp49 --> leaf06:swp49
       device.vm.network "private_network",
-            :mac => "44383900002C",
+            :mac => "44383900005C",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8024',
+            :libvirt__tunnel_local_port => '8052',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9024',
+            :libvirt__tunnel_port => '9052',
             :libvirt__iface_name => 'swp49',
             auto_config: false
-      # link for swp50 --> exit02:swp50
+      # link for swp50 --> leaf06:swp50
       device.vm.network "private_network",
-            :mac => "443839000019",
+            :mac => "443839000034",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8014',
+            :libvirt__tunnel_local_port => '8028',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9014',
+            :libvirt__tunnel_port => '9028',
             :libvirt__iface_name => 'swp50',
             auto_config: false
-      # link for swp51 --> spine01:swp30
+      # link for swp51 --> spine01:swp5
+      device.vm.network "private_network",
+            :mac => "443839000032",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8027',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9027',
+            :libvirt__iface_name => 'swp51',
+            auto_config: false
+      # link for swp52 --> spine02:swp5
       device.vm.network "private_network",
             :mac => "44383900000A",
             :libvirt__tunnel_type => 'udp',
@@ -1090,16 +1100,6 @@ Vagrant.configure("2") do |config|
             :libvirt__tunnel_local_port => '8006',
             :libvirt__tunnel_ip => '127.0.0.1',
             :libvirt__tunnel_port => '9006',
-            :libvirt__iface_name => 'swp51',
-            auto_config: false
-      # link for swp52 --> spine02:swp30
-      device.vm.network "private_network",
-            :mac => "443839000063",
-            :libvirt__tunnel_type => 'udp',
-            :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8056',
-            :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9056',
             :libvirt__iface_name => 'swp52',
             auto_config: false
 
@@ -1117,16 +1117,16 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:41 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000053 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000009 swp44"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004C swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004D swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000013 swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000014 swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002C swp49"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000019 swp50"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000A swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000063 swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000064 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000025 swp44"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000050 swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000051 swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000061 swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000062 swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005C swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000034 swp50"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000032 swp51"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000A swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1162,12 +1162,12 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp1 --> leaf01:swp52
       device.vm.network "private_network",
-            :mac => "44383900002B",
+            :mac => "443839000029",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9023',
+            :libvirt__tunnel_local_port => '9022',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8023',
+            :libvirt__tunnel_port => '8022',
             :libvirt__iface_name => 'swp1',
             auto_config: false
       # link for swp2 --> leaf02:swp52
@@ -1182,7 +1182,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp3 --> leaf03:swp52
       device.vm.network "private_network",
-            :mac => "443839000020",
+            :mac => "44383900001F",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '9017',
@@ -1192,42 +1192,42 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp4 --> leaf04:swp52
       device.vm.network "private_network",
-            :mac => "44383900004F",
+            :mac => "443839000053",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9044',
+            :libvirt__tunnel_local_port => '9046',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8044',
+            :libvirt__tunnel_port => '8046',
             :libvirt__iface_name => 'swp4',
             auto_config: false
-      # link for swp29 --> exit02:swp52
+      # link for swp5 --> leaf05:swp52
       device.vm.network "private_network",
-            :mac => "44383900005E",
+            :mac => "44383900000B",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9053',
+            :libvirt__tunnel_local_port => '9006',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8053',
-            :libvirt__iface_name => 'swp29',
+            :libvirt__tunnel_port => '8006',
+            :libvirt__iface_name => 'swp5',
             auto_config: false
-      # link for swp30 --> exit01:swp52
+      # link for swp6 --> leaf06:swp52
       device.vm.network "private_network",
-            :mac => "443839000064",
+            :mac => "443839000009",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9056',
+            :libvirt__tunnel_local_port => '9005',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8056',
-            :libvirt__iface_name => 'swp30',
+            :libvirt__tunnel_port => '8005',
+            :libvirt__iface_name => 'swp6',
             auto_config: false
       # link for swp31 --> spine01:swp31
       device.vm.network "private_network",
-            :mac => "443839000051",
+            :mac => "443839000055",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9045',
+            :libvirt__tunnel_local_port => '9047',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8045',
+            :libvirt__tunnel_port => '8047',
             :libvirt__iface_name => 'swp31',
             auto_config: false
       # link for swp32 --> spine01:swp32
@@ -1255,13 +1255,13 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:22 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002B swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000029 swp1"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000068 swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000020 swp3"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004F swp4"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005E swp29"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000064 swp30"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000051 swp31"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001F swp3"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000053 swp4"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000B swp5"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000009 swp6"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000055 swp31"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000042 swp32"
 
 
@@ -1291,39 +1291,39 @@ Vagrant.configure("2") do |config|
             :mac => "A00000000021",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8031',
+            :libvirt__tunnel_local_port => '8032',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9031',
+            :libvirt__tunnel_port => '9032',
             :libvirt__iface_name => 'eth0',
             auto_config: false
       # link for swp1 --> leaf01:swp51
       device.vm.network "private_network",
-            :mac => "44383900005C",
+            :mac => "44383900005F",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9052',
+            :libvirt__tunnel_local_port => '9053',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8052',
+            :libvirt__tunnel_port => '8053',
             :libvirt__iface_name => 'swp1',
             auto_config: false
       # link for swp2 --> leaf02:swp51
       device.vm.network "private_network",
-            :mac => "44383900002F",
+            :mac => "44383900002B",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9025',
+            :libvirt__tunnel_local_port => '9023',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8025',
+            :libvirt__tunnel_port => '8023',
             :libvirt__iface_name => 'swp2',
             auto_config: false
       # link for swp3 --> leaf03:swp51
       device.vm.network "private_network",
-            :mac => "443839000058",
+            :mac => "44383900005B",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9050',
+            :libvirt__tunnel_local_port => '9051',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8050',
+            :libvirt__tunnel_port => '8051',
             :libvirt__iface_name => 'swp3',
             auto_config: false
       # link for swp4 --> leaf04:swp51
@@ -1336,34 +1336,34 @@ Vagrant.configure("2") do |config|
             :libvirt__tunnel_port => '8037',
             :libvirt__iface_name => 'swp4',
             auto_config: false
-      # link for swp29 --> exit02:swp51
+      # link for swp5 --> leaf05:swp51
       device.vm.network "private_network",
-            :mac => "443839000027",
+            :mac => "443839000033",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9021',
+            :libvirt__tunnel_local_port => '9027',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8021',
-            :libvirt__iface_name => 'swp29',
+            :libvirt__tunnel_port => '8027',
+            :libvirt__iface_name => 'swp5',
             auto_config: false
-      # link for swp30 --> exit01:swp51
+      # link for swp6 --> leaf06:swp51
       device.vm.network "private_network",
-            :mac => "44383900000B",
+            :mac => "443839000019",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9006',
+            :libvirt__tunnel_local_port => '9014',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8006',
-            :libvirt__iface_name => 'swp30',
+            :libvirt__tunnel_port => '8014',
+            :libvirt__iface_name => 'swp6',
             auto_config: false
       # link for swp31 --> spine02:swp31
       device.vm.network "private_network",
-            :mac => "443839000050",
+            :mac => "443839000054",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8045',
+            :libvirt__tunnel_local_port => '8047',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9045',
+            :libvirt__tunnel_port => '9047',
             :libvirt__iface_name => 'swp31',
             auto_config: false
       # link for swp32 --> spine02:swp32
@@ -1391,13 +1391,13 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:21 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005C swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002F swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000058 swp3"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005F swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002B swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005B swp3"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000044 swp4"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000027 swp29"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000B swp30"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000050 swp31"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000033 swp5"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000019 swp6"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000054 swp31"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000041 swp32"
 
 
@@ -1444,17 +1444,17 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp2 --> server04:eth2
       device.vm.network "private_network",
-            :mac => "443839000033",
+            :mac => "443839000031",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9027',
+            :libvirt__tunnel_local_port => '9026',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8027',
+            :libvirt__tunnel_port => '8026',
             :libvirt__iface_name => 'swp2',
             auto_config: false
       # link for swp45 --> leaf04:swp46
       device.vm.network "private_network",
-            :mac => "44383900001D",
+            :mac => "44383900001C",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '8016',
@@ -1464,7 +1464,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp46 --> leaf04:swp45
       device.vm.network "private_network",
-            :mac => "44383900001E",
+            :mac => "44383900001D",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '9016',
@@ -1474,32 +1474,32 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp47 --> leaf04:swp48
       device.vm.network "private_network",
-            :mac => "44383900003A",
+            :mac => "44383900003D",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8032',
+            :libvirt__tunnel_local_port => '8033',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9032',
+            :libvirt__tunnel_port => '9033',
             :libvirt__iface_name => 'swp47',
             auto_config: false
       # link for swp48 --> leaf04:swp47
       device.vm.network "private_network",
-            :mac => "44383900003B",
+            :mac => "44383900003E",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9032',
+            :libvirt__tunnel_local_port => '9033',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8032',
+            :libvirt__tunnel_port => '8033',
             :libvirt__iface_name => 'swp48',
             auto_config: false
       # link for swp49 --> leaf03:swp49
       device.vm.network "private_network",
-            :mac => "443839000036",
+            :mac => "443839000039",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9029',
+            :libvirt__tunnel_local_port => '9030',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8029',
+            :libvirt__tunnel_port => '8030',
             :libvirt__iface_name => 'swp49',
             auto_config: false
       # link for swp50 --> leaf03:swp50
@@ -1524,12 +1524,12 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp52 --> spine02:swp4
       device.vm.network "private_network",
-            :mac => "44383900004E",
+            :mac => "443839000052",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8044',
+            :libvirt__tunnel_local_port => '8046',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9044',
+            :libvirt__tunnel_port => '9046',
             :libvirt__iface_name => 'swp52',
             auto_config: false
 
@@ -1548,15 +1548,15 @@ Vagrant.configure("2") do |config|
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:14 eth0"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000066 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000033 swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001D swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001E swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003A swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003B swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000036 swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000031 swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001C swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001D swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003D swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003E swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000039 swp49"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000007 swp50"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000043 swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004E swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000052 swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1585,14 +1585,14 @@ Vagrant.configure("2") do |config|
             :mac => "A00000000012",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8038',
+            :libvirt__tunnel_local_port => '8039',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9038',
+            :libvirt__tunnel_port => '9039',
             :libvirt__iface_name => 'eth0',
             auto_config: false
       # link for swp1 --> server01:eth2
       device.vm.network "private_network",
-            :mac => "443839000018",
+            :mac => "443839000017",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '9013',
@@ -1602,7 +1602,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp2 --> server02:eth2
       device.vm.network "private_network",
-            :mac => "44383900001C",
+            :mac => "44383900001B",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '9015',
@@ -1612,7 +1612,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp45 --> leaf02:swp46
       device.vm.network "private_network",
-            :mac => "44383900000E",
+            :mac => "44383900000D",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '8008',
@@ -1622,7 +1622,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp46 --> leaf02:swp45
       device.vm.network "private_network",
-            :mac => "44383900000F",
+            :mac => "44383900000E",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '9008',
@@ -1632,32 +1632,32 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp47 --> leaf02:swp48
       device.vm.network "private_network",
-            :mac => "443839000061",
+            :mac => "44383900003A",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8055',
+            :libvirt__tunnel_local_port => '8031',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9055',
+            :libvirt__tunnel_port => '9031',
             :libvirt__iface_name => 'swp47',
             auto_config: false
       # link for swp48 --> leaf02:swp47
       device.vm.network "private_network",
-            :mac => "443839000062",
+            :mac => "44383900003B",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9055',
+            :libvirt__tunnel_local_port => '9031',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8055',
+            :libvirt__tunnel_port => '8031',
             :libvirt__iface_name => 'swp48',
             auto_config: false
       # link for swp49 --> leaf01:swp49
       device.vm.network "private_network",
-            :mac => "443839000012",
+            :mac => "443839000010",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9010',
+            :libvirt__tunnel_local_port => '9009',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8010',
+            :libvirt__tunnel_port => '8009',
             :libvirt__iface_name => 'swp49',
             auto_config: false
       # link for swp50 --> leaf01:swp50
@@ -1672,12 +1672,12 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp51 --> spine01:swp2
       device.vm.network "private_network",
-            :mac => "44383900002E",
+            :mac => "44383900002A",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8025',
+            :libvirt__tunnel_local_port => '8023',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9025',
+            :libvirt__tunnel_port => '9023',
             :libvirt__iface_name => 'swp51',
             auto_config: false
       # link for swp52 --> spine02:swp2
@@ -1705,15 +1705,15 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:12 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000018 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001C swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000E swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000F swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000061 swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000062 swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000012 swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000017 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001B swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000D swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000E swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003A swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003B swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000010 swp49"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000002 swp50"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002E swp51"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002A swp51"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000067 swp52"
 
 
@@ -1743,24 +1743,24 @@ Vagrant.configure("2") do |config|
             :mac => "A00000000013",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8028',
+            :libvirt__tunnel_local_port => '8007',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9028',
+            :libvirt__tunnel_port => '9007',
             :libvirt__iface_name => 'eth0',
             auto_config: false
       # link for swp1 --> server03:eth1
       device.vm.network "private_network",
-            :mac => "443839000029",
+            :mac => "443839000027",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9022',
+            :libvirt__tunnel_local_port => '9021',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8022',
+            :libvirt__tunnel_port => '8021',
             :libvirt__iface_name => 'swp1',
             auto_config: false
       # link for swp2 --> server04:eth1
       device.vm.network "private_network",
-            :mac => "443839000024",
+            :mac => "443839000023",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '9019',
@@ -1770,52 +1770,52 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp45 --> leaf03:swp46
       device.vm.network "private_network",
-            :mac => "443839000030",
+            :mac => "44383900002C",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8026',
+            :libvirt__tunnel_local_port => '8024',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9026',
+            :libvirt__tunnel_port => '9024',
             :libvirt__iface_name => 'swp45',
             auto_config: false
       # link for swp46 --> leaf03:swp45
       device.vm.network "private_network",
-            :mac => "443839000031",
+            :mac => "44383900002D",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9026',
+            :libvirt__tunnel_local_port => '9024',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8026',
+            :libvirt__tunnel_port => '8024',
             :libvirt__iface_name => 'swp46',
             auto_config: false
       # link for swp47 --> leaf03:swp48
       device.vm.network "private_network",
-            :mac => "443839000059",
+            :mac => "443839000011",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8051',
+            :libvirt__tunnel_local_port => '8010',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9051',
+            :libvirt__tunnel_port => '9010',
             :libvirt__iface_name => 'swp47',
             auto_config: false
       # link for swp48 --> leaf03:swp47
       device.vm.network "private_network",
-            :mac => "44383900005A",
+            :mac => "443839000012",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9051',
+            :libvirt__tunnel_local_port => '9010',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8051',
+            :libvirt__tunnel_port => '8010',
             :libvirt__iface_name => 'swp48',
             auto_config: false
       # link for swp49 --> leaf04:swp49
       device.vm.network "private_network",
-            :mac => "443839000035",
+            :mac => "443839000038",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8029',
+            :libvirt__tunnel_local_port => '8030',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9029',
+            :libvirt__tunnel_port => '9030',
             :libvirt__iface_name => 'swp49',
             auto_config: false
       # link for swp50 --> leaf04:swp50
@@ -1830,17 +1830,17 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp51 --> spine01:swp3
       device.vm.network "private_network",
-            :mac => "443839000057",
+            :mac => "44383900005A",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8050',
+            :libvirt__tunnel_local_port => '8051',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9050',
+            :libvirt__tunnel_port => '9051',
             :libvirt__iface_name => 'swp51',
             auto_config: false
       # link for swp52 --> spine02:swp3
       device.vm.network "private_network",
-            :mac => "44383900001F",
+            :mac => "44383900001E",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '8017',
@@ -1863,16 +1863,16 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:13 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000029 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000024 swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000030 swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000031 swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000059 swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005A swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000035 swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000027 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000023 swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002C swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002D swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000011 swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000012 swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000038 swp49"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000006 swp50"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000057 swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001F swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005A swp51"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001E swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1901,9 +1901,9 @@ Vagrant.configure("2") do |config|
             :mac => "A00000000011",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8020',
+            :libvirt__tunnel_local_port => '8035',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9020',
+            :libvirt__tunnel_port => '9035',
             :libvirt__iface_name => 'eth0',
             auto_config: false
       # link for swp1 --> server01:eth1
@@ -1918,7 +1918,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp2 --> server02:eth1
       device.vm.network "private_network",
-            :mac => "443839000016",
+            :mac => "443839000015",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '9012',
@@ -1928,7 +1928,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp45 --> leaf01:swp46
       device.vm.network "private_network",
-            :mac => "443839000021",
+            :mac => "443839000020",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '8018',
@@ -1938,7 +1938,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp46 --> leaf01:swp45
       device.vm.network "private_network",
-            :mac => "443839000022",
+            :mac => "443839000021",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '9018',
@@ -1948,32 +1948,32 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp47 --> leaf01:swp48
       device.vm.network "private_network",
-            :mac => "443839000049",
+            :mac => "44383900004B",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8041',
+            :libvirt__tunnel_local_port => '8042',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9041',
+            :libvirt__tunnel_port => '9042',
             :libvirt__iface_name => 'swp47',
             auto_config: false
       # link for swp48 --> leaf01:swp47
       device.vm.network "private_network",
-            :mac => "44383900004A",
+            :mac => "44383900004C",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '9041',
+            :libvirt__tunnel_local_port => '9042',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '8041',
+            :libvirt__tunnel_port => '8042',
             :libvirt__iface_name => 'swp48',
             auto_config: false
       # link for swp49 --> leaf02:swp49
       device.vm.network "private_network",
-            :mac => "443839000011",
+            :mac => "44383900000F",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8010',
+            :libvirt__tunnel_local_port => '8009',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9010',
+            :libvirt__tunnel_port => '9009',
             :libvirt__iface_name => 'swp49',
             auto_config: false
       # link for swp50 --> leaf02:swp50
@@ -1988,22 +1988,22 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp51 --> spine01:swp1
       device.vm.network "private_network",
-            :mac => "44383900005B",
+            :mac => "44383900005E",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8052',
+            :libvirt__tunnel_local_port => '8053',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9052',
+            :libvirt__tunnel_port => '9053',
             :libvirt__iface_name => 'swp51',
             auto_config: false
       # link for swp52 --> spine02:swp1
       device.vm.network "private_network",
-            :mac => "44383900002A",
+            :mac => "443839000028",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8023',
+            :libvirt__tunnel_local_port => '8022',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9023',
+            :libvirt__tunnel_port => '9022',
             :libvirt__iface_name => 'swp52',
             auto_config: false
 
@@ -2022,15 +2022,15 @@ Vagrant.configure("2") do |config|
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:11 eth0"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000004 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000016 swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000021 swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000022 swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000049 swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004A swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000011 swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000015 swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000020 swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000021 swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004B swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004C swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000F swp49"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000001 swp50"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005B swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002A swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005E swp51"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000028 swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -2066,24 +2066,24 @@ Vagrant.configure("2") do |config|
             :libvirt__tunnel_port => '9040',
             :libvirt__iface_name => 'eth0',
             auto_config: false
-      # link for eth1 --> exit01:swp1
+      # link for eth1 --> leaf05:swp1
       device.vm.network "private_network",
-            :mac => "443839000052",
+            :mac => "443839000063",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8046',
+            :libvirt__tunnel_local_port => '8056',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9046',
+            :libvirt__tunnel_port => '9056',
             :libvirt__iface_name => 'eth1',
             auto_config: false
-      # link for eth2 --> exit02:swp1
+      # link for eth2 --> leaf06:swp1
       device.vm.network "private_network",
-            :mac => "44383900000C",
+            :mac => "443839000056",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8007',
+            :libvirt__tunnel_local_port => '8048',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9007',
+            :libvirt__tunnel_port => '9048',
             :libvirt__iface_name => 'eth2',
             auto_config: false
 
@@ -2101,8 +2101,8 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:51 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000052 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000C eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000063 eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000056 eth2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -2133,9 +2133,9 @@ Vagrant.configure("2") do |config|
             :mac => "A00000000031",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8042',
+            :libvirt__tunnel_local_port => '8044',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9042',
+            :libvirt__tunnel_port => '9044',
             :libvirt__iface_name => 'eth0',
             auto_config: false
       # link for eth1 --> leaf01:swp1
@@ -2150,7 +2150,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for eth2 --> leaf02:swp1
       device.vm.network "private_network",
-            :mac => "443839000017",
+            :mac => "443839000016",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '8013',
@@ -2174,7 +2174,7 @@ Vagrant.configure("2") do |config|
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:31 eth0"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000003 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000017 eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000016 eth2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -2212,12 +2212,12 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for eth1 --> leaf03:swp1
       device.vm.network "private_network",
-            :mac => "443839000028",
+            :mac => "443839000026",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8022',
+            :libvirt__tunnel_local_port => '8021',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9022',
+            :libvirt__tunnel_port => '9021',
             :libvirt__iface_name => 'eth1',
             auto_config: false
       # link for eth2 --> leaf04:swp1
@@ -2245,7 +2245,7 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:33 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000028 eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000026 eth1"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000065 eth2"
 
 
@@ -2277,14 +2277,14 @@ Vagrant.configure("2") do |config|
             :mac => "A00000000032",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8047',
+            :libvirt__tunnel_local_port => '8050',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9047',
+            :libvirt__tunnel_port => '9050',
             :libvirt__iface_name => 'eth0',
             auto_config: false
       # link for eth1 --> leaf01:swp2
       device.vm.network "private_network",
-            :mac => "443839000015",
+            :mac => "443839000014",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '8012',
@@ -2294,7 +2294,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for eth2 --> leaf02:swp2
       device.vm.network "private_network",
-            :mac => "44383900001B",
+            :mac => "44383900001A",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '8015',
@@ -2317,8 +2317,8 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:32 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000015 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001B eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000014 eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001A eth2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -2356,7 +2356,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for eth1 --> leaf03:swp2
       device.vm.network "private_network",
-            :mac => "443839000023",
+            :mac => "443839000022",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => '8019',
@@ -2366,12 +2366,12 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for eth2 --> leaf04:swp2
       device.vm.network "private_network",
-            :mac => "443839000032",
+            :mac => "443839000030",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8027',
+            :libvirt__tunnel_local_port => '8026',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9027',
+            :libvirt__tunnel_port => '9026',
             :libvirt__iface_name => 'eth2',
             auto_config: false
 
@@ -2389,8 +2389,8 @@ Vagrant.configure("2") do |config|
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:34 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000023 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000032 eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000022 eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000030 eth2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -2416,32 +2416,32 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp15
       device.vm.network "private_network",
-            :mac => "44383900003F",
+            :mac => "44383900002E",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8035',
+            :libvirt__tunnel_local_port => '8025',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9035',
+            :libvirt__tunnel_port => '9025',
             :libvirt__iface_name => 'eth0',
             auto_config: false
-      # link for swp1 --> exit01:swp44
+      # link for swp1 --> leaf05:swp44
       device.vm.network "private_network",
-            :mac => "443839000008",
+            :mac => "443839000024",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8005',
+            :libvirt__tunnel_local_port => '8020',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9005',
+            :libvirt__tunnel_port => '9020',
             :libvirt__iface_name => 'swp1',
             auto_config: false
-      # link for swp2 --> exit02:swp44
+      # link for swp2 --> leaf06:swp44
       device.vm.network "private_network",
-            :mac => "443839000046",
+            :mac => "44383900004D",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8039',
+            :libvirt__tunnel_local_port => '8043',
             :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9039',
+            :libvirt__tunnel_port => '9043',
             :libvirt__iface_name => 'swp2',
             auto_config: false
 
@@ -2458,9 +2458,9 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003F eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000008 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000046 swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002E eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000024 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004D swp2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm --vagrant-name=swp48"
