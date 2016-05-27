@@ -293,7 +293,7 @@ Vagrant.configure("2") do |config|
     device.vm.box = "{{ device.os }}"
     {% if device.version %}device.vm.box_version = "{{ device.version }}"{% endif %}
 {% if provider == 'virtualbox' %}    device.vm.provider "virtualbox" do |v|
-      v.name = "{{ epoch_time }}_{{ device.hostname }}"{% elif provider == 'libvirt' %}    # disabling sync folder support on all VMs
+      v.name = "#{wbid}_{{ device.hostname }}"{% elif provider == 'libvirt' %}    # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
     device.vm.provider :libvirt do |v|{% endif %}

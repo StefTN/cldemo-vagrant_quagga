@@ -21,6 +21,11 @@
     - man
     - bash-completion
     - python-paramiko
+    - python-dev
+    - python-pip
+
+- name: install paramiko version 1.16
+  command: pip install paramiko==1.16
 
 - name: run apt-get update
   apt: update_cache=yes
