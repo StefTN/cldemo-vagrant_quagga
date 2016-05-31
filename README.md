@@ -134,7 +134,8 @@ This Vagrant topology is built using [Topology Converter](https://github.com/cum
 To create your own arbitrary topology, edit the file `topology.dot`
 and add the devices or cables you need and run
 [topology_converter.py](https://github.com/CumulusNetworks/topology_converter/blob/master/topology_converter.py)
-in this directory. For more details on how to make customized topologies, read
+in this directory. This will create a new Vagrantfile for you, which is preferred to editing the Vagrantfile
+manually. For more details on how to make customized topologies, read
 that project's [documentation](https://github.com/CumulusNetworks/topology_converter/tree/master/documentation).
 
 ![Cumulus icon](http://cumulusnetworks.com/static/cumulus/img/logo_2014.png)
