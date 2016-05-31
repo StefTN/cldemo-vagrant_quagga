@@ -138,6 +138,11 @@ in this directory. This will create a new Vagrantfile for you, which is preferre
 manually. For more details on how to make customized topologies, read
 that project's [documentation](https://github.com/CumulusNetworks/topology_converter/tree/master/documentation).
 
+    vagrant destroy -f
+    wget https://raw.githubusercontent.com/CumulusNetworks/topology_converter/master/topology_converter.py
+    # edit topology.dot as desired
+    python topology_converter.py topology.dot
+
 ![Cumulus icon](http://cumulusnetworks.com/static/cumulus/img/logo_2014.png)
 
 ### Cumulus Linux
