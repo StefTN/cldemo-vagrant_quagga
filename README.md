@@ -42,10 +42,11 @@ The following tasks are completed to make using the topology more convenient.
 
 After the topology comes up, we use `vagrant ssh` to log in to the management
 device and switch to the `cumulus` user. The `cumulus` user is able to access
-other devices in the network using its SSH key, and has passwordless sudo
-enabled on all devices to make it easy to run administrative commands. **Most
-demos assume that you are logged into the out of band management server as the
-`cumulus` user**.
+other devices (leaf01, spine02) in the network using its SSH key, and has
+passwordless sudo enabled on all devices to make it easy to run administrative
+commands. Further, most automation tools (Ansible, Puppet, Chef) are run
+from this management server. **Most demos assume that you are logged into
+the out of band management server as the `cumulus` user**.
 
 Note that due to the way we simulate the out of band network, it is not possible
 to use `vagrant ssh` to access in-band devices like leaf01 and leaf02. These
