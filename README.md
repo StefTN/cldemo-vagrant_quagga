@@ -121,7 +121,7 @@ Factory-reset a device
 
 Destroy the entire topology
 ---------------------------
-    vagrant destroy -fpl
+    vagrant destroy -f
 
 
 Provision a Smaller Topology
