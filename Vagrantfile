@@ -267,6 +267,7 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
   wbid = 1
+  offset = 0
 
   config.vm.provider "virtualbox" do |v|
     v.gui=false
