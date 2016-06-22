@@ -274,6 +274,7 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
   wbid = 1
+  offset = 0
 {% if provider == 'virtualbox' %}
   config.vm.provider "virtualbox" do |v|
     v.gui=false
@@ -309,9 +310,9 @@ Vagrant.configure("2") do |config|
             :mac => "{{ link.mac|replace(':', '') }}",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '{{ link.local_ip }}',
-            :libvirt__tunnel_local_port => '{{ link.local_port }}',
+            :libvirt__tunnel_local_port => '{{ link.local_port + offset }}',
             :libvirt__tunnel_ip => '{{ link.remote_ip }}',
-            :libvirt__tunnel_port => '{{ link.remote_port }}',
+            :libvirt__tunnel_port => '{{ link.remote_port + offset}}',
             :libvirt__iface_name => '{{ link.local_interface }}',
             auto_config: false{% endif %}{% endfor %}
 
