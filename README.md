@@ -110,6 +110,7 @@ in a repository using an automation tool such as Ansible, Puppet, or Chef
 (preferred) or use the hypervisor's halt and resume functionality.
 
 For VirtualBox, these commands are:
+
     * VBoxManage controlvm leaf01 poweroff
     * VBoxManage startvm leaf01 --type headless
 
