@@ -69,8 +69,9 @@ On an Ubuntu 16.04 box, this can be done with the following commands:
     sudo apt-add-repository ppa:ansible/ansible
     sudo apt-get update
     wget https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.deb
-    sudo dpkgi -i vagrant_1.8.1_x86_64.deb 
+    sudo dpkg -i vagrant_1.8.1_x86_64.deb 
     sudo apt-get install ansible
+    vagrant plugin install vagrant-cumulus
 
 ### Available Demos
 
@@ -96,7 +97,6 @@ To use the reference topology by itself outside of the above demos, follow the i
 
     git clone https://github.com/cumulusnetworks/cldemo-vagrant
     cd cldemo-vagrant
-    vagrant plugin install vagrant-cumulus
     vagrant up
     vagrant ssh oob-mgmt-server
     sudo su - cumulus
@@ -110,6 +110,7 @@ in a repository using an automation tool such as Ansible, Puppet, or Chef
 (preferred) or use the hypervisor's halt and resume functionality.
 
 For VirtualBox, these commands are:
+
     * VBoxManage controlvm leaf01 poweroff
     * VBoxManage startvm leaf01 --type headless
 
