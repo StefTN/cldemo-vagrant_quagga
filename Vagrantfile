@@ -612,7 +612,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "oob-mgmt-switch" do |device|
     device.vm.hostname = "oob-mgmt-switch"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.7"
+    device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_oob-mgmt-switch"
       v.memory = 256
@@ -725,7 +725,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "exit02" do |device|
     device.vm.hostname = "exit02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.7"
+    device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_exit02"
       v.memory = 512
@@ -818,7 +818,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "exit01" do |device|
     device.vm.hostname = "exit01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.7"
+    device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_exit01"
       v.memory = 512
@@ -911,7 +911,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "spine02" do |device|
     device.vm.hostname = "spine02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.7"
+    device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_spine02"
       v.memory = 512
@@ -994,7 +994,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "spine01" do |device|
     device.vm.hostname = "spine01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.7"
+    device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_spine01"
       v.memory = 512
@@ -1077,7 +1077,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf04" do |device|
     device.vm.hostname = "leaf04"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.7"
+    device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf04"
       v.memory = 512
@@ -1170,7 +1170,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf02" do |device|
     device.vm.hostname = "leaf02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.7"
+    device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf02"
       v.memory = 512
@@ -1263,7 +1263,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf03" do |device|
     device.vm.hostname = "leaf03"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.7"
+    device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf03"
       v.memory = 512
@@ -1356,7 +1356,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf01" do |device|
     device.vm.hostname = "leaf01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.7"
+    device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf01"
       v.memory = 512
@@ -1724,7 +1724,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "internet" do |device|
     device.vm.hostname = "internet"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "2.5.7"
+    device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_internet"
       v.memory = 256
