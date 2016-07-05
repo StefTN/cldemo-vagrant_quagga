@@ -15,11 +15,22 @@ echo "  adding fake cl-license..."
 echo -e "#!/bin/bash\nexit 0" > /bin/cl-license
 chmod 755 /bin/cl-license
 
-echo -e "\n\nauto lo" > /etc/network/interfaces
-echo -e "iface lo inet loopback\n\n" >> /etc/network/interfaces
+cat <<EOF > /etc/network/interfaces
+# This file describes the network interfaces available on your system
+# and how to activate them. For more information, see interfaces(5), ifup(8)
+#
+# Please see /usr/share/doc/python-ifupdown2/examples/ for examples
+#
+#
 
-echo -e "\n\nauto eth0" >> /etc/network/interfaces
-echo -e "iface eth0 inet dhcp\n\n" >> /etc/network/interfaces
+# The loopback network interface
+auto lo
+iface lo inet loopback
+
+# The primary network interface
+auto eth0
+iface eth0 inet dhcp
+EOF
 
 ## Convenience code. This is normally done in ZTP.
 echo "cumulus ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/10_cumulus
