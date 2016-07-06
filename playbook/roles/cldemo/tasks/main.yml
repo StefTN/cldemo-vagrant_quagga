@@ -9,16 +9,21 @@
   copy: src=apache2_envvars dest=/etc/apache2/envvars
   notify: restart apache2
 
+- name: install git early
+  apt: name={{ item }}
+  with_items:
+    - curl
+    - man
+    - git
+
 - name: add brightbox and ansible ppa
   apt_repository:  repo={{item}}
   with_items:
     - ppa:brightbox/ruby-ng
 
-- name: install curl, man, bash-completion, and paramiko (for helpers)
+- name: install bash-completion and paramiko (for helpers)
   apt: name={{ item }}
   with_items:
-    - curl
-    - man
     - bash-completion
     - python-paramiko
     - python-dev
@@ -36,7 +41,6 @@
     - ruby2.1
     - ruby2.1-dev
     - ruby-switch
-    - git
     - bundler
 
 - name: set default ruby to 2.1
