@@ -23,17 +23,3 @@
 - name: Clear hosts file
   copy: src=known_hosts dest=/home/{{wbench_user}}/.ssh/known_hosts mode=0600
 
-- name: chown root ssh to root
-  command: chown -R cumulus:cumulus /home/cumulus/.ssh
-
-- name: create root ssh directory
-  file: path=/root/.ssh state=directory
-
-- name: copy cumulus user's private ssh key to root.
-  command: cp /home/{{ wbench_user}}/.ssh/id_rsa /root/.ssh/id_rsa
-
-- name: copy cumulus user's public ssh key to root.
-  command: cp /home/{{ wbench_user}}/.ssh/id_rsa.pub /root/.ssh/id_rsa.pub
-
-- name: chown root ssh to root
-  command: chown -R root /root/.ssh
