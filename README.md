@@ -55,22 +55,17 @@ devices **must** be accessed via the out-of-band management server.
 ### Prerequisites
 
 Before running this demo or any of the other demos in the list below, install
-[VirtualBox](https://www.virtualbox.org/manual/ch02.html),
-[Vagrant](https://www.vagrantup.com/downloads.html), and
-[Ansible](https://docs.ansible.com/ansible/intro_installation.html) using the
-installation instructions from their website. The version of Vagrant and Ansible
+[VirtualBox](https://www.virtualbox.org/manual/ch02.html) and
+[Vagrant](https://www.vagrantup.com/downloads.html) using the
+installation instructions from their website. The version of Vagrant and Virtualbox
 available in your distribution's package manager may be out of date, so
 installing via the preferred sources is recommended. This example was last
-tested with **Vagrant 1.8** and **Ansible 2.0.1**.
+tested with **Vagrant 1.8**.
 
 On an Ubuntu 16.04 box, this can be done with the following commands:
 
-    sudo apt-get install git virtualbox software-properties-common
-    sudo apt-add-repository ppa:ansible/ansible
-    sudo apt-get update
     wget https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.deb
-    sudo dpkg -i vagrant_1.8.1_x86_64.deb 
-    sudo apt-get install ansible
+    sudo dpkg -i vagrant_1.8.1_x86_64.deb
     vagrant plugin install vagrant-cumulus
 
 ### Available Demos
@@ -80,16 +75,16 @@ Typically demos are built upon the Reference Topology shown here using this repo
 * **[Cldemo-docker-quagga](https://github.com/CumulusNetworks/cldemo-docker-quagga)** -- This demo shows off two ways of putting Quagga into a Docker container to do Layer 3 networking on the hosts.
 * **[Cldemo-automation-puppet](https://github.com/CumulusNetworks/cldemo-automation-puppet)** -- This demo demonstrates how to write a manifest using Puppet to configure switches running Cumulus Linux and servers running Ubuntu.
 * **[Cldemo-automation-ansible](https://github.com/CumulusNetworks/cldemo-automation-ansible)** -- This demo demonstrates how to write a playbook using Ansible to configure switches running Cumulus Linux and servers running Ubuntu.
-* **[Cldemo-automation-chef](https://github.com/CumulusNetworks/cldemo-automation-chef)** -- This demo demonstrates how to write a set of cookbooks using Chef to configure switches running Cumulus Linux and servers running Ubuntu. 
+* **[Cldemo-automation-chef](https://github.com/CumulusNetworks/cldemo-automation-chef)** -- This demo demonstrates how to write a set of cookbooks using Chef to configure switches running Cumulus Linux and servers running Ubuntu.
 * **[Cldemo-onie-ztp-ptm](https://github.com/CumulusNetworks/cldemo-onie-ztp-ptm)** -- This demo demonstrates how to configure an out of band management network to automatically install and configure Cumulus Linux using Zero Touch Provisioning, and validate the cabling of the switches using Prescriptive Topology Manager.
 * **[Cldemo-config-routing](https://github.com/CumulusNetworks/cldemo-config-routing)** -- This Github repository contains the configuration files necessary for setting up Layer 3 routing on a CLOS topology using Cumulus Linux and Quagga.
-* **[Cldemo-rdnbr-ansible](https://github.com/CumulusNetworks/cldemo-rdnbr-ansible)** -- COMING SOON -- This demo shows a topology using 'redistribute-neighbor' to add host reachability directly into a BGP routed fabric. 
+* **[Cldemo-rdnbr-ansible](https://github.com/CumulusNetworks/cldemo-rdnbr-ansible)** -- COMING SOON -- This demo shows a topology using 'redistribute-neighbor' to add host reachability directly into a BGP routed fabric.
 * **[Cldemo-roh-ansible](https://github.com/CumulusNetworks/cldemo-roh-ansible)** -- COMING SOON -- This demo shows a topology using 'Routing on the Host' to add host reachability directly into a BGP routed fabric.
 * **[Cldemo-config-mlag](https://github.com/CumulusNetworks/cldemo-config-mlag)** -- COMING SOON
 
 Getting Started
 ------------------
-To use one of the demos above, follow the instructions in the README for each repository. 
+To use one of the demos above, follow the instructions in the README for each repository.
 
 To use the reference topology by itself outside of the above demos, follow the instructions below.
 
