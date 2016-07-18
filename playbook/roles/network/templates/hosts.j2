@@ -1,7 +1,0 @@
-127.0.0.1   localhost
-
-{{ wbench_eth1_ip }} {{ wbench_hostname }}.lab.local {{ wbench_hostname }}
-
-{% for hostname, dnsattr in wbench_hosts.iteritems() %}
-{{dnsattr.ip}} {{hostname}}.lab.local {{hostname}}
-{% endfor %}

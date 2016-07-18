@@ -14,6 +14,7 @@
 
 raise "vagrant-libvirt plugin must be installed, try $ vagrant plugin install vagrant-libvirt" unless Vagrant.has_plugin? "vagrant-libvirt"
 {% endif %}raise "vagrant-cumulus plugin must be installed, try $ vagrant plugin install vagrant-cumulus" unless Vagrant.has_plugin? "vagrant-cumulus"
+require 'json'
 
 $script = <<-SCRIPT
 if grep -q -i 'cumulus' /etc/lsb-release &> /dev/null; then
@@ -328,20 +329,26 @@ Vagrant.configure("2") do |config|
       # Run Any Extra Config
 {% if device.config is defined %}      device.vm.provision :shell , path: "{{ device.config }}"{% endif %}
 
-{% if device.ansible %}      device.vm.provision "ansible" do |ansible|
-          ansible.playbook = "./playbook/site.yml"
-          ansible.extra_vars = {wbench_hosts: {
-              {% for device2 in devices %}
-              {% if not device2.vagrant %}
-              {% for link in device2.interfaces %}
-              {% if link.local_interface == 'eth0' %}
-                  {{ device2.hostname}}: {ip: "{{device2.mgmt_ip}}", mac: "{{ link.mac }}"},
-              {% endif %}
-              {% endfor %}
-              {% endif %}
-              {% endfor %}
-                              }}
-        end{% endif %}
+{% if device.ansible %}
+    extravars = {wbench_hosts: {
+        {% for device2 in devices %}
+        {% if not device2.vagrant %}
+        {% for link in device2.interfaces %}
+        {% if link.local_interface == 'eth0' %}
+            {{ device2.hostname}}: {ip: "{{device2.mgmt_ip}}", mac: "{{ link.mac }}"},
+        {% endif %}
+        {% endfor %}
+        {% endif %}
+        {% endfor %}
+                        }}
+    device.vm.provision :shell , inline: "sudo apt-get update"
+    device.vm.provision :shell , inline: "sudo apt-get install software-properties-common git -y"
+    device.vm.provision :shell , inline: "sudo apt-add-repository ppa:ansible/ansible -y"
+    device.vm.provision :shell , inline: "sudo apt-get update"
+    device.vm.provision :shell , inline: "sudo apt-get install ansible -qy"
+    device.vm.provision :shell , inline: "git clone https://github.com/cumulusnetworks/cldemo-provision "
+    device.vm.provision :shell , inline: "ansible-playbook cldemo-provision/site.yml --extra-vars '#{extravars.to_json}'  --connection=local -i localhost,"
+{% endif %}
 
       # Apply the interface re-map
       device.vm.provision "file", source: "{{ script_storage }}/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
