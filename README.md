@@ -68,6 +68,9 @@ On an Ubuntu 16.04 box, this can be done with the following commands:
     sudo dpkg -i vagrant_1.8.1_x86_64.deb
     vagrant plugin install vagrant-cumulus
 
+On Windows, if you have HyperV enabled, you will need to disable it as it will
+conflict with Virtualbox's ability to create 64-bit VMs.
+
 ### Available Demos
 
 Typically demos are built upon the Reference Topology shown here using this repository as a starting point and layering device configuration on top.
