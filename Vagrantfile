@@ -284,8 +284,8 @@ Vagrant.configure("2") do |config|
     
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_oob-mgmt-server"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 1024
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
@@ -623,8 +623,8 @@ Vagrant.configure("2") do |config|
     device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_oob-mgmt-switch"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 256
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -737,8 +737,8 @@ Vagrant.configure("2") do |config|
     device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_exit02"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -831,8 +831,8 @@ Vagrant.configure("2") do |config|
     device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_exit01"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -925,8 +925,8 @@ Vagrant.configure("2") do |config|
     device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_spine02"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -1009,8 +1009,8 @@ Vagrant.configure("2") do |config|
     device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_spine01"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -1093,8 +1093,8 @@ Vagrant.configure("2") do |config|
     device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf04"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -1187,8 +1187,8 @@ Vagrant.configure("2") do |config|
     device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf02"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -1281,8 +1281,8 @@ Vagrant.configure("2") do |config|
     device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf03"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -1375,8 +1375,8 @@ Vagrant.configure("2") do |config|
     device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf01"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -1469,8 +1469,8 @@ Vagrant.configure("2") do |config|
     
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_edge01"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
@@ -1525,8 +1525,8 @@ Vagrant.configure("2") do |config|
     
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_server01"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
@@ -1581,8 +1581,8 @@ Vagrant.configure("2") do |config|
     
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_server03"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
@@ -1637,8 +1637,8 @@ Vagrant.configure("2") do |config|
     
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_server02"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
@@ -1693,8 +1693,8 @@ Vagrant.configure("2") do |config|
     
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_server04"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 512
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
@@ -1749,8 +1749,8 @@ Vagrant.configure("2") do |config|
     device.vm.box_version = "3.0.0"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_internet"
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null'] 
       v.memory = 256
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
