@@ -594,7 +594,7 @@ Vagrant.configure("2") do |config|
         
                         }}
     device.vm.provision :shell , inline: "sudo apt-get update"
-    device.vm.provision :shell , inline: "sudo apt-get install software-properties-common git -y"
+    device.vm.provision :shell , inline: "sudo apt-get install software-properties-common vim lldpd git -y"
     device.vm.provision :shell , inline: "sudo apt-add-repository ppa:ansible/ansible -y"
     device.vm.provision :shell , inline: "sudo apt-get update"
     device.vm.provision :shell , inline: "sudo apt-get install ansible -qy"
