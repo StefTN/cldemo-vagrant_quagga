@@ -1,5 +1,5 @@
-# Created by Topology-Converter v4.1.0
-#    using topology data from: topology.dot
+# Created by Topology-Converter v4.4.0_dev
+#    using topology data from: ./topology.dot
 #    NOTE: in order to use this Vagrantfile you will need:
 #       -Vagrant(v1.7+) installed: http://www.vagrantup.com/downloads
 #       -Cumulus Plugin for Vagrant installed: $ vagrant plugin install vagrant-cumulus
@@ -9,6 +9,9 @@
 #       -Boxes which have been mutated to support Libvirt -- see guide below:
 #            https://community.cumulusnetworks.com/cumulus/topics/converting-cumulus-vx-virtualbox-vagrant-box-gt-libvirt-vagrant-box
 #       -Start with \"vagrant up --provider=libvirt --no-parallel\n")
+
+#Set the default provider to libvirt in the case they forget --provider=libvirt or if someone destroys a machine it reverts to virtualbox
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
 raise "vagrant-libvirt plugin must be installed, try $ vagrant plugin install vagrant-libvirt" unless Vagrant.has_plugin? "vagrant-libvirt"
 raise "vagrant-cumulus plugin must be installed, try $ vagrant plugin install vagrant-cumulus" unless Vagrant.has_plugin? "vagrant-cumulus"
@@ -289,6 +292,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "oob-mgmt-server"
     device.vm.box = "boxcutter/ubuntu1404"
     
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -301,7 +305,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth1 --> oob-mgmt-switch:swp1
       device.vm.network "private_network",
-            :mac => "44383900005F",
+            :mac => "44383900005f",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8054 + offset }",
@@ -328,7 +332,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            exit02: {ip: "192.168.0.42", mac: "A0:00:00:00:00:42"},
+            exit02: {ip: "192.168.0.42", mac: "a0:00:00:00:00:42"},
         
         
         
@@ -356,7 +360,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            exit01: {ip: "192.168.0.41", mac: "A0:00:00:00:00:41"},
+            exit01: {ip: "192.168.0.41", mac: "a0:00:00:00:00:41"},
         
         
         
@@ -384,7 +388,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            spine02: {ip: "192.168.0.22", mac: "A0:00:00:00:00:22"},
+            spine02: {ip: "192.168.0.22", mac: "a0:00:00:00:00:22"},
         
         
         
@@ -408,7 +412,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            spine01: {ip: "192.168.0.21", mac: "A0:00:00:00:00:21"},
+            spine01: {ip: "192.168.0.21", mac: "a0:00:00:00:00:21"},
         
         
         
@@ -432,7 +436,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            leaf04: {ip: "192.168.0.14", mac: "A0:00:00:00:00:14"},
+            leaf04: {ip: "192.168.0.14", mac: "a0:00:00:00:00:14"},
         
         
         
@@ -460,7 +464,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            leaf02: {ip: "192.168.0.12", mac: "A0:00:00:00:00:12"},
+            leaf02: {ip: "192.168.0.12", mac: "a0:00:00:00:00:12"},
         
         
         
@@ -488,7 +492,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            leaf03: {ip: "192.168.0.13", mac: "A0:00:00:00:00:13"},
+            leaf03: {ip: "192.168.0.13", mac: "a0:00:00:00:00:13"},
         
         
         
@@ -516,7 +520,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            leaf01: {ip: "192.168.0.11", mac: "A0:00:00:00:00:11"},
+            leaf01: {ip: "192.168.0.11", mac: "a0:00:00:00:00:11"},
         
         
         
@@ -544,7 +548,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            edge01: {ip: "192.168.0.51", mac: "A0:00:00:00:00:51"},
+            edge01: {ip: "192.168.0.51", mac: "a0:00:00:00:00:51"},
         
         
         
@@ -556,7 +560,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            server01: {ip: "192.168.0.31", mac: "A0:00:00:00:00:31"},
+            server01: {ip: "192.168.0.31", mac: "a0:00:00:00:00:31"},
         
         
         
@@ -568,7 +572,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            server03: {ip: "192.168.0.33", mac: "A0:00:00:00:00:33"},
+            server03: {ip: "192.168.0.33", mac: "a0:00:00:00:00:33"},
         
         
         
@@ -580,7 +584,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            server02: {ip: "192.168.0.32", mac: "A0:00:00:00:00:32"},
+            server02: {ip: "192.168.0.32", mac: "a0:00:00:00:00:32"},
         
         
         
@@ -592,7 +596,7 @@ Vagrant.configure("2") do |config|
         
         
         
-            server04: {ip: "192.168.0.34", mac: "A0:00:00:00:00:34"},
+            server04: {ip: "192.168.0.34", mac: "a0:00:00:00:00:34"},
         
         
         
@@ -605,7 +609,7 @@ Vagrant.configure("2") do |config|
         
                         }}
     device.vm.provision :shell , inline: "sudo apt-get update"
-    device.vm.provision :shell , inline: "sudo apt-get install software-properties-common git -y"
+    device.vm.provision :shell , inline: "sudo apt-get install software-properties-common vim lldpd git -y"
     device.vm.provision :shell , inline: "sudo apt-add-repository ppa:ansible/ansible -y"
     device.vm.provision :shell , inline: "sudo apt-get update"
     device.vm.provision :shell , inline: "sudo apt-get install ansible -qy"
@@ -616,7 +620,7 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005F eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:5f eth1"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm -nv"
@@ -632,6 +636,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "oob-mgmt-switch"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.0.0"
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -652,7 +657,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp2 --> server01:eth0
       device.vm.network "private_network",
-            :mac => "44383900004B",
+            :mac => "44383900004b",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9042 + offset }",
@@ -722,7 +727,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp9 --> leaf04:eth0
       device.vm.network "private_network",
-            :mac => "44383900003E",
+            :mac => "44383900003e",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9034 + offset }",
@@ -804,21 +809,21 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000060 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004B swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000054 swp3"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000005 swp4"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000056 swp5"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000025 swp6"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000045 swp7"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000034 swp8"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003E swp9"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000039 swp10"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000069 swp11"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000010 swp12"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000055 swp13"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000048 swp14"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000040 swp15"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:60 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:4b swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:54 swp3"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:05 swp4"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:56 swp5"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:25 swp6"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:45 swp7"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:34 swp8"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:3e swp9"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:39 swp10"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:69 swp11"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:10 swp12"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:55 swp13"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:48 swp14"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:40 swp15"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm -nv"
@@ -834,6 +839,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "exit02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.0.0"
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -844,7 +850,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp13
       device.vm.network "private_network",
-            :mac => "A00000000042",
+            :mac => "a00000000042",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8048 + offset }",
@@ -854,7 +860,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp1 --> edge01:eth2
       device.vm.network "private_network",
-            :mac => "44383900000D",
+            :mac => "44383900000d",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9007 + offset }",
@@ -894,7 +900,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp47 --> exit02:swp48
       device.vm.network "private_network",
-            :mac => "44383900003C",
+            :mac => "44383900003c",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8033 + offset }",
@@ -904,7 +910,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp48 --> exit02:swp47
       device.vm.network "private_network",
-            :mac => "44383900003D",
+            :mac => "44383900003d",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9033 + offset }",
@@ -914,7 +920,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp49 --> exit01:swp49
       device.vm.network "private_network",
-            :mac => "44383900002D",
+            :mac => "44383900002d",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9024 + offset }",
@@ -924,7 +930,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp50 --> exit01:swp50
       device.vm.network "private_network",
-            :mac => "44383900001A",
+            :mac => "44383900001a",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9014 + offset }",
@@ -944,7 +950,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp52 --> spine02:swp29
       device.vm.network "private_network",
-            :mac => "44383900005D",
+            :mac => "44383900005d",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8053 + offset }",
@@ -966,17 +972,17 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:42 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000D swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000047 swp44"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000037 swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000038 swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003C swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003D swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002D swp49"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001A swp50"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000026 swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005D swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:42 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:0d swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:47 swp44"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:37 swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:38 swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:3c swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:3d swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:2d swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:1a swp50"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:26 swp51"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:5d swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -992,6 +998,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "exit01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.0.0"
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -1002,7 +1009,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp12
       device.vm.network "private_network",
-            :mac => "A00000000041",
+            :mac => "a00000000041",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8009 + offset }",
@@ -1032,7 +1039,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp45 --> exit01:swp46
       device.vm.network "private_network",
-            :mac => "44383900004C",
+            :mac => "44383900004c",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8043 + offset }",
@@ -1042,7 +1049,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp46 --> exit01:swp45
       device.vm.network "private_network",
-            :mac => "44383900004D",
+            :mac => "44383900004d",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9043 + offset }",
@@ -1072,7 +1079,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp49 --> exit02:swp49
       device.vm.network "private_network",
-            :mac => "44383900002C",
+            :mac => "44383900002c",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8024 + offset }",
@@ -1092,7 +1099,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp51 --> spine01:swp30
       device.vm.network "private_network",
-            :mac => "44383900000A",
+            :mac => "44383900000a",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8006 + offset }",
@@ -1124,17 +1131,17 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:41 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000053 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000009 swp44"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004C swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004D swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000013 swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000014 swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002C swp49"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000019 swp50"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000A swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000063 swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:41 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:53 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:09 swp44"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:4c swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:4d swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:13 swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:14 swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:2c swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:19 swp50"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:0a swp51"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:63 swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1150,6 +1157,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "spine02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.0.0"
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -1160,7 +1168,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp11
       device.vm.network "private_network",
-            :mac => "A00000000022",
+            :mac => "a00000000022",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8059 + offset }",
@@ -1170,7 +1178,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp1 --> leaf01:swp52
       device.vm.network "private_network",
-            :mac => "44383900002B",
+            :mac => "44383900002b",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9023 + offset }",
@@ -1200,7 +1208,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp4 --> leaf04:swp52
       device.vm.network "private_network",
-            :mac => "44383900004F",
+            :mac => "44383900004f",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9044 + offset }",
@@ -1210,7 +1218,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp29 --> exit02:swp52
       device.vm.network "private_network",
-            :mac => "44383900005E",
+            :mac => "44383900005e",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9053 + offset }",
@@ -1262,15 +1270,15 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:22 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002B swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000068 swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000020 swp3"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004F swp4"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005E swp29"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000064 swp30"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000051 swp31"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000042 swp32"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:22 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:2b swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:68 swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:20 swp3"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:4f swp4"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:5e swp29"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:64 swp30"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:51 swp31"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:42 swp32"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1286,6 +1294,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "spine01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.0.0"
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -1296,7 +1305,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp10
       device.vm.network "private_network",
-            :mac => "A00000000021",
+            :mac => "a00000000021",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8031 + offset }",
@@ -1306,7 +1315,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp1 --> leaf01:swp51
       device.vm.network "private_network",
-            :mac => "44383900005C",
+            :mac => "44383900005c",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9052 + offset }",
@@ -1316,7 +1325,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp2 --> leaf02:swp51
       device.vm.network "private_network",
-            :mac => "44383900002F",
+            :mac => "44383900002f",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9025 + offset }",
@@ -1356,7 +1365,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp30 --> exit01:swp51
       device.vm.network "private_network",
-            :mac => "44383900000B",
+            :mac => "44383900000b",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9006 + offset }",
@@ -1398,15 +1407,15 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:21 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005C swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002F swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000058 swp3"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000044 swp4"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000027 swp29"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000B swp30"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000050 swp31"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000041 swp32"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:21 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:5c swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:2f swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:58 swp3"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:44 swp4"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:27 swp29"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:0b swp30"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:50 swp31"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:41 swp32"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1422,6 +1431,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "leaf04"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.0.0"
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -1432,7 +1442,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp9
       device.vm.network "private_network",
-            :mac => "A00000000014",
+            :mac => "a00000000014",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8034 + offset }",
@@ -1462,7 +1472,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp45 --> leaf04:swp46
       device.vm.network "private_network",
-            :mac => "44383900001D",
+            :mac => "44383900001d",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8016 + offset }",
@@ -1472,7 +1482,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp46 --> leaf04:swp45
       device.vm.network "private_network",
-            :mac => "44383900001E",
+            :mac => "44383900001e",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9016 + offset }",
@@ -1482,7 +1492,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp47 --> leaf04:swp48
       device.vm.network "private_network",
-            :mac => "44383900003A",
+            :mac => "44383900003a",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8032 + offset }",
@@ -1492,7 +1502,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp48 --> leaf04:swp47
       device.vm.network "private_network",
-            :mac => "44383900003B",
+            :mac => "44383900003b",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9032 + offset }",
@@ -1532,7 +1542,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp52 --> spine02:swp4
       device.vm.network "private_network",
-            :mac => "44383900004E",
+            :mac => "44383900004e",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8044 + offset }",
@@ -1554,17 +1564,17 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:14 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000066 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000033 swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001D swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001E swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003A swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003B swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000036 swp49"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000007 swp50"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000043 swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004E swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:14 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:66 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:33 swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:1d swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:1e swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:3a swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:3b swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:36 swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:07 swp50"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:43 swp51"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:4e swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1580,6 +1590,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "leaf02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.0.0"
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -1590,7 +1601,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp7
       device.vm.network "private_network",
-            :mac => "A00000000012",
+            :mac => "a00000000012",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8038 + offset }",
@@ -1610,7 +1621,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp2 --> server02:eth2
       device.vm.network "private_network",
-            :mac => "44383900001C",
+            :mac => "44383900001c",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9015 + offset }",
@@ -1620,7 +1631,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp45 --> leaf02:swp46
       device.vm.network "private_network",
-            :mac => "44383900000E",
+            :mac => "44383900000e",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8008 + offset }",
@@ -1630,7 +1641,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp46 --> leaf02:swp45
       device.vm.network "private_network",
-            :mac => "44383900000F",
+            :mac => "44383900000f",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9008 + offset }",
@@ -1680,7 +1691,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp51 --> spine01:swp2
       device.vm.network "private_network",
-            :mac => "44383900002E",
+            :mac => "44383900002e",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8025 + offset }",
@@ -1712,17 +1723,17 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:12 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000018 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001C swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000E swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000F swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000061 swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000062 swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000012 swp49"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000002 swp50"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002E swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000067 swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:12 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:18 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:1c swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:0e swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:0f swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:61 swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:62 swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:12 swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:02 swp50"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:2e swp51"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:67 swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1738,6 +1749,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "leaf03"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.0.0"
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -1748,7 +1760,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp8
       device.vm.network "private_network",
-            :mac => "A00000000013",
+            :mac => "a00000000013",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8028 + offset }",
@@ -1808,7 +1820,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp48 --> leaf03:swp47
       device.vm.network "private_network",
-            :mac => "44383900005A",
+            :mac => "44383900005a",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9051 + offset }",
@@ -1848,7 +1860,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp52 --> spine02:swp3
       device.vm.network "private_network",
-            :mac => "44383900001F",
+            :mac => "44383900001f",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8017 + offset }",
@@ -1870,17 +1882,17 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:13 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000029 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000024 swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000030 swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000031 swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000059 swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005A swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000035 swp49"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000006 swp50"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000057 swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001F swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:13 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:29 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:24 swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:30 swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:31 swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:59 swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:5a swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:35 swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:06 swp50"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:57 swp51"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:1f swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1896,6 +1908,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "leaf01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.0.0"
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -1906,7 +1919,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp6
       device.vm.network "private_network",
-            :mac => "A00000000011",
+            :mac => "a00000000011",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8020 + offset }",
@@ -1966,7 +1979,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp48 --> leaf01:swp47
       device.vm.network "private_network",
-            :mac => "44383900004A",
+            :mac => "44383900004a",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 9041 + offset }",
@@ -1996,7 +2009,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp51 --> spine01:swp1
       device.vm.network "private_network",
-            :mac => "44383900005B",
+            :mac => "44383900005b",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8052 + offset }",
@@ -2006,7 +2019,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for swp52 --> spine02:swp1
       device.vm.network "private_network",
-            :mac => "44383900002A",
+            :mac => "44383900002a",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8023 + offset }",
@@ -2028,17 +2041,17 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:11 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000004 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000016 swp2"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000021 swp45"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000022 swp46"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000049 swp47"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900004A swp48"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000011 swp49"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000001 swp50"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900005B swp51"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900002A swp52"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:11 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:04 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:16 swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:21 swp45"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:22 swp46"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:49 swp47"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:4a swp48"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:11 swp49"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:01 swp50"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:5b swp51"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:2a swp52"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -2054,11 +2067,13 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "edge01"
     device.vm.box = "boxcutter/ubuntu1404"
     
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
     device.vm.provider :libvirt do |v|
       v.memory = 512
+      v.nic_model_type = 'e1000' 
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
@@ -2066,7 +2081,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp14
       device.vm.network "private_network",
-            :mac => "A00000000051",
+            :mac => "a00000000051",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8040 + offset }",
@@ -2086,7 +2101,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for eth2 --> exit02:swp1
       device.vm.network "private_network",
-            :mac => "44383900000C",
+            :mac => "44383900000c",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8007 + offset }",
@@ -2108,9 +2123,9 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:51 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000052 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900000C eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:51 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:52 eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:0c eth2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -2126,11 +2141,13 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "server01"
     device.vm.box = "boxcutter/ubuntu1404"
     
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
     device.vm.provider :libvirt do |v|
       v.memory = 512
+      v.nic_model_type = 'e1000' 
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
@@ -2138,7 +2155,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp2
       device.vm.network "private_network",
-            :mac => "A00000000031",
+            :mac => "a00000000031",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8042 + offset }",
@@ -2180,9 +2197,9 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:31 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000003 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000017 eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:31 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:03 eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:17 eth2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -2198,11 +2215,13 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "server03"
     device.vm.box = "boxcutter/ubuntu1404"
     
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
     device.vm.provider :libvirt do |v|
       v.memory = 512
+      v.nic_model_type = 'e1000' 
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
@@ -2210,7 +2229,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp4
       device.vm.network "private_network",
-            :mac => "A00000000033",
+            :mac => "a00000000033",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8003 + offset }",
@@ -2252,9 +2271,9 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:33 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000028 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000065 eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:33 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:28 eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:65 eth2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -2270,11 +2289,13 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "server02"
     device.vm.box = "boxcutter/ubuntu1404"
     
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
     device.vm.provider :libvirt do |v|
       v.memory = 512
+      v.nic_model_type = 'e1000' 
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
@@ -2282,7 +2303,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp3
       device.vm.network "private_network",
-            :mac => "A00000000032",
+            :mac => "a00000000032",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8047 + offset }",
@@ -2302,7 +2323,7 @@ Vagrant.configure("2") do |config|
             auto_config: false
       # link for eth2 --> leaf02:swp2
       device.vm.network "private_network",
-            :mac => "44383900001B",
+            :mac => "44383900001b",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8015 + offset }",
@@ -2324,9 +2345,9 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:32 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000015 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900001B eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:32 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:15 eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:1b eth2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -2342,11 +2363,13 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "server04"
     device.vm.box = "boxcutter/ubuntu1404"
     
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
     device.vm.provider :libvirt do |v|
       v.memory = 512
+      v.nic_model_type = 'e1000' 
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
       # UBUNTU DEVICES ONLY: Shorten Boot Process - remove \"Wait for Network
@@ -2354,7 +2377,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp5
       device.vm.network "private_network",
-            :mac => "A00000000034",
+            :mac => "a00000000034",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8049 + offset }",
@@ -2396,9 +2419,9 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a A0:00:00:00:00:34 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000023 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000032 eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:34 eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:23 eth1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:32 eth2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -2414,6 +2437,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "internet"
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.0.0"
+
     # disabling sync folder support on all VMs
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder '.', '/vagrant', :disabled => true
@@ -2424,7 +2448,7 @@ Vagrant.configure("2") do |config|
 
       # link for eth0 --> oob-mgmt-switch:swp15
       device.vm.network "private_network",
-            :mac => "44383900003F",
+            :mac => "44383900003f",
             :libvirt__tunnel_type => 'udp',
             :libvirt__tunnel_local_ip => '127.0.0.1',
             :libvirt__tunnel_local_port => "#{ 8035 + offset }",
@@ -2466,9 +2490,9 @@ Vagrant.configure("2") do |config|
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44383900003F eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000008 swp1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 443839000046 swp2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:3f eth0"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:08 swp1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:46 swp2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm --vagrant-name=swp48"
