@@ -1,5 +1,5 @@
 # Created by Topology-Converter v4.4.0_dev
-#    using topology data from: ./topology.dot
+#    using topology data from: topology.dot
 #    NOTE: in order to use this Vagrantfile you will need:
 #       -Vagrant(v1.7+) installed: http://www.vagrantup.com/downloads
 #       -Cumulus Plugin for Vagrant installed: $ vagrant plugin install vagrant-cumulus
@@ -621,7 +621,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "oob-mgmt-switch" do |device|
     device.vm.hostname = "oob-mgmt-switch"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.0.0"
+    device.vm.box_version = "3.0.1"
 
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_oob-mgmt-switch"
@@ -736,7 +736,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "exit02" do |device|
     device.vm.hostname = "exit02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.0.0"
+    device.vm.box_version = "3.0.1"
 
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_exit02"
@@ -831,7 +831,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "exit01" do |device|
     device.vm.hostname = "exit01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.0.0"
+    device.vm.box_version = "3.0.1"
 
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_exit01"
@@ -926,7 +926,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "spine02" do |device|
     device.vm.hostname = "spine02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.0.0"
+    device.vm.box_version = "3.0.1"
 
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_spine02"
@@ -1011,7 +1011,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "spine01" do |device|
     device.vm.hostname = "spine01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.0.0"
+    device.vm.box_version = "3.0.1"
 
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_spine01"
@@ -1096,7 +1096,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf04" do |device|
     device.vm.hostname = "leaf04"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.0.0"
+    device.vm.box_version = "3.0.1"
 
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf04"
@@ -1191,7 +1191,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf02" do |device|
     device.vm.hostname = "leaf02"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.0.0"
+    device.vm.box_version = "3.0.1"
 
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf02"
@@ -1286,7 +1286,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf03" do |device|
     device.vm.hostname = "leaf03"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.0.0"
+    device.vm.box_version = "3.0.1"
 
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf03"
@@ -1381,7 +1381,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "leaf01" do |device|
     device.vm.hostname = "leaf01"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.0.0"
+    device.vm.box_version = "3.0.1"
 
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf01"
@@ -1761,7 +1761,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "internet" do |device|
     device.vm.hostname = "internet"
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.0.0"
+    device.vm.box_version = "3.0.1"
 
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_internet"
