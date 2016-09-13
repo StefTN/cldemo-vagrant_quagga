@@ -1,13 +1,24 @@
-# Created by Topology-Converter v4.4.0_dev
+# Created by Topology-Converter v4.5.0
+#    https://github.com/cumulusnetworks/topology_converter
 #    using topology data from: topology.dot
+#
 #    NOTE: in order to use this Vagrantfile you will need:
-#       -Vagrant(v1.7+) installed: http://www.vagrantup.com/downloads
+#       -Vagrant(v1.8.1+) installed: http://www.vagrantup.com/downloads
 #       -Cumulus Plugin for Vagrant installed: $ vagrant plugin install vagrant-cumulus
 #       -the "helper_scripts" directory that comes packaged with topology-converter.py
 #       -Virtualbox installed: https://www.virtualbox.org/wiki/Downloads
 
-raise "vagrant-cumulus plugin must be installed, try $ vagrant plugin install vagrant-cumulus" unless Vagrant.has_plugin? "vagrant-cumulus"
-require 'json'
+
+
+# Check required plugins
+REQUIRED_PLUGINS = %w(vagrant-cumulus)
+exit unless REQUIRED_PLUGINS.all? do |plugin|
+  Vagrant.has_plugin?(plugin) || (
+    puts "The #{plugin} plugin is required. Please install it with:"
+    puts "$ vagrant plugin install #{plugin}"
+    false
+  )
+end
 
 $script = <<-SCRIPT
 if grep -q -i 'cumulus' /etc/lsb-release &> /dev/null; then
@@ -280,7 +291,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for oob-mgmt-server #####
   config.vm.define "oob-mgmt-server" do |device|
     device.vm.hostname = "oob-mgmt-server"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "boxcutter/ubuntu1604"
     
 
     device.vm.provider "virtualbox" do |v|
@@ -297,10 +308,12 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
+
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -310,290 +323,20 @@ Vagrant.configure("2") do |config|
 
 
     extravars = {wbench_hosts: {
-        
-        
-        
-        
-        
-        
-        
-        
-            exit02: {ip: "192.168.0.42", mac: "a0:00:00:00:00:42"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            exit01: {ip: "192.168.0.41", mac: "a0:00:00:00:00:41"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            spine02: {ip: "192.168.0.22", mac: "a0:00:00:00:00:22"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            spine01: {ip: "192.168.0.21", mac: "a0:00:00:00:00:21"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            leaf04: {ip: "192.168.0.14", mac: "a0:00:00:00:00:14"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            leaf02: {ip: "192.168.0.12", mac: "a0:00:00:00:00:12"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            leaf03: {ip: "192.168.0.13", mac: "a0:00:00:00:00:13"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            leaf01: {ip: "192.168.0.11", mac: "a0:00:00:00:00:11"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            edge01: {ip: "192.168.0.51", mac: "a0:00:00:00:00:51"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            server01: {ip: "192.168.0.31", mac: "a0:00:00:00:00:31"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            server03: {ip: "192.168.0.33", mac: "a0:00:00:00:00:33"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            server02: {ip: "192.168.0.32", mac: "a0:00:00:00:00:32"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            server04: {ip: "192.168.0.34", mac: "a0:00:00:00:00:34"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-                        }}
+        exit02: {ip: "192.168.0.42", mac: "a0:00:00:00:00:42"},
+        exit01: {ip: "192.168.0.41", mac: "a0:00:00:00:00:41"},
+        spine02: {ip: "192.168.0.22", mac: "a0:00:00:00:00:22"},
+        spine01: {ip: "192.168.0.21", mac: "a0:00:00:00:00:21"},
+        leaf04: {ip: "192.168.0.14", mac: "a0:00:00:00:00:14"},
+        leaf02: {ip: "192.168.0.12", mac: "a0:00:00:00:00:12"},
+        leaf03: {ip: "192.168.0.13", mac: "a0:00:00:00:00:13"},
+        leaf01: {ip: "192.168.0.11", mac: "a0:00:00:00:00:11"},
+        edge01: {ip: "192.168.0.51", mac: "a0:00:00:00:00:51"},
+        server01: {ip: "192.168.0.31", mac: "a0:00:00:00:00:31"},
+        server03: {ip: "192.168.0.33", mac: "a0:00:00:00:00:33"},
+        server02: {ip: "192.168.0.32", mac: "a0:00:00:00:00:32"},
+        server04: {ip: "192.168.0.34", mac: "a0:00:00:00:00:34"},
+        }}
     device.vm.provision :shell , inline: "sudo apt-get update"
     device.vm.provision :shell , inline: "sudo apt-get install software-properties-common vim lldpd git -y"
     device.vm.provision :shell , inline: "sudo apt-add-repository ppa:ansible/ansible -y"
@@ -677,24 +420,23 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc13', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc14', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc15', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc16', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc13', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc14', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc15', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc16', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -780,20 +522,19 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -875,20 +616,19 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -964,18 +704,17 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -1049,18 +788,17 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -1140,20 +878,19 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -1235,20 +972,19 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -1330,20 +1066,19 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -1425,20 +1160,19 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -1475,7 +1209,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for edge01 #####
   config.vm.define "edge01" do |device|
     device.vm.hostname = "edge01"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "boxcutter/ubuntu1604"
     
 
     device.vm.provider "virtualbox" do |v|
@@ -1498,12 +1232,11 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -1532,7 +1265,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for server01 #####
   config.vm.define "server01" do |device|
     device.vm.hostname = "server01"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "boxcutter/ubuntu1604"
     
 
     device.vm.provider "virtualbox" do |v|
@@ -1555,12 +1288,11 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -1589,7 +1321,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for server03 #####
   config.vm.define "server03" do |device|
     device.vm.hostname = "server03"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "boxcutter/ubuntu1604"
     
 
     device.vm.provider "virtualbox" do |v|
@@ -1612,12 +1344,11 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -1646,7 +1377,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for server02 #####
   config.vm.define "server02" do |device|
     device.vm.hostname = "server02"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "boxcutter/ubuntu1604"
     
 
     device.vm.provider "virtualbox" do |v|
@@ -1669,12 +1400,11 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -1703,7 +1433,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for server04 #####
   config.vm.define "server04" do |device|
     device.vm.hostname = "server04"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "boxcutter/ubuntu1604"
     
 
     device.vm.provider "virtualbox" do |v|
@@ -1726,12 +1456,11 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"
@@ -1781,12 +1510,16 @@ Vagrant.configure("2") do |config|
       
 
     device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-vms']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-vms']
+      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
+      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
 
       vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
+      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
+      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
+
+end
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
       device.vm.provision :shell , inline: "(grep -q -E '^mesg n$' /root/.profile && sed -i 's/^mesg n$/tty -s \\&\\& mesg n/g' /root/.profile && echo 'Ignore the previous error \"stdin: is not a tty\" -- fixing this now...') || exit 0;"

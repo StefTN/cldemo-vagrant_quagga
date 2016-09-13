@@ -1,7 +1,9 @@
 # Created by Topology-Converter v{{ version }}
+#    https://github.com/cumulusnetworks/topology_converter
 #    using topology data from: {{ topology_file }}
+#
 #    NOTE: in order to use this Vagrantfile you will need:
-#       -Vagrant(v1.7+) installed: http://www.vagrantup.com/downloads
+#       -Vagrant(v1.8.1+) installed: http://www.vagrantup.com/downloads
 #       -Cumulus Plugin for Vagrant installed: $ vagrant plugin install vagrant-cumulus
 #       -the "helper_scripts" directory that comes packaged with topology-converter.py
 {% if provider == 'virtualbox' %}#       -Virtualbox installed: https://www.virtualbox.org/wiki/Downloads
@@ -15,9 +17,25 @@
 #Set the default provider to libvirt in the case they forget --provider=libvirt or if someone destroys a machine it reverts to virtualbox
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
-raise "vagrant-libvirt plugin must be installed, try $ vagrant plugin install vagrant-libvirt" unless Vagrant.has_plugin? "vagrant-libvirt"
-{% endif %}raise "vagrant-cumulus plugin must be installed, try $ vagrant plugin install vagrant-cumulus" unless Vagrant.has_plugin? "vagrant-cumulus"
-require 'json'
+# Check required plugins
+REQUIRED_PLUGINS_LIBVIRT = %w(vagrant-libvirt vagrant-mutate)
+exit unless REQUIRED_PLUGINS_LIBVIRT.all? do |plugin|
+  Vagrant.has_plugin?(plugin) || (
+    puts "The #{plugin} plugin is required. Please install it with:"
+    puts "$ vagrant plugin install #{plugin}"
+    false
+  )
+end{% endif %}
+
+# Check required plugins
+REQUIRED_PLUGINS = %w(vagrant-cumulus)
+exit unless REQUIRED_PLUGINS.all? do |plugin|
+  Vagrant.has_plugin?(plugin) || (
+    puts "The #{plugin} plugin is required. Please install it with:"
+    puts "$ vagrant plugin install #{plugin}"
+    false
+  )
+end
 
 $script = <<-SCRIPT
 if grep -q -i 'cumulus' /etc/lsb-release &> /dev/null; then
@@ -324,9 +342,12 @@ Vagrant.configure("2") do |config|
             auto_config: false{% endif %}{% endfor %}
 
 {% if provider == 'virtualbox' %}    device.vm.provider "virtualbox" do |vbox|
-{% for i in range(2, 2+device.interfaces.__len__()) %}      vbox.customize ['modifyvm', :id, '--nicpromisc{{i}}', 'allow-vms']
+{% for i in range(2, 2+device.interfaces.__len__()) %}      vbox.customize ['modifyvm', :id, '--nicpromisc{{i}}', 'allow-all']
 {% endfor %}
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+{% if device.function == "oob-server" or device.function == "internet" -%}
+{% for i in range(1, 2+device.interfaces.__len__()) %}      vbox.customize ["modifyvm", :id, "--nictype{{i}}", "virtio"]
+{% endfor %}
+{% endif -%}
     end{% endif %}
 
       # Fixes "stdin: is not a tty" message --> https://github.com/mitchellh/vagrant/issues/1673
@@ -337,15 +358,15 @@ Vagrant.configure("2") do |config|
 
 {% if device.ansible %}
     extravars = {wbench_hosts: {
-        {% for device2 in devices %}
-        {% if not device2.vagrant %}
-        {% for link in device2.interfaces %}
-        {% if link.local_interface == 'eth0' %}
+        {% for device2 in devices -%}
+        {% if not device2.vagrant -%}
+        {% for link in device2.interfaces -%}
+        {% if link.local_interface == 'eth0' -%}
             {{ device2.hostname}}: {ip: "{{device2.mgmt_ip}}", mac: "{{ link.mac }}"},
-        {% endif %}
-        {% endfor %}
-        {% endif %}
-        {% endfor %}
+        {% endif -%}
+        {% endfor -%}
+        {% endif -%}
+        {% endfor -%}
                         }}
     device.vm.provision :shell , inline: "sudo apt-get update"
     device.vm.provision :shell , inline: "sudo apt-get install software-properties-common vim lldpd git -y"

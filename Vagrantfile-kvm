@@ -1,7 +1,9 @@
-# Created by Topology-Converter v4.4.0_dev
-#    using topology data from: topology.dot
+# Created by Topology-Converter v4.5.0
+#    https://github.com/cumulusnetworks/topology_converter
+#    using topology data from: ./topology_kvm.dot
+#
 #    NOTE: in order to use this Vagrantfile you will need:
-#       -Vagrant(v1.7+) installed: http://www.vagrantup.com/downloads
+#       -Vagrant(v1.8.1+) installed: http://www.vagrantup.com/downloads
 #       -Cumulus Plugin for Vagrant installed: $ vagrant plugin install vagrant-cumulus
 #       -the "helper_scripts" directory that comes packaged with topology-converter.py
 #        -Libvirt Installed -- guide to come
@@ -13,9 +15,25 @@
 #Set the default provider to libvirt in the case they forget --provider=libvirt or if someone destroys a machine it reverts to virtualbox
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
-raise "vagrant-libvirt plugin must be installed, try $ vagrant plugin install vagrant-libvirt" unless Vagrant.has_plugin? "vagrant-libvirt"
-raise "vagrant-cumulus plugin must be installed, try $ vagrant plugin install vagrant-cumulus" unless Vagrant.has_plugin? "vagrant-cumulus"
-require 'json'
+# Check required plugins
+REQUIRED_PLUGINS_LIBVIRT = %w(vagrant-libvirt vagrant-mutate)
+exit unless REQUIRED_PLUGINS_LIBVIRT.all? do |plugin|
+  Vagrant.has_plugin?(plugin) || (
+    puts "The #{plugin} plugin is required. Please install it with:"
+    puts "$ vagrant plugin install #{plugin}"
+    false
+  )
+end
+
+# Check required plugins
+REQUIRED_PLUGINS = %w(vagrant-cumulus)
+exit unless REQUIRED_PLUGINS.all? do |plugin|
+  Vagrant.has_plugin?(plugin) || (
+    puts "The #{plugin} plugin is required. Please install it with:"
+    puts "$ vagrant plugin install #{plugin}"
+    false
+  )
+end
 
 $script = <<-SCRIPT
 if grep -q -i 'cumulus' /etc/lsb-release &> /dev/null; then
@@ -290,7 +308,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for oob-mgmt-server #####
   config.vm.define "oob-mgmt-server" do |device|
     device.vm.hostname = "oob-mgmt-server"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "yk0/ubuntu-xenial"
     
 
     # disabling sync folder support on all VMs
@@ -324,290 +342,20 @@ Vagrant.configure("2") do |config|
 
 
     extravars = {wbench_hosts: {
-        
-        
-        
-        
-        
-        
-        
-        
-            exit02: {ip: "192.168.0.42", mac: "a0:00:00:00:00:42"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            exit01: {ip: "192.168.0.41", mac: "a0:00:00:00:00:41"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            spine02: {ip: "192.168.0.22", mac: "a0:00:00:00:00:22"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            spine01: {ip: "192.168.0.21", mac: "a0:00:00:00:00:21"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            leaf04: {ip: "192.168.0.14", mac: "a0:00:00:00:00:14"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            leaf02: {ip: "192.168.0.12", mac: "a0:00:00:00:00:12"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            leaf03: {ip: "192.168.0.13", mac: "a0:00:00:00:00:13"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            leaf01: {ip: "192.168.0.11", mac: "a0:00:00:00:00:11"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            edge01: {ip: "192.168.0.51", mac: "a0:00:00:00:00:51"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            server01: {ip: "192.168.0.31", mac: "a0:00:00:00:00:31"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            server03: {ip: "192.168.0.33", mac: "a0:00:00:00:00:33"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            server02: {ip: "192.168.0.32", mac: "a0:00:00:00:00:32"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-            server04: {ip: "192.168.0.34", mac: "a0:00:00:00:00:34"},
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-                        }}
+        exit02: {ip: "192.168.0.42", mac: "a0:00:00:00:00:42"},
+        exit01: {ip: "192.168.0.41", mac: "a0:00:00:00:00:41"},
+        spine02: {ip: "192.168.0.22", mac: "a0:00:00:00:00:22"},
+        spine01: {ip: "192.168.0.21", mac: "a0:00:00:00:00:21"},
+        leaf04: {ip: "192.168.0.14", mac: "a0:00:00:00:00:14"},
+        leaf02: {ip: "192.168.0.12", mac: "a0:00:00:00:00:12"},
+        leaf03: {ip: "192.168.0.13", mac: "a0:00:00:00:00:13"},
+        leaf01: {ip: "192.168.0.11", mac: "a0:00:00:00:00:11"},
+        edge01: {ip: "192.168.0.51", mac: "a0:00:00:00:00:51"},
+        server01: {ip: "192.168.0.31", mac: "a0:00:00:00:00:31"},
+        server03: {ip: "192.168.0.33", mac: "a0:00:00:00:00:33"},
+        server02: {ip: "192.168.0.32", mac: "a0:00:00:00:00:32"},
+        server04: {ip: "192.168.0.34", mac: "a0:00:00:00:00:34"},
+        }}
     device.vm.provision :shell , inline: "sudo apt-get update"
     device.vm.provision :shell , inline: "sudo apt-get install software-properties-common vim lldpd git -y"
     device.vm.provision :shell , inline: "sudo apt-add-repository ppa:ansible/ansible -y"
@@ -2065,7 +1813,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for edge01 #####
   config.vm.define "edge01" do |device|
     device.vm.hostname = "edge01"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "yk0/ubuntu-xenial"
     
 
     # disabling sync folder support on all VMs
@@ -2139,7 +1887,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for server01 #####
   config.vm.define "server01" do |device|
     device.vm.hostname = "server01"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "yk0/ubuntu-xenial"
     
 
     # disabling sync folder support on all VMs
@@ -2213,7 +1961,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for server03 #####
   config.vm.define "server03" do |device|
     device.vm.hostname = "server03"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "yk0/ubuntu-xenial"
     
 
     # disabling sync folder support on all VMs
@@ -2287,7 +2035,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for server02 #####
   config.vm.define "server02" do |device|
     device.vm.hostname = "server02"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "yk0/ubuntu-xenial"
     
 
     # disabling sync folder support on all VMs
@@ -2361,7 +2109,7 @@ Vagrant.configure("2") do |config|
   ##### DEFINE VM for server04 #####
   config.vm.define "server04" do |device|
     device.vm.hostname = "server04"
-    device.vm.box = "boxcutter/ubuntu1404"
+    device.vm.box = "yk0/ubuntu-xenial"
     
 
     # disabling sync folder support on all VMs
