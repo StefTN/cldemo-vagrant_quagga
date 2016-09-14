@@ -386,7 +386,7 @@ Vagrant.configure("2") do |config|
 {% for link in device.interfaces %}      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a {{ link.mac }} {{ link.local_interface }}"
 {% endfor %}
 
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm {% if device.vagrant %}{% if device.vagrant=='eth0' %}-nv{%else%}--vagrant-name={{device.vagrant}}{% endif%}{% endif%}"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm {% if device.vagrant %}{% if device.vagrant=='eth0' and not device.predictive_interfaces %}-nv{%else%}--vagrant-name={{device.vagrant}}{% endif%}{% endif%}"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
       device.vm.provision :shell , :inline => $script
 

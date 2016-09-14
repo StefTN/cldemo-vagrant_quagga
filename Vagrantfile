@@ -1,6 +1,6 @@
 # Created by Topology-Converter v4.5.0
 #    https://github.com/cumulusnetworks/topology_converter
-#    using topology data from: ./topology.dot
+#    using topology data from: topology.dot
 #
 #    NOTE: in order to use this Vagrantfile you will need:
 #       -Vagrant(v1.8.1+) installed: http://www.vagrantup.com/downloads
@@ -354,7 +354,7 @@ end
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:5f eth1"
 
 
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm -nv"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm --vagrant-name=eth0"
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
       device.vm.provision :shell , :inline => $script
 
