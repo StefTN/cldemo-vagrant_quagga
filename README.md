@@ -76,7 +76,7 @@ conflict with Virtualbox's ability to create 64-bit VMs.
 Typically demos are built upon the Reference Topology shown here using this repository as a starting point and layering device configuration on top.
 
 * **[Cldemo-config-routing](https://github.com/CumulusNetworks/cldemo-config-routing)** -- This Github repository contains the configuration files necessary for setting up Layer 3 routing on a CLOS topology using Cumulus Linux and Quagga.
-* **[Cldemo-config-mlag](https://github.com/CumulusNetworks/cldemo-config-mlag)**
+* **[Cldemo-config-mlag](https://github.com/CumulusNetworks/cldemo-config-mlag)** -- This demo shows a topology using MLAG to dual-connect hosts at Layer 2 to two top of rack leafs and uses BGP unnumbered/L3 for everything above the leaf layer.
 * **[Cldemo-roh-ansible](https://github.com/CumulusNetworks/cldemo-roh-ansible)** --  This demo shows a topology using 'Routing on the Host' to add host reachability directly into a BGP routed fabric.
 * **[Cldemo-roh-docker](https://github.com/CumulusNetworks/cldemo-roh-docker)** -- This demo shows how to do ROH with a docker container.
 * **[Cldemo-automation-puppet](https://github.com/CumulusNetworks/cldemo-automation-puppet)** -- This demo demonstrates how to write a manifest using Puppet to configure switches running Cumulus Linux and servers running Ubuntu.
@@ -84,7 +84,7 @@ Typically demos are built upon the Reference Topology shown here using this repo
 * **[Cldemo-ansible-tower](https://github.com/CumulusNetworks/cldemo-ansible-tower)** -- This demo demonstrates how to setup Ansible Tower to control Cumulus Linux switches with Ansible playbooks.
 * **[Cldemo-automation-chef](https://github.com/CumulusNetworks/cldemo-automation-chef)** -- This demo demonstrates how to write a set of cookbooks using Chef to configure switches running Cumulus Linux and servers running Ubuntu.
 * **[Cldemo-onie-ztp-ptm](https://github.com/CumulusNetworks/cldemo-onie-ztp-ptm)** -- This demo demonstrates how to configure an out of band management network to automatically install and configure Cumulus Linux using Zero Touch Provisioning, and validate the cabling of the switches using Prescriptive Topology Manager.
-* **[Cldemo-rdnbr-ansible](https://github.com/CumulusNetworks/cldemo-rdnbr-ansible)** -- COMING SOON -- This demo shows a topology using 'redistribute-neighbor' to add host reachability directly into a BGP routed fabric.
+* **[Cldemo-rdnbr-ansible](https://github.com/CumulusNetworks/cldemo-rdnbr-ansible)** -- This demo shows a topology using 'redistribute-neighbor' to add host reachability directly into a BGP routed fabric.
 
 
 Getting Started
@@ -104,15 +104,19 @@ To use the reference topology by itself outside of the above demos, follow the i
 
 ### Managing the VMs in the Topology
 The topology built using this Vagrantfile does not support `vagrant halt` or
-`vagrant resume` for in-band devices. This means that in order to keep your
-configuration across Vagrant sessions, you should either save your configuration
-in a repository using an automation tool such as Ansible, Puppet, or Chef
-(preferred) or use the hypervisor's halt and resume functionality.
-
-For VirtualBox, these commands are:
+`vagrant resume` for in-band devices. To resume working with the demos at a later point in time, use the hypervisor's halt and resume functionality. In Virtualbox this can be done inside of the GUI by powering off (and later powering-on) the devices involved in the simulation or by running the following CLI commands:
 
     * VBoxManage controlvm leaf01 poweroff
     * VBoxManage startvm leaf01 --type headless
+
+When using the libvirt hyperviser 
+    * libvirt suspend cldemo-vagrant_leaf01
+    * libvirt resume cldemo-vagrant_leaf01
+
+### Preserving configuration
+In order to keep your configuration across Vagrant sessions, you should either save your configuration
+in a repository using an automation tool such as Ansible, Puppet, or Chef (preferred) or alternatively copy the configuration files off of the VMs before running the "vagrant destroy" command to remove and destroy the VMs involved in the simulation.
+
 
 Factory-reset a device
 ----------------------
