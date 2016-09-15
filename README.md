@@ -104,12 +104,16 @@ To use the reference topology by itself outside of the above demos, follow the i
 
 ### Managing the VMs in the Topology
 The topology built using this Vagrantfile does not support `vagrant halt` or
-`vagrant resume` for in-band devices. To resume working with the demos at a later point in time, use the hypervisor's halt and resume functionality. In Virtualbox this can be done inside of the GUI by powering off (and later powering-on) the devices involved in the simulation or by running the following CLI commands:
+`vagrant resume` for in-band devices. To resume working with the demos at a later point in time, use the hypervisor's halt and resume functionality.
+
+In Virtualbox this can be done inside of the GUI by powering off (and later powering-on) the devices involved in the simulation or by running the following CLI commands:
 
     * VBoxManage controlvm leaf01 poweroff
     * VBoxManage startvm leaf01 --type headless
 
-When using the libvirt hyperviser 
+
+When using the libvirt/kvm hypervisor the following commands can be used:
+
     * libvirt suspend cldemo-vagrant_leaf01
     * libvirt resume cldemo-vagrant_leaf01
 
