@@ -283,9 +283,14 @@ EOF
 
     elif [[ $DISTRIB_RELEASE =~ ^3.* ]]; then
         echo "  INFO: Detected a 3.x Based Release"
-
         echo "  Disabling default remap on Cumulus VX..."
         mv -v /etc/hw_init.d/S10rename_eth_swp.sh /etc/S10rename_eth_swp.sh.backup
+        echo "### Disabling ZTP service..."
+        systemctl stop ztp.service
+        ztp -d 2>&1
+        echo "### Resetting ZTP to work next boot..."
+        ztp -R 2>&1
+        echo "### Rebooting Switch to Apply Remap..."
         reboot
     fi
     echo "### DONE ###"
