@@ -1,7 +1,7 @@
 # Cumulus Linux Demo Framework
 ![Reference Topology](https://github.com/CumulusNetworks/cldemo-vagrant/blob/master/cldemo_topology.png "Reference Topology")
 
-**[See the Layer 3 IP addressing](https://raw.githubusercontent.com/CumulusNetworks/cldemo-vagrant/master/cldemo_topology_l3.png)**
+**[See the Layer 3 IP addressing on the Out of Band Network](https://raw.githubusercontent.com/CumulusNetworks/cldemo-vagrant/master/cldemo_topology_l3.png)**
 
 
 Virtualizing a Network with Cumulus VX
@@ -60,7 +60,9 @@ Before running this demo or any of the other demos in the list below, install
 installation instructions from their website. The version of Vagrant and Virtualbox
 available in your distribution's package manager may be out of date, so
 installing via the preferred sources is recommended. This example was last
-tested with **Vagrant 1.8**.
+tested with **Vagrant 1.8.4**.
+
+*NOTE: Do not use Vagrant version 1.8.5, there are known issues that should be rectified in v1.8.6
 
 On an Ubuntu 16.04 box, this can be done with the following commands:
 
