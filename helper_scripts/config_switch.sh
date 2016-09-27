@@ -40,6 +40,14 @@ chmod 700 -R /home/cumulus/.ssh
 chown cumulus:cumulus -R /home/cumulus/.ssh
 echo "This is a fake license" > /etc/cumulus/.license.txt
 
+## Make onie reinstalls work. Note that installing from onie will undo these changes.
+mkdir /tmp/foo
+mount LABEL=ONIE-BOOT /tmp/foo
+sed -i 's/eth0/eth1/g' /tmp/foo/grub/grub.cfg
+sed -i 's/eth0/eth1/g' /tmp/foo/onie/grub/grub-extra.cfg
+umount /tmp/foo
+
+
 
 echo "#################################"
 echo "   Finished"
