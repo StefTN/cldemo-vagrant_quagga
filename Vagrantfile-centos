@@ -1301,13 +1301,13 @@ end
   ##### DEFINE VM for server01 #####
   config.vm.define "server01" do |device|
     device.vm.hostname = "server01"
-    device.vm.box = "boxcutter/ubuntu1604"
+    device.vm.box = "centos/7"
 
 
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_server01"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
-      v.memory = 512
+      v.memory = 3000
     end
     device.vm.synced_folder ".", "/vagrant", disabled: true
 
@@ -1329,23 +1329,19 @@ end
 
 end
 
-      # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
-      device.vm.provision :shell , inline: "(grep -q 'mesg n' /root/.profile 2>/dev/null && sed -i '/mesg n/d' /root/.profile  2>/dev/null && echo 'Ignore the previous error, fixing this now...') || true;"
 
-      # Shorten Boot Process - Applies to Ubuntu Only - remove \"Wait for Network\"
-      device.vm.provision :shell , inline: "sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf || true"
 
       # Run Any Extra Config
-      device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+      device.vm.provision :shell , path: "./helper_scripts/config_server_centos.sh"
 
 
 
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:31 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:03 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:17 eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:31 mgmt"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:03 uplink1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:17 uplink2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1359,7 +1355,7 @@ end
   ##### DEFINE VM for server03 #####
   config.vm.define "server03" do |device|
     device.vm.hostname = "server03"
-    device.vm.box = "boxcutter/ubuntu1604"
+    device.vm.box = "centos/7"
 
 
     device.vm.provider "virtualbox" do |v|
@@ -1387,23 +1383,17 @@ end
 
 end
 
-      # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
-      device.vm.provision :shell , inline: "(grep -q 'mesg n' /root/.profile 2>/dev/null && sed -i '/mesg n/d' /root/.profile  2>/dev/null && echo 'Ignore the previous error, fixing this now...') || true;"
-
-      # Shorten Boot Process - Applies to Ubuntu Only - remove \"Wait for Network\"
-      device.vm.provision :shell , inline: "sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf || true"
-
       # Run Any Extra Config
-      device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+      device.vm.provision :shell , path: "./helper_scripts/config_server_centos.sh"
 
 
 
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:33 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:28 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:65 eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:33 mgmt"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:28 uplink1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:65 uplink2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1417,7 +1407,7 @@ end
   ##### DEFINE VM for server02 #####
   config.vm.define "server02" do |device|
     device.vm.hostname = "server02"
-    device.vm.box = "boxcutter/ubuntu1604"
+    device.vm.box = "centos/7"
 
 
     device.vm.provider "virtualbox" do |v|
@@ -1446,22 +1436,22 @@ end
 end
 
       # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
-      device.vm.provision :shell , inline: "(grep -q 'mesg n' /root/.profile 2>/dev/null && sed -i '/mesg n/d' /root/.profile  2>/dev/null && echo 'Ignore the previous error, fixing this now...') || true;"
+      #device.vm.provision :shell , inline: "(grep -q 'mesg n' /root/.profile 2>/dev/null && sed -i '/mesg n/d' /root/.profile  2>/dev/null && echo 'Ignore the previous error, fixing this now...') || true;"
 
       # Shorten Boot Process - Applies to Ubuntu Only - remove \"Wait for Network\"
-      device.vm.provision :shell , inline: "sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf || true"
+      #device.vm.provision :shell , inline: "sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf || true"
 
       # Run Any Extra Config
-      device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+      device.vm.provision :shell , path: "./helper_scripts/config_server_centos.sh"
 
 
 
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:32 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:15 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:1b eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:32 mgmt"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:15 uplink1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:1b uplink2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
@@ -1475,7 +1465,7 @@ end
   ##### DEFINE VM for server04 #####
   config.vm.define "server04" do |device|
     device.vm.hostname = "server04"
-    device.vm.box = "boxcutter/ubuntu1604"
+    device.vm.box = "centos/7"
 
 
     device.vm.provider "virtualbox" do |v|
@@ -1503,23 +1493,17 @@ end
 
 end
 
-      # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
-      device.vm.provision :shell , inline: "(grep -q 'mesg n' /root/.profile 2>/dev/null && sed -i '/mesg n/d' /root/.profile  2>/dev/null && echo 'Ignore the previous error, fixing this now...') || true;"
-
-      # Shorten Boot Process - Applies to Ubuntu Only - remove \"Wait for Network\"
-      device.vm.provision :shell , inline: "sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf || true"
-
       # Run Any Extra Config
-      device.vm.provision :shell , path: "./helper_scripts/config_server.sh"
+      device.vm.provision :shell , path: "./helper_scripts/config_server_centos.sh"
 
 
 
       # Apply the interface re-map
       device.vm.provision "file", source: "./helper_scripts/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
       device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:34 eth0"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:23 eth1"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:32 eth2"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a a0:00:00:00:00:34 mgmt"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:23 uplink1"
+      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a 44:38:39:00:00:32 uplink2"
 
 
       device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm "
