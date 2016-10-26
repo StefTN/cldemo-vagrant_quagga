@@ -118,8 +118,8 @@ In Virtualbox this can be done inside of the GUI by powering off (and later powe
 
 When using the libvirt/kvm hypervisor the following commands can be used:
 
-    * libvirt suspend cldemo-vagrant_leaf01
-    * libvirt resume cldemo-vagrant_leaf01
+    * virsh destroy cldemo-vagrant_leaf01
+    * virsh start cldemo-vagrant_leaf01
 
 ### Preserving configuration
 In order to keep your configuration across Vagrant sessions, you should either save your configuration
