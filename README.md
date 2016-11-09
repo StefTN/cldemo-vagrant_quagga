@@ -55,20 +55,9 @@ devices **must** be accessed via the out-of-band management server.
 ### Prerequisites
 
 Before running this demo or any of the other demos in the list below, install
-[VirtualBox](https://www.virtualbox.org/manual/ch02.html) and
-[Vagrant](https://www.vagrantup.com/downloads.html) using the
-installation instructions from their website. The version of Vagrant and Virtualbox
-available in your distribution's package manager may be out of date, so
-installing via the preferred sources is recommended. This example was last
-tested with **Vagrant 1.8.4**.
-
-*NOTE: Do not use Vagrant version 1.8.5, there are known issues that should be rectified in v1.8.6
-
-On an Ubuntu 16.04 box, this can be done with the following commands:
-
-    wget https://releases.hashicorp.com/vagrant/1.8.1/vagrant_1.8.1_x86_64.deb
-    sudo dpkg -i vagrant_1.8.1_x86_64.deb
-    vagrant plugin install vagrant-cumulus
+[VirtualBox](https://www.virtualbox.org/wiki/Download_Old_Builds) and
+[Vagrant](https://releases.hashicorp.com/vagrant/). The currently supported
+versions of VirtualBox and Vagrant are **5.1.8r111374** and **1.8.6**
 
 On Windows, if you have HyperV enabled, you will need to disable it as it will
 conflict with Virtualbox's ability to create 64-bit VMs.
