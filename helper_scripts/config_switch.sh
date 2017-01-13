@@ -11,10 +11,6 @@ echo "  adding fake cl-acltool..."
 echo -e "#!/bin/bash\nexit 0" > /bin/cl-acltool
 chmod 755 /bin/cl-acltool
 
-echo "  adding fake cl-license..."
-echo -e "#!/bin/bash\nexit 0" > /bin/cl-license
-chmod 755 /bin/cl-license
-
 cat <<EOF > /etc/network/interfaces
 # This file describes the network interfaces available on your system
 # and how to activate them. For more information, see interfaces(5), ifup(8)
