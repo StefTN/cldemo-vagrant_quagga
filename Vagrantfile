@@ -279,7 +279,7 @@ Vagrant.configure("2") do |config|
   offset = 0
 
   config.vm.provider "virtualbox" do |v|
-    v.gui=false
+    v.gui = false
   end
 
 
