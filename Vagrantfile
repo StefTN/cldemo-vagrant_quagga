@@ -1551,10 +1551,9 @@ end
       vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
       vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
 
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype2", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype3", "virtio"]
-      vbox.customize ["modifyvm", :id, "--nictype4", "virtio"]
+      # delete strange phantom NICs in cumulus-vx VirtualBox images
+      vbox.customize ['modifyvm', :id, '--nic9', 'none']
+      vbox.customize ['modifyvm', :id, '--nic10', 'none']
 
 end
 
