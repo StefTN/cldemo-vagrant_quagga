@@ -275,7 +275,7 @@ fi
 SCRIPT
 
 Vagrant.configure("2") do |config|
-  wbid = 1
+  wbid = ENV['USER']
   offset = 0
 
   config.vm.provider "virtualbox" do |v|
