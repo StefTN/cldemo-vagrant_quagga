@@ -7,14 +7,14 @@ graph vx {
  "spine02" [function="spine" os="CumulusCommunity/cumulus-vx" version="3.2.0" memory="512" config="./helper_scripts/config_switch.sh" mgmt_ip="192.168.0.22"]
  "exit01" [function="exit" os="CumulusCommunity/cumulus-vx" version="3.2.0" memory="512" config="./helper_scripts/config_switch.sh" mgmt_ip="192.168.0.41"]
  "exit02" [function="exit" os="CumulusCommunity/cumulus-vx" version="3.2.0" memory="512" config="./helper_scripts/config_switch.sh" mgmt_ip="192.168.0.42"]
- "server01" [function="host" os="boxcutter/ubuntu1604" memory="512" config="./helper_scripts/config_server.sh" mgmt_ip="192.168.0.31"]
- "server02" [function="host" os="boxcutter/ubuntu1604" memory="512" config="./helper_scripts/config_server.sh" mgmt_ip="192.168.0.32"]
- "server03" [function="host" os="boxcutter/ubuntu1604" memory="512" config="./helper_scripts/config_server.sh" mgmt_ip="192.168.0.33"]
- "server04" [function="host" os="boxcutter/ubuntu1604" memory="512" config="./helper_scripts/config_server.sh" mgmt_ip="192.168.0.34"]
- "edge01" [function="host" os="boxcutter/ubuntu1604" memory="512" config="./helper_scripts/config_server.sh" mgmt_ip="192.168.0.51"]
- "internet" [function="internet" vagrant="swp48" os="CumulusCommunity/cumulus-vx" version="3.2.0" memory="256" config="./helper_scripts/config_internet.sh" mgmt_ip="192.168.0.253"]
- "oob-mgmt-switch" [function="oob-switch" vagrant="eth0" os="CumulusCommunity/cumulus-vx" version="3.2.0" memory="256" config="./helper_scripts/config_oob_switch.sh" mgmt_ip="192.168.0.1"]
- "oob-mgmt-server" [function="oob-server" ansible=True vagrant="eth0" predictive_interfaces=True os="boxcutter/ubuntu1604" memory="1024" config="./helper_scripts/config_oob_server.sh" mgmt_ip="192.168.0.254"]
+ "server01" [function="host" os="yk0/ubuntu-xenial" memory="512" config="./helper_scripts/config_server.sh" mgmt_ip="192.168.0.31"]
+ "server02" [function="host" os="yk0/ubuntu-xenial" memory="512" config="./helper_scripts/config_server.sh" mgmt_ip="192.168.0.32"]
+ "server03" [function="host" os="yk0/ubuntu-xenial" memory="512" config="./helper_scripts/config_server.sh" mgmt_ip="192.168.0.33"]
+ "server04" [function="host" os="yk0/ubuntu-xenial" memory="512" config="./helper_scripts/config_server.sh" mgmt_ip="192.168.0.34"]
+ "edge01" [function="host" os="yk0/ubuntu-xenial" memory="512" config="./helper_scripts/config_server.sh" mgmt_ip="192.168.0.51"]
+ "internet" [function="internet" vagrant="swp48" os="CumulusCommunity/cumulus-vx" version="3.2.0" memory="512" config="./helper_scripts/config_internet.sh" mgmt_ip="192.168.0.253"]
+ "oob-mgmt-switch" [function="oob-switch" vagrant="eth0" os="CumulusCommunity/cumulus-vx" version="3.2.0" memory="512" config="./helper_scripts/oob_switch_config.sh" mgmt_ip="192.168.0.1"]
+ "oob-mgmt-server" [function="oob-server" vagrant="eth0" os="yk0/ubuntu-xenial" memory="1024" config="./helper_scripts/auto_mgmt_net/OOB_Server_Config_auto_mgmt.sh" mgmt_ip="192.168.0.254"]
 
  "leaf01":"swp51" -- "spine01":"swp1"
  "leaf02":"swp51" -- "spine01":"swp2"
@@ -35,14 +35,14 @@ graph vx {
  "exit01":"swp49" -- "exit02":"swp49"
  "exit01":"swp50" -- "exit02":"swp50"
 
- "server01":"eth1" -- "leaf01":"swp1"
- "server01":"eth2" -- "leaf02":"swp1"
- "server02":"eth1" -- "leaf01":"swp2"
- "server02":"eth2" -- "leaf02":"swp2"
- "server03":"eth1" -- "leaf03":"swp1"
- "server03":"eth2" -- "leaf04":"swp1"
- "server04":"eth1" -- "leaf03":"swp2"
- "server04":"eth2" -- "leaf04":"swp2"
+ "server01":"eth1" -- "leaf01":"swp1" [left_mac="00:03:00:11:11:01"]
+ "server01":"eth2" -- "leaf02":"swp1" [left_mac="00:03:00:11:11:02"]
+ "server02":"eth1" -- "leaf01":"swp2" [left_mac="00:03:00:22:22:01"]
+ "server02":"eth2" -- "leaf02":"swp2" [left_mac="00:03:00:22:22:02"]
+ "server03":"eth1" -- "leaf03":"swp1" [left_mac="00:03:00:33:33:01"]
+ "server03":"eth2" -- "leaf04":"swp1" [left_mac="00:03:00:33:33:02"]
+ "server04":"eth1" -- "leaf03":"swp2" [left_mac="00:03:00:44:44:01"]
+ "server04":"eth2" -- "leaf04":"swp2" [left_mac="00:03:00:44:44:02"]
 
  "exit01":"swp51" -- "spine01":"swp30"
  "exit01":"swp52" -- "spine02":"swp30"
@@ -68,7 +68,7 @@ graph vx {
  "edge01":"eth1" -- "exit01":"swp1"
  "edge01":"eth2" -- "exit02":"swp1"
 
- "oob-mgmt-server":"eth1" -- "oob-mgmt-switch":"swp1"
+ "oob-mgmt-server":"eth1" -- "oob-mgmt-switch":"swp1" [right_mac="A0:00:00:00:00:61"]
  "server01":"eth0" -- "oob-mgmt-switch":"swp2" [left_mac="A0:00:00:00:00:31"]
  "server02":"eth0" -- "oob-mgmt-switch":"swp3" [left_mac="A0:00:00:00:00:32"]
  "server03":"eth0" -- "oob-mgmt-switch":"swp4" [left_mac="A0:00:00:00:00:33"]
@@ -82,5 +82,5 @@ graph vx {
  "exit01":"eth0" -- "oob-mgmt-switch":"swp12" [left_mac="A0:00:00:00:00:41"]
  "exit02":"eth0" -- "oob-mgmt-switch":"swp13" [left_mac="A0:00:00:00:00:42"]
  "edge01":"eth0" -- "oob-mgmt-switch":"swp14" [left_mac="A0:00:00:00:00:51"]
- "internet":"eth0" -- "oob-mgmt-switch":"swp15"
+ "internet":"eth0" -- "oob-mgmt-switch":"swp15" [left_mac="A0:00:00:00:00:50"]
 }
