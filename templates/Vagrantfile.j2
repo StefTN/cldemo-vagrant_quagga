@@ -1,10 +1,10 @@
 # Created by Topology-Converter v{{ version }}
 #    https://github.com/cumulusnetworks/topology_converter
 #    using topology data from: {{ topology_file }}
+#    built with the following args: {{ arg_string }}
 #
 #    NOTE: in order to use this Vagrantfile you will need:
 #       -Vagrant(v1.8.1+) installed: http://www.vagrantup.com/downloads
-#       -Cumulus Plugin for Vagrant installed: $ vagrant plugin install vagrant-cumulus
 #       -the "helper_scripts" directory that comes packaged with topology-converter.py
 {% if provider == 'virtualbox' %}#       -Virtualbox installed: https://www.virtualbox.org/wiki/Downloads
 
@@ -16,6 +16,8 @@
 
 #Set the default provider to libvirt in the case they forget --provider=libvirt or if someone destroys a machine it reverts to virtualbox
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
+
+Vagrant.require_version ">= 1.8.6", "< 1.9.2"
 
 # Check required plugins
 REQUIRED_PLUGINS_LIBVIRT = %w(vagrant-libvirt vagrant-mutate)
@@ -35,263 +37,53 @@ if grep -q -i 'cumulus' /etc/lsb-release &> /dev/null; then
     if [[ $DISTRIB_RELEASE =~ ^2.* ]]; then
         echo "  INFO: Detected a 2.5.x Based Release"
         echo "  adding fake cl-acltool..."
-        echo -e "#!/bin/bash\nexit 0" > /bin/cl-acltool
-        chmod 755 /bin/cl-acltool
+        echo -e "#!/bin/bash\nexit 0" > /usr/bin/cl-acltool
+        chmod 755 /usr/bin/cl-acltool
 
         echo "  adding fake cl-license..."
-        cat > /bin/cl-license <<'EOF'
-#! /bin/bash
-#-------------------------------------------------------------------------------
-#
-# Copyright 2013 Cumulus Networks, Inc.  All rights reserved
-#
-
-URL_RE='^http://.*/.*'
-
-#Legacy symlink
-if echo "$0" | grep -q "cl-license-install$"; then
-    exec cl-license -i $*
-fi
-
-LIC_DIR="/etc/cumulus"
-PERSIST_LIC_DIR="/mnt/persist/etc/cumulus"
-
-#Print current license, if any.
-if [ -z "$1" ]; then
-    if [ ! -f "$LIC_DIR/.license.txt" ]; then
-        echo "No license installed!" >&2
-        exit 20
-    fi
-    cat "$LIC_DIR/.license.txt"
-    exit 0
-fi
-
-#Must be root beyond this point
-if (( EUID != 0 )); then
-   echo "You must have root privileges to run this command." 1>&2
-   exit 100
-fi
-
-#Delete license
-if [ x"$1" == "x-d" ]; then
-    rm -f "$LIC_DIR/.license.txt"
-    rm -f "$PERSIST_LIC_DIR/.license.txt"
-
-    echo License file uninstalled.
-    exit 0
-fi
-
-function usage {
-    echo "Usage: $0 (-i (license_file | URL) | -d)" >&2
-    echo "    -i  Install a license, via stdin, file, or URL." >&2
-    echo "    -d  Delete the current installed license." >&2
-    echo >&2
-    echo " cl-license prints, installs or deletes a license on this switch." >&2
-}
-
-if [ x"$1" != 'x-i' ]; then
-    usage
-    exit 100
-fi
-shift
-if [ ! -f "$1" ]; then
-    if [ -n "$1" ]; then
-        if ! echo "$1" | grep -q "$URL_RE"; then
-            usage
-            echo "file $1 not found or not readable." >&2
-            exit 100
-        fi
-    fi
-fi
-
-function clean_tmp {
-    rm $1
-}
-
-if [ -z "$1" ]; then
-    LIC_FILE=`mktemp lic.XXXXXX`
-    trap "clean_tmp $LIC_FILE" EXIT
-    echo "Paste license text here, then hit ctrl-d" >&2
-    cat >$LIC_FILE
-else
-    if echo "$1" | grep -q "$URL_RE"; then
-        LIC_FILE=`mktemp lic.XXXXXX`
-        trap "clean_tmp $LIC_FILE" EXIT
-        if ! wget "$1" -O $LIC_FILE; then
-            echo "Couldn't download $1 via HTTP!" >&2
-            exit 10
-        fi
-    else
-        LIC_FILE="$1"
-    fi
-fi
-
-/usr/sbin/switchd -lic "$LIC_FILE"
-SWITCHD_RETCODE=$?
-if [ $SWITCHD_RETCODE -eq 99 ]; then
-    more /usr/share/cumulus/EULA.txt
-    echo "I (on behalf of the entity who will be using the software) accept"
-    read -p "and agree to the EULA  (yes/no): "
-    if [ "$REPLY" != "yes" -a "$REPLY" != "y" ]; then
-        echo EULA not agreed to, aborting. >&2
-        exit 2
-    fi
-elif [ $SWITCHD_RETCODE -ne 0 ]; then
-    echo '******************************' >&2
-    echo ERROR: License file not valid. >&2
-    echo ERROR: No license installed. >&2
-    echo '******************************' >&2
-    exit 1
-fi
-
-mkdir -p "$LIC_DIR"
-cp "$LIC_FILE" "$LIC_DIR/.license.txt"
-chmod 644 "$LIC_DIR/.license.txt"
-
-mkdir -p "$PERSIST_LIC_DIR"
-cp "$LIC_FILE" "$PERSIST_LIC_DIR/.license.txt"
-chmod 644 "$PERSIST_LIC_DIR/.license.txt"
-
-echo License file installed.
-echo Reboot to enable functionality.
-EOF
-        chmod 755 /bin/cl-license
+        echo -e "#!/bin/bash\nexit 0" > /usr/bin/cl-license
+        chmod 755 /usr/bin/cl-license
 
         echo "  Disabling default remap on Cumulus VX..."
         mv -v /etc/init.d/rename_eth_swp /etc/init.d/rename_eth_swp.backup
 
-        echo "  Replacing fake switchd"
-        rm -rf /usr/bin/switchd
-        cat > /usr/sbin/switchd <<'EOF'
-#!/bin/bash
-PIDFILE=$1
-LICENSE_FILE=/etc/cumulus/.license
-RC=0
-
-# Make sure we weren't invoked with "-lic"
-if [ "$PIDFILE" == "-lic" ]; then
-  if [ "$2" != "" ]; then
-        LICENSE_FILE=$2
-  fi
-  if [ ! -e $LICENSE_FILE ]; then
-    echo "No license file." >&2
-    RC=1
-  fi
-  RC=0
-else
-  tail -f /dev/null & CPID=$!
-  echo -n $CPID > $PIDFILE
-  wait $CPID
-fi
-
-exit $RC
-EOF
-        chmod 755 /usr/sbin/switchd
-
-        cat > /etc/init.d/switchd <<'EOF'
-#! /bin/bash
-### BEGIN INIT INFO
-# Provides:          switchd
-# Required-Start:
-# Required-Stop:
-# Should-Start:
-# Should-Stop:
-# X-Start-Before
-# Default-Start:     S
-# Default-Stop:
-# Short-Description: Controls fake switchd process
-### END INIT INFO
-
-# Author: Kristian Van Der Vliet <kristian@cumulusnetworks.com>
-#
-# Please remove the "Author" lines above and replace them
-# with your own name if you copy and modify this script.
-
-PATH=/sbin:/bin:/usr/bin
-
-NAME=switchd
-SCRIPTNAME=/etc/init.d/$NAME
-PIDFILE=/var/run/switchd.pid
-
-. /lib/init/vars.sh
-. /lib/lsb/init-functions
-
-do_start() {
-  echo "[ ok ] Starting Cumulus Networks switch chip daemon: switchd"
-  /usr/sbin/switchd $PIDFILE 2>/dev/null &
-}
-
-do_stop() {
-  if [ -e $PIDFILE ];then
-    kill -TERM $(cat $PIDFILE)
-    rm $PIDFILE
-  fi
-}
-
-do_status() {
-  if [ -e $PIDFILE ];then
-    echo "[ ok ] switchd is running."
-  else
-    echo "[FAIL] switchd is not running ... failed!" >&2
-    exit 3
-  fi
-}
-
-case "$1" in
-  start|"")
-	log_action_begin_msg "Starting switchd"
-	do_start
-	log_action_end_msg 0
-	;;
-  stop)
-  log_action_begin_msg "Stopping switchd"
-  do_stop
-  log_action_end_msg 0
-  ;;
-  status)
-  do_status
-  ;;
-  restart)
-	log_action_begin_msg "Re-starting switchd"
-  do_stop
-	do_start
-	log_action_end_msg 0
-	;;
-  reload|force-reload)
-	echo "Error: argument '$1' not supported" >&2
-	exit 3
-	;;
-  *)
-	echo "Usage: $SCRIPTNAME [start|stop|restart|status]" >&2
-	exit 3
-	;;
-esac
-
-:
-EOF
-        chmod 755 /etc/init.d/switchd
+        echo "### Rebooting to Apply Remap..."
         reboot
 
     elif [[ $DISTRIB_RELEASE =~ ^3.* ]]; then
         echo "  INFO: Detected a 3.x Based Release"
-        echo "  Disabling default remap on Cumulus VX..."
+        echo "### Disabling default remap on Cumulus VX..."
         mv -v /etc/hw_init.d/S10rename_eth_swp.sh /etc/S10rename_eth_swp.sh.backup
         echo "### Disabling ZTP service..."
         systemctl stop ztp.service
         ztp -d 2>&1
         echo "### Resetting ZTP to work next boot..."
         ztp -R 2>&1
-        echo "### Rebooting Switch to Apply Remap..."
-        reboot
+        echo "  INFO: Detected Cumulus Linux v$DISTRIB_RELEASE Release"
+        if [[ $DISTRIB_RELEASE =~ ^3.[1-9].* ]]; then
+            echo "### Fixing ONIE DHCP to avoid Vagrant Interface ###"
+            echo "     Note: Installing from ONIE will undo these changes." 
+            mkdir /tmp/foo
+            mount LABEL=ONIE-BOOT /tmp/foo
+            sed -i 's/eth0/eth1/g' /tmp/foo/grub/grub.cfg
+            sed -i 's/eth0/eth1/g' /tmp/foo/onie/grub/grub-extra.cfg
+            umount /tmp/foo
+        fi
+        if [[ $DISTRIB_RELEASE =~ ^3.[2-9].* ]]; then
+            echo "### Giving Vagrant User Ability to Run NCLU Commands ###"
+            sed -i 's/users_with_edit = root, cumulus/users_with_edit = root, cumulus, vagrant/g' /etc/netd.conf
+            sed -i 's/users_with_show = root, cumulus/users_with_show = root, cumulus, vagrant/g' /etc/netd.conf
+        fi
+
     fi
-    echo "### DONE ###"
-else
-    reboot
 fi
+echo "### DONE ###"
+echo "### Rebooting Device to Apply Remap..."
+nohup bash -c 'sleep 2; shutdown now -r "Rebooting to Remap Interfaces"' &
 SCRIPT
 
 Vagrant.configure("2") do |config|
-  wbid = 1
+  wbid = ENV['USER']
   offset = 0
 {% if provider == 'virtualbox' %}
   config.vm.provider "virtualbox" do |v|
@@ -301,29 +93,50 @@ Vagrant.configure("2") do |config|
     # increase nic adapter count to be greater than 8 for all VMs.
     domain.management_network_address = "10.255.#{wbid}.0/24"
     domain.management_network_name = "wbr#{wbid}"
-    domain.nic_adapter_count = 55{% endif %}
+    domain.nic_adapter_count = 130{% endif %}
   end
 
+{% if generate_ansible_hostfile == True %}
+  #Generating Ansible Host File at following location:
+  #    ./.vagrant/provisioners/ansible/inventory/vagrant_ansible_inventory
+  config.vm.provision "ansible" do |ansible|
+    ansible.playbook = "./helper_scripts/empty_playbook.yml"
+{% if function_group is defined -%}
+    # ANSIBLE GROUPS CONFIGURATION
+    ansible.groups = {
+{%- for function in function_group %}
+      "{{ function }}" => [{% for device in function_group[function] %}"{{device}}",{% endfor %}],{% endfor %}
+      "network:children" => [{% for function in function_group%}{% if function in network_functions%}"{{function}}",{% endif %}{% endfor %}]
+    }
+{%- endif %}
+  end{% endif %}
 
 {% for device in devices %}
   ##### DEFINE VM for {{ device.hostname }} #####
   config.vm.define "{{ device.hostname }}" do |device|
-    device.vm.hostname = "{{ device.hostname }}"
-    device.vm.box = "{{ device.os }}"
-    {% if device.version %}device.vm.box_version = "{{ device.version }}"{% endif %}
-
+    device.vm.hostname = "{{ device.hostname }}" {% if device.pxehost=="True" and provider == 'libvirt'%}
+    #NO BOX USED FOR PXE DEVICE{% else %}
+    device.vm.box = "{{ device.os }}"{% if device.version %}
+    device.vm.box_version = "{{ device.version }}"{% endif %}{% endif %}
 {% if provider == 'virtualbox' %}    device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_{{ device.hostname }}"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']{% elif provider == 'libvirt' %}    # disabling sync folder support on all VMs
-    #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
-    device.vm.synced_folder '.', '/vagrant', :disabled => true
-    device.vm.provider :libvirt do |v|{% endif %}
-      v.memory = {{ device.memory }}{% if device.function == 'host' and provider == 'libvirt' %}
-      v.nic_model_type = 'e1000' {% endif %}
+
+      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']{% elif provider == 'libvirt' %}
+    device.vm.provider :libvirt do |v|{% if device.pxehost=="True" %}
+      v.storage :file, :size => '100G', :type => 'qcow2', :bus => 'sata', :device => 'sda'
+      v.boot 'hd'
+      v.boot 'network'{% endif %}{% if device.function == 'host' %}
+      v.nic_model_type = 'e1000' {% endif %}{% endif %}
+{% if device.memory is defined %}      v.memory = {{ device.memory }}{% endif %}
     end{% if synced_folder == False %}
+    #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
     device.vm.synced_folder ".", "/vagrant", disabled: true{% endif %}
 
-      # NETWORK INTERFACES{% for link in device.interfaces %}
+{% if device.ssh_port is defined %}    # SSH Port
+    device.vm.network :forwarded_port, guest: 22, host: {{ device.ssh_port }}, host_ip: "0.0.0.0", id: "ssh", auto_correct:true
+{%- endif %}
+
+    # NETWORK INTERFACES{% for link in device.interfaces %}
       # link for {{ link.local_interface }} --> {{ link.remote_device }}:{{ link.remote_interface }}
       {% if provider == 'virtualbox' %}device.vm.network "private_network", virtualbox__intnet: "#{wbid}_{{ link.network }}", auto_config: false , :mac => "{{ link.mac|replace(':', '') }}"
       {% elif provider == 'libvirt' %}device.vm.network "private_network",
@@ -336,58 +149,109 @@ Vagrant.configure("2") do |config|
             :libvirt__iface_name => '{{ link.local_interface }}',
             auto_config: false{% endif %}{% endfor %}
 
-{% if provider == 'virtualbox' %}    device.vm.provider "virtualbox" do |vbox|
-{% for i in range(2, 2+device.interfaces.__len__()) %}      vbox.customize ['modifyvm', :id, '--nicpromisc{{i}}', 'allow-all']
-{% endfor %}
-{% if device.function == "oob-server" or device.function == "internet" -%}
-{% for i in range(1, 2+device.interfaces.__len__()) %}      vbox.customize ["modifyvm", :id, "--nictype{{i}}", "virtio"]
-{% endfor %}
-{% endif -%}
+{% if provider == 'virtualbox' %}    device.vm.provider "virtualbox" do |vbox|{% for i in range(2, 2+device.interfaces.__len__()) %}
+      vbox.customize ['modifyvm', :id, '--nicpromisc{{i}}', 'allow-all']{% endfor %}
+      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
+{% if device.function == "oob-server" or device.function == "internet" -%}{% for i in range(2, 2+device.interfaces.__len__()) %}
+      vbox.customize ["modifyvm", :id, "--nictype{{i}}", "virtio"]{% endfor %}{% endif -%}
+{% if device.pxehost=="True" %}
+
+      #Setup Interfaces for PXEBOOT
+        #Adding network as a boot option.
+        vbox.customize ["modifyvm", :id, "--boot4", "net"]
+
+        #Setting Vagrant interface to lowest boot preference
+        vbox.customize ["modifyvm", :id, "--nicbootprio1", "0"]
+{% for link in device.interfaces %}{% if link.pxebootinterface %}{% if link.pxebootinterface == "True" %}
+        #Setting Specified interface to highest preference.
+        vbox.customize ["modifyvm", :id, "--nicbootprio{{loop.index+1}}", "1"]{% endif %}{% endif %}{% endfor %}{% endif %}
     end{% endif %}
 
-      # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
-      device.vm.provision :shell , inline: "(grep -q 'mesg n' /root/.profile 2>/dev/null && sed -i '/mesg n/d' /root/.profile  2>/dev/null && echo 'Ignore the previous error, fixing this now...') || true;"
+    # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
+    device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
 
-      {% if "ubuntu" in device.os.lower() -%}
-      # Shorten Boot Process - Applies to Ubuntu Only - remove \"Wait for Network\"
-      device.vm.provision :shell , inline: "sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf || true"{% endif %}
+    {% if "ubuntu" in device.os.lower() -%}
+    # Shorten Boot Process - Applies to Ubuntu Only - remove \"Wait for Network\"
+    device.vm.provision :shell , inline: "sed -i 's/sleep [0-9]*/sleep 1/' /etc/init/failsafe.conf 2>/dev/null || true"
+    {% endif -%}
 
-      # Run Any Extra Config
-{% if device.config is defined %}      device.vm.provision :shell , path: "{{ device.config }}"{% endif %}
+{% if device.function == "oob-server" and create_mgmt_device -%}
+    #Copy over DHCP files and MGMT Network Files
+    device.vm.provision "file", source: "{{ script_storage }}/auto_mgmt_network/dhcpd.conf", destination: "~/dhcpd.conf"
+    device.vm.provision "file", source: "{{ script_storage }}/auto_mgmt_network/dhcpd.hosts", destination: "~/dhcpd.hosts"
+    device.vm.provision "file", source: "{{ script_storage }}/auto_mgmt_network/hosts", destination: "~/hosts"
+    device.vm.provision "file", source: "{{ script_storage }}/auto_mgmt_network/ansible_hostfile", destination: "~/ansible_hostfile"
+    device.vm.provision "file", source: "./helper_scripts/auto_mgmt_network/ztp_oob.sh", destination: "~/ztp_oob.sh"
+{% endif -%}
+{% if create_mgmt_device and device.function != "Unknown" and device.function != "oob-server" and device.function != "host" -%}
 
-{% if device.ansible %}
-    extravars = {wbench_hosts: {
-        {% for device2 in devices -%}
-        {% if not device2.vagrant -%}
-        {% for link in device2.interfaces -%}
-        {% if link.local_interface == 'eth0' -%}
-            {{ device2.hostname}}: {ip: "{{device2.mgmt_ip}}", mac: "{{ link.mac }}"},
-        {% endif -%}
-        {% endfor -%}
-        {% endif -%}
-        {% endfor -%}
-                        }}
-    device.vm.provision :shell , inline: "sudo apt-get update"
-    device.vm.provision :shell , inline: "sudo apt-get install software-properties-common vim lldpd git -y"
-    device.vm.provision :shell , inline: "sudo apt-add-repository ppa:ansible/ansible -y"
-    device.vm.provision :shell , inline: "sudo apt-get update"
-    device.vm.provision :shell , inline: "sudo apt-get install ansible -qy"
-    device.vm.provision :shell , inline: "git clone https://github.com/cumulusnetworks/cldemo-provision "
-    device.vm.provision :shell , inline: "ansible-playbook cldemo-provision/site.yml --extra-vars '#{extravars.to_json}'  --connection=local -i localhost,"
+    #Copy over Topology.dot File
+    device.vm.provision "file", source: "{{ topology_file }}", destination: "~/topology.dot"
+    device.vm.provision :shell, privileged: false, inline: "sudo mv ~/topology.dot /etc/ptm.d/topology.dot"
+
+{% endif -%}
+{% if device.config is defined %}
+    # Run the Config specified in the Node Attributes
+    device.vm.provision :shell , privileged: false, :inline => 'echo "$(whoami)" > /tmp/normal_user'
+    device.vm.provision :shell , path: "{{ device.config }}"
 {% endif %}
 
-      # Apply the interface re-map
-      device.vm.provision "file", source: "{{ script_storage }}/apply_udev.py", destination: "/home/vagrant/apply_udev.py"
-      device.vm.provision :shell , inline: "chmod 755 /home/vagrant/apply_udev.py"
-{% for link in device.interfaces %}      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -a {{ link.mac }} {{ link.local_interface }}"
-{% endfor %}
+    # Install Rules for the interface re-map
+    {% if device.pxehost=="True" and provider == 'libvirt' -%}
+      # NO REMAP for LIBVIRT PXE DEVICE
+    {% elif device.remap=="False" -%}
+      # REMAP Disabled for this node
+    {% else -%}
+    device.vm.provision :shell , :inline => <<-delete_udev_directory
+if [ -d "/etc/udev/rules.d/70-persistent-net.rules" ]; then
+    rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
+fi
+delete_udev_directory
 
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -vm {% if device.vagrant %}{% if device.vagrant=='eth0' and not device.predictive_interfaces %}-nv{%else%}--vagrant-name={{device.vagrant}}{% endif%}{% endif%}"
-      device.vm.provision :shell , inline: "/home/vagrant/apply_udev.py -s"
-      device.vm.provision :shell , :inline => $script
+{% for link in device.interfaces -%}
+      device.vm.provision :shell , :inline => <<-udev_rule
+echo "  INFO: Adding UDEV Rule: {{ link.mac }} --> {{ link.local_interface }}"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="{{ link.mac }}", NAME="{{ link.local_interface }}", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+udev_rule
+     {% endfor %}
+      device.vm.provision :shell , :inline => <<-vagrant_interface_rule
+echo "  INFO: Adding UDEV Rule: Vagrant interface = {% if device.vagrant %}{{ device.vagrant }}{%else%}vagrant{% endif%}"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{ifindex}=="2", NAME="{% if device.vagrant %}{{ device.vagrant }}{%else%}vagrant{% endif%}", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "#### UDEV Rules (/etc/udev/rules.d/70-persistent-net.rules) ####"
+cat /etc/udev/rules.d/70-persistent-net.rules
+vagrant_interface_rule
 
+{% endif -%}
 
+{% if device.playbook is defined %}
+    # Ansible Playbook Configuration
+    device.vm.provision "ansible" do |ansible|
+          ansible.playbook = "{{ device.playbook }}"
+{%- if function_group is defined %}
+          # ANSIBLE GROUPS CONFIGURATION
+          ansible.groups = {
+{%- for function in function_group%}
+            "{{ function }}" => [{% for device in function_group[function] %}"{{device}}",{% endfor %}],
+{%- endfor %}
+            "network:children" => [{% for function in function_group%}{% if function in network_functions%}"{{function}}",{% endif %}{% endfor %}]
+          }
+{%- endif %}
+    end
+{% endif -%}
 
+{% if device.pxehost=="True" and provider == 'libvirt' -%}
+
+    # NO REMAP APPLICATION for LIBVIRT PXE DEVICE
+{% elif device.remap=="False" -%}
+
+    # NO REMAP APPLICATION Required
+
+{% else -%}
+    # Run Any Platform Specific Code and Apply the interface Re-map
+    #   (may or may not perform a reboot depending on platform)
+    device.vm.provision :shell , :inline => $script
+
+{% endif -%}
   end
 {% endfor %}
 
