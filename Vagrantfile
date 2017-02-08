@@ -1,7 +1,7 @@
 # Created by Topology-Converter v4.6.0
 #    https://github.com/cumulusnetworks/topology_converter
 #    using topology data from: ./topology.dot
-#    built with the following args: ./topology_converter.py ./topology.dot -cmd
+#    built with the following args: ./topology_converter.py -cmd ./topology.dot
 #
 #    NOTE: in order to use this Vagrantfile you will need:
 #       -Vagrant(v1.8.1+) installed: http://www.vagrantup.com/downloads
@@ -132,8 +132,8 @@ echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:00:00:24", NAME=
 udev_rule
      
       device.vm.provision :shell , :inline => <<-vagrant_interface_rule
-echo "  INFO: Adding UDEV Rule: Vagrant interface = vagrant"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{ifindex}=="2", NAME="vagrant", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: Vagrant interface = eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{ifindex}=="2", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 echo "#### UDEV Rules (/etc/udev/rules.d/70-persistent-net.rules) ####"
 cat /etc/udev/rules.d/70-persistent-net.rules
 vagrant_interface_rule
@@ -148,7 +148,7 @@ end
   config.vm.define "oob-mgmt-switch" do |device|
     device.vm.hostname = "oob-mgmt-switch" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.2.0"
+    device.vm.box_version = "3.2.1"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_oob-mgmt-switch"
 
@@ -325,7 +325,7 @@ end
   config.vm.define "exit02" do |device|
     device.vm.hostname = "exit02" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.2.0"
+    device.vm.box_version = "3.2.1"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_exit02"
 
@@ -470,7 +470,7 @@ end
   config.vm.define "exit01" do |device|
     device.vm.hostname = "exit01" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.2.0"
+    device.vm.box_version = "3.2.1"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_exit01"
 
@@ -615,7 +615,7 @@ end
   config.vm.define "spine02" do |device|
     device.vm.hostname = "spine02" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.2.0"
+    device.vm.box_version = "3.2.1"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_spine02"
 
@@ -744,7 +744,7 @@ end
   config.vm.define "spine01" do |device|
     device.vm.hostname = "spine01" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.2.0"
+    device.vm.box_version = "3.2.1"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_spine01"
 
@@ -873,7 +873,7 @@ end
   config.vm.define "leaf04" do |device|
     device.vm.hostname = "leaf04" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.2.0"
+    device.vm.box_version = "3.2.1"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf04"
 
@@ -1018,7 +1018,7 @@ end
   config.vm.define "leaf02" do |device|
     device.vm.hostname = "leaf02" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.2.0"
+    device.vm.box_version = "3.2.1"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf02"
 
@@ -1163,7 +1163,7 @@ end
   config.vm.define "leaf03" do |device|
     device.vm.hostname = "leaf03" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.2.0"
+    device.vm.box_version = "3.2.1"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf03"
 
@@ -1308,7 +1308,7 @@ end
   config.vm.define "leaf01" do |device|
     device.vm.hostname = "leaf01" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.2.0"
+    device.vm.box_version = "3.2.1"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_leaf01"
 
@@ -1843,7 +1843,7 @@ end
   config.vm.define "internet" do |device|
     device.vm.hostname = "internet" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
-    device.vm.box_version = "3.2.0"
+    device.vm.box_version = "3.2.1"
     device.vm.provider "virtualbox" do |v|
       v.name = "#{wbid}_internet"
 

@@ -1,8 +1,7 @@
-{% set mgmt_ips = devices[0].mgmt_ip.split(',') -%}
 #!/bin/bash
-# Created by Topology-Converter v{{ version }}
+# Created by Topology-Converter v4.6.0
 #    https://github.com/cumulusnetworks/topology_converter
-#    using topology data from: {{ topology_file }}
+#    using topology data from: ./topology.dot
 
 #######################
 #       KNOBS
@@ -33,7 +32,7 @@ install_puppet(){
     sed -i 's/-Xms2g/-Xms512m/g' /etc/default/puppetserver
     sed -i 's/-Xmx2g/-Xmx512m/g' /etc/default/puppetserver
     echo "*" > /etc/puppetlabs/puppet/autosign.conf
-    sed -i 's/{{ mgmt_ips[0] }}/{{ mgmt_ips[0] }} puppet /g'>> /etc/hosts
+    sed -i 's/192.168.0.254/192.168.0.254 puppet /g'>> /etc/hosts
 }
 
 install_ansible(){
@@ -58,11 +57,11 @@ iface lo inet loopback
 auto vagrant
 iface vagrant inet dhcp
 
-{% for mgmt_ip in mgmt_ips %}
+
 auto mgmt_net
 iface mgmt_net inet static
-    address {{ mgmt_ip }}/24
-{% endfor %}
+    address 192.168.0.254/24
+
 EOT
 
 echo " ### Overwriting DNS Server to 8.8.8.8 ###"
@@ -189,7 +188,7 @@ if [ $puppet -eq 1 ]; then
 sudo rm -rf /etc/puppetlabs/code/environments/production
 sudo ln -s  /home/cumulus/$REPONAME/puppet/ /etc/puppetlabs/code/environments/production
 sudo /opt/puppetlabs/bin/puppet module install puppetlabs-stdlib
-#sudo bash -c 'echo "certname = {{ mgmt_ips[0] }}" >> /etc/puppetlabs/puppet/puppet.conf'
+#sudo bash -c 'echo "certname = 192.168.0.254" >> /etc/puppetlabs/puppet/puppet.conf'
 echo " ### STARTING PUPPETSERVER... ###"
 echo "     (this may take a while 30 secs or so...)"
 sudo systemctl restart puppetserver.service  
