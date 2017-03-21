@@ -17,7 +17,7 @@
 #Set the default provider to libvirt in the case they forget --provider=libvirt or if someone destroys a machine it reverts to virtualbox
 ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
-Vagrant.require_version ">= 1.8.6", "< 1.9.2"
+Vagrant.require_version ">= 1.8.6", "< 1.9.3"
 
 # Check required plugins
 REQUIRED_PLUGINS_LIBVIRT = %w(vagrant-libvirt vagrant-mutate)
@@ -83,7 +83,7 @@ nohup bash -c 'sleep 2; shutdown now -r "Rebooting to Remap Interfaces"' &
 SCRIPT
 
 Vagrant.configure("2") do |config|
-  wbid = ENV['USER']
+  wbid = 1
   offset = 0
 {% if provider == 'virtualbox' %}
   config.vm.provider "virtualbox" do |v|
