@@ -7,7 +7,7 @@ group {
 
   option domain-name-servers 192.168.0.254;
   option domain-name "simulation";
-  #option routers 192.168.0.254;
+  option routers 192.168.0.254;
   option www-server 192.168.0.254;
   option default-url = "http://192.168.0.254/onie-installer";
 
