@@ -3,6 +3,5 @@ ccw-wbenchvm-ansible/*
 cldemo-ansible/*
 ccw-wbenchvm-ansible*
 cldemo-ansible*
-topology_converter.py
 dhcp_mac_map
 topology.dot.local
