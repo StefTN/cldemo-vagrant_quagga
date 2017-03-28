@@ -186,16 +186,15 @@ EOT
 
 chown -R cumulus:cumulus /home/cumulus/
 chown -R cumulus:cumulus /home/cumulus/.ssh
-chmod 755 -R /home/cumulus/
-chown cumulus /home/cumulus/.ssh/id*
 chmod 700 /home/cumulus/.ssh/
-chmod 600 /home/cumulus/.ssh/id*
+chmod 600 /home/cumulus/.ssh/*
+chown cumulus:cumulus /home/cumulus/.ssh/*
 
 echo "Copying Key into /var/www/html..."
 cp /home/cumulus/.ssh/id_rsa.pub /var/www/html/authorized_keys
 cp /home/cumulus/.ssh/id_rsa.pub /home/cumulus/.ssh/authorized_keys
-chmod 600 /home/cumulus/.ssh/*
 chmod 755 /var/www/html/authorized_keys
+
 
 echo "<html><h1>You've come to the OOB-MGMT-Server.</h1></html>" > /var/www/html/index.html
 chmod 777 -R /var/www/html/*
