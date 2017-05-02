@@ -1,6 +1,7 @@
 {% set mgmt_ips = devices[0].mgmt_ip.split(',') -%}
 #!/bin/bash
 # Created by Topology-Converter v{{ version }}
+#    Template Revision: v4.6.1_custom
 #    https://github.com/cumulusnetworks/topology_converter
 #    using topology data from: {{ topology_file }}
 
@@ -82,8 +83,8 @@ auto eth0
 iface eth0 inet dhcp
 
 {% for mgmt_ip in mgmt_ips %}
-auto mgmt_net
-iface mgmt_net inet static
+auto eth1
+iface eth1 inet static
     address {{ mgmt_ip }}/24
 {% endfor %}
 EOT

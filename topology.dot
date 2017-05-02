@@ -68,7 +68,7 @@ graph vx {
  "edge01":"eth1" -- "exit01":"swp1"
  "edge01":"eth2" -- "exit02":"swp1"
 
- "oob-mgmt-server":"mgmt_net" -- "oob-mgmt-switch":"swp1" [right_mac="A0:00:00:00:00:61"]
+ "oob-mgmt-server":"eth1" -- "oob-mgmt-switch":"swp1" [right_mac="A0:00:00:00:00:61"]
  "server01":"eth0" -- "oob-mgmt-switch":"swp2" [left_mac="A0:00:00:00:00:31"]
  "server02":"eth0" -- "oob-mgmt-switch":"swp3" [left_mac="A0:00:00:00:00:32"]
  "server03":"eth0" -- "oob-mgmt-switch":"swp4" [left_mac="A0:00:00:00:00:33"]

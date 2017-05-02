@@ -1,5 +1,6 @@
 #!/bin/bash
-# Created by Topology-Converter v4.6.0
+# Created by Topology-Converter v4.6.2_dev
+#    Template Revision: v4.6.1_custom
 #    https://github.com/cumulusnetworks/topology_converter
 #    using topology data from: ./topology.dot
 
@@ -81,8 +82,8 @@ auto eth0
 iface eth0 inet dhcp
 
 
-auto mgmt_net
-iface mgmt_net inet static
+auto eth1
+iface eth1 inet static
     address 192.168.0.254/24
 
 EOT
