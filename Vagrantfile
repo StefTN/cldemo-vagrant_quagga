@@ -2,14 +2,31 @@
 #    Template Revision: v4.6.2
 #    https://github.com/cumulusnetworks/topology_converter
 #    using topology data from: ./topology.dot
-#    built with the following args: ./topology_converter.py ./topology.dot
+#    built with the following args: ./topology_converter.py -p libvirt ./topology.dot
 #
 #    NOTE: in order to use this Vagrantfile you will need:
 #       -Vagrant(v1.8.6+) installed: http://www.vagrantup.com/downloads
 #       -the "helper_scripts" directory that comes packaged with topology-converter.py
-#       -Virtualbox installed: https://www.virtualbox.org/wiki/Downloads
+#        -Libvirt Installed -- guide to come
+#       -Vagrant-Libvirt Plugin installed: $ vagrant plugin install vagrant-libvirt
+#       -Boxes which have been mutated to support Libvirt -- see guide below:
+#            https://community.cumulusnetworks.com/cumulus/topics/converting-cumulus-vx-virtualbox-vagrant-box-gt-libvirt-vagrant-box
+#       -Start with \"vagrant up --provider=libvirt --no-parallel\n")
 
+#Set the default provider to libvirt in the case they forget --provider=libvirt or if someone destroys a machine it reverts to virtualbox
+ENV['VAGRANT_DEFAULT_PROVIDER'] = 'libvirt'
 
+Vagrant.require_version ">= 1.8.6", "< 1.9.6"
+
+# Check required plugins
+REQUIRED_PLUGINS_LIBVIRT = %w(vagrant-libvirt)
+exit unless REQUIRED_PLUGINS_LIBVIRT.all? do |plugin|
+  Vagrant.has_plugin?(plugin) || (
+    puts "The #{plugin} plugin is required. Please install it with:"
+    puts "$ vagrant plugin install #{plugin}"
+    false
+  )
+end
 
 
 $script = <<-SCRIPT
@@ -68,9 +85,11 @@ SCRIPT
 
 Vagrant.configure("2") do |config|
 
-  config.vm.provider "virtualbox" do |v|
-    v.gui=false
-
+  config.vm.provider :libvirt do |domain|
+    # increase nic adapter count to be greater than 8 for all VMs.
+    domain.management_network_address = "10.255.1.0/24"
+    domain.management_network_name = "wbr1"
+    domain.nic_adapter_count = 130
   end
 
 
@@ -80,9 +99,9 @@ Vagrant.configure("2") do |config|
   config.vm.define "oob-mgmt-server" do |device|
     device.vm.hostname = "oob-mgmt-server" 
     device.vm.box = "CumulusCommunity/vx_oob_server"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_oob-mgmt-server"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+    device.vm.box_version = "1.0.1"
+
+    device.vm.provider :libvirt do |v|
       v.memory = 1024
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -92,13 +111,17 @@ Vagrant.configure("2") do |config|
 
     # NETWORK INTERFACES
       # link for eth1 --> oob-mgmt-switch:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net54", auto_config: false , :mac => "443839000057"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:57",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8054',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9054',
+            :libvirt__iface_name => 'eth1',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -140,9 +163,8 @@ end
     device.vm.hostname = "oob-mgmt-switch" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_oob-mgmt-switch"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -152,73 +174,167 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> NOTHING:NOTHING
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net61", auto_config: false , :mac => "443839000060"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:60",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8061',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9061',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for swp1 --> oob-mgmt-server:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net54", auto_config: false , :mac => "a00000000061"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:61",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9054',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8054',
+            :libvirt__iface_name => 'swp1',
+            auto_config: false
       # link for swp2 --> server01:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net42", auto_config: false , :mac => "443839000043"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:43",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9042',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8042',
+            :libvirt__iface_name => 'swp2',
+            auto_config: false
       # link for swp3 --> server02:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net47", auto_config: false , :mac => "44383900004c"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:4c",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9047',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8047',
+            :libvirt__iface_name => 'swp3',
+            auto_config: false
       # link for swp4 --> server03:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net3", auto_config: false , :mac => "443839000004"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:04",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9003',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8003',
+            :libvirt__iface_name => 'swp4',
+            auto_config: false
       # link for swp5 --> server04:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net49", auto_config: false , :mac => "44383900004e"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:4e",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9049',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8049',
+            :libvirt__iface_name => 'swp5',
+            auto_config: false
       # link for swp6 --> leaf01:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net20", auto_config: false , :mac => "443839000020"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:20",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9020',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8020',
+            :libvirt__iface_name => 'swp6',
+            auto_config: false
       # link for swp7 --> leaf02:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net38", auto_config: false , :mac => "44383900003d"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:3d",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9038',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8038',
+            :libvirt__iface_name => 'swp7',
+            auto_config: false
       # link for swp8 --> leaf03:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net28", auto_config: false , :mac => "44383900002d"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:2d",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9028',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8028',
+            :libvirt__iface_name => 'swp8',
+            auto_config: false
       # link for swp9 --> leaf04:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net34", auto_config: false , :mac => "443839000037"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:37",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9034',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8034',
+            :libvirt__iface_name => 'swp9',
+            auto_config: false
       # link for swp10 --> spine01:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net31", auto_config: false , :mac => "443839000032"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:32",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9031',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8031',
+            :libvirt__iface_name => 'swp10',
+            auto_config: false
       # link for swp11 --> spine02:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net59", auto_config: false , :mac => "44383900005f"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:5f",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9059',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8059',
+            :libvirt__iface_name => 'swp11',
+            auto_config: false
       # link for swp12 --> exit01:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net9", auto_config: false , :mac => "44383900000f"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:0f",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9009',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8009',
+            :libvirt__iface_name => 'swp12',
+            auto_config: false
       # link for swp13 --> exit02:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net48", auto_config: false , :mac => "44383900004d"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:4d",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9048',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8048',
+            :libvirt__iface_name => 'swp13',
+            auto_config: false
       # link for swp14 --> edge01:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net40", auto_config: false , :mac => "443839000040"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:40",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9040',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8040',
+            :libvirt__iface_name => 'swp14',
+            auto_config: false
       # link for swp15 --> internet:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net35", auto_config: false , :mac => "443839000038"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:38",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9035',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8035',
+            :libvirt__iface_name => 'swp15',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc13', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc14', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc15', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc16', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc17', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -320,9 +436,8 @@ end
     device.vm.hostname = "exit02" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_exit02"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -332,53 +447,117 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp13
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net48", auto_config: false , :mac => "a00000000042"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:42",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8048',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9048',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for swp1 --> edge01:eth2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net7", auto_config: false , :mac => "44383900000c"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:0c",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9007',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8007',
+            :libvirt__iface_name => 'swp1',
+            auto_config: false
       # link for swp44 --> internet:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net39", auto_config: false , :mac => "44383900003f"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:3f",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9039',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8039',
+            :libvirt__iface_name => 'swp44',
+            auto_config: false
       # link for swp45 --> exit02:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net30", auto_config: false , :mac => "443839000030"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:30",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8030',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9030',
+            :libvirt__iface_name => 'swp45',
+            auto_config: false
       # link for swp46 --> exit02:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net30", auto_config: false , :mac => "443839000031"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:31",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9030',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8030',
+            :libvirt__iface_name => 'swp46',
+            auto_config: false
       # link for swp47 --> exit02:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net33", auto_config: false , :mac => "443839000035"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:35",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8033',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9033',
+            :libvirt__iface_name => 'swp47',
+            auto_config: false
       # link for swp48 --> exit02:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net33", auto_config: false , :mac => "443839000036"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:36",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9033',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8033',
+            :libvirt__iface_name => 'swp48',
+            auto_config: false
       # link for swp49 --> exit01:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net24", auto_config: false , :mac => "443839000027"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:27",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9024',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8024',
+            :libvirt__iface_name => 'swp49',
+            auto_config: false
       # link for swp50 --> exit01:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net14", auto_config: false , :mac => "443839000017"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:17",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9014',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8014',
+            :libvirt__iface_name => 'swp50',
+            auto_config: false
       # link for swp51 --> spine01:swp29
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net21", auto_config: false , :mac => "443839000021"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:21",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8021',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9021',
+            :libvirt__iface_name => 'swp51',
+            auto_config: false
       # link for swp52 --> spine02:swp29
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net53", auto_config: false , :mac => "443839000055"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:55",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8053',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9053',
+            :libvirt__iface_name => 'swp52',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -460,9 +639,8 @@ end
     device.vm.hostname = "exit01" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_exit01"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -472,53 +650,117 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp12
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net9", auto_config: false , :mac => "a00000000041"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:41",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8009',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9009',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for swp1 --> edge01:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net46", auto_config: false , :mac => "44383900004b"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:4b",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9046',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8046',
+            :libvirt__iface_name => 'swp1',
+            auto_config: false
       # link for swp44 --> internet:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net5", auto_config: false , :mac => "443839000008"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:08",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9005',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8005',
+            :libvirt__iface_name => 'swp44',
+            auto_config: false
       # link for swp45 --> exit01:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net43", auto_config: false , :mac => "443839000044"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:44",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8043',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9043',
+            :libvirt__iface_name => 'swp45',
+            auto_config: false
       # link for swp46 --> exit01:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net43", auto_config: false , :mac => "443839000045"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:45",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9043',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8043',
+            :libvirt__iface_name => 'swp46',
+            auto_config: false
       # link for swp47 --> exit01:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net11", auto_config: false , :mac => "443839000012"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:12",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8011',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9011',
+            :libvirt__iface_name => 'swp47',
+            auto_config: false
       # link for swp48 --> exit01:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net11", auto_config: false , :mac => "443839000013"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:13",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9011',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8011',
+            :libvirt__iface_name => 'swp48',
+            auto_config: false
       # link for swp49 --> exit02:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net24", auto_config: false , :mac => "443839000026"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:26",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8024',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9024',
+            :libvirt__iface_name => 'swp49',
+            auto_config: false
       # link for swp50 --> exit02:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net14", auto_config: false , :mac => "443839000016"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:16",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8014',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9014',
+            :libvirt__iface_name => 'swp50',
+            auto_config: false
       # link for swp51 --> spine01:swp30
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net6", auto_config: false , :mac => "443839000009"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:09",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8006',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9006',
+            :libvirt__iface_name => 'swp51',
+            auto_config: false
       # link for swp52 --> spine02:swp30
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net56", auto_config: false , :mac => "44383900005a"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:5a",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8056',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9056',
+            :libvirt__iface_name => 'swp52',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -600,9 +842,8 @@ end
     device.vm.hostname = "spine02" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_spine02"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -612,45 +853,97 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp11
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net59", auto_config: false , :mac => "a00000000022"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:22",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8059',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9059',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for swp1 --> leaf01:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net23", auto_config: false , :mac => "443839000025"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:25",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9023',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8023',
+            :libvirt__iface_name => 'swp1',
+            auto_config: false
       # link for swp2 --> leaf02:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net58", auto_config: false , :mac => "44383900005e"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:5e",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9058',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8058',
+            :libvirt__iface_name => 'swp2',
+            auto_config: false
       # link for swp3 --> leaf03:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net17", auto_config: false , :mac => "44383900001c"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:1c",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9017',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8017',
+            :libvirt__iface_name => 'swp3',
+            auto_config: false
       # link for swp4 --> leaf04:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net44", auto_config: false , :mac => "443839000047"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:47",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9044',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8044',
+            :libvirt__iface_name => 'swp4',
+            auto_config: false
       # link for swp29 --> exit02:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net53", auto_config: false , :mac => "443839000056"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:56",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9053',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8053',
+            :libvirt__iface_name => 'swp29',
+            auto_config: false
       # link for swp30 --> exit01:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net56", auto_config: false , :mac => "44383900005b"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:5b",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9056',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8056',
+            :libvirt__iface_name => 'swp30',
+            auto_config: false
       # link for swp31 --> spine01:swp31
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net45", auto_config: false , :mac => "443839000049"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:49",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9045',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8045',
+            :libvirt__iface_name => 'swp31',
+            auto_config: false
       # link for swp32 --> spine01:swp32
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net36", auto_config: false , :mac => "44383900003a"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:3a",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9036',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8036',
+            :libvirt__iface_name => 'swp32',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -724,9 +1017,8 @@ end
     device.vm.hostname = "spine01" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_spine01"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -736,45 +1028,97 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp10
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net31", auto_config: false , :mac => "a00000000021"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:21",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8031',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9031',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for swp1 --> leaf01:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net52", auto_config: false , :mac => "443839000054"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:54",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9052',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8052',
+            :libvirt__iface_name => 'swp1',
+            auto_config: false
       # link for swp2 --> leaf02:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net25", auto_config: false , :mac => "443839000029"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:29",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9025',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8025',
+            :libvirt__iface_name => 'swp2',
+            auto_config: false
       # link for swp3 --> leaf03:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net50", auto_config: false , :mac => "443839000050"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:50",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9050',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8050',
+            :libvirt__iface_name => 'swp3',
+            auto_config: false
       # link for swp4 --> leaf04:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net37", auto_config: false , :mac => "44383900003c"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:3c",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9037',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8037',
+            :libvirt__iface_name => 'swp4',
+            auto_config: false
       # link for swp29 --> exit02:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net21", auto_config: false , :mac => "443839000022"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:22",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9021',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8021',
+            :libvirt__iface_name => 'swp29',
+            auto_config: false
       # link for swp30 --> exit01:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net6", auto_config: false , :mac => "44383900000a"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:0a",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9006',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8006',
+            :libvirt__iface_name => 'swp30',
+            auto_config: false
       # link for swp31 --> spine02:swp31
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net45", auto_config: false , :mac => "443839000048"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:48",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8045',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9045',
+            :libvirt__iface_name => 'swp31',
+            auto_config: false
       # link for swp32 --> spine02:swp32
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net36", auto_config: false , :mac => "443839000039"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:39",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8036',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9036',
+            :libvirt__iface_name => 'swp32',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -848,9 +1192,8 @@ end
     device.vm.hostname = "leaf04" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_leaf04"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -860,53 +1203,117 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp9
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net34", auto_config: false , :mac => "a00000000014"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:14",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8034',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9034',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for swp1 --> server03:eth2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net57", auto_config: false , :mac => "44383900005c"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:5c",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9057',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8057',
+            :libvirt__iface_name => 'swp1',
+            auto_config: false
       # link for swp2 --> server04:eth2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net27", auto_config: false , :mac => "44383900002c"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:2c",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9027',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8027',
+            :libvirt__iface_name => 'swp2',
+            auto_config: false
       # link for swp45 --> leaf04:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net16", auto_config: false , :mac => "443839000019"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:19",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8016',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9016',
+            :libvirt__iface_name => 'swp45',
+            auto_config: false
       # link for swp46 --> leaf04:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net16", auto_config: false , :mac => "44383900001a"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:1a",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9016',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8016',
+            :libvirt__iface_name => 'swp46',
+            auto_config: false
       # link for swp47 --> leaf04:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net32", auto_config: false , :mac => "443839000033"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:33",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8032',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9032',
+            :libvirt__iface_name => 'swp47',
+            auto_config: false
       # link for swp48 --> leaf04:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net32", auto_config: false , :mac => "443839000034"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:34",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9032',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8032',
+            :libvirt__iface_name => 'swp48',
+            auto_config: false
       # link for swp49 --> leaf03:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net29", auto_config: false , :mac => "44383900002f"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:2f",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9029',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8029',
+            :libvirt__iface_name => 'swp49',
+            auto_config: false
       # link for swp50 --> leaf03:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net4", auto_config: false , :mac => "443839000006"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:06",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9004',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8004',
+            :libvirt__iface_name => 'swp50',
+            auto_config: false
       # link for swp51 --> spine01:swp4
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net37", auto_config: false , :mac => "44383900003b"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:3b",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8037',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9037',
+            :libvirt__iface_name => 'swp51',
+            auto_config: false
       # link for swp52 --> spine02:swp4
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net44", auto_config: false , :mac => "443839000046"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:46",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8044',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9044',
+            :libvirt__iface_name => 'swp52',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -988,9 +1395,8 @@ end
     device.vm.hostname = "leaf02" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_leaf02"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -1000,53 +1406,117 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp7
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net38", auto_config: false , :mac => "a00000000012"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:12",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8038',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9038',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for swp1 --> server01:eth2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net13", auto_config: false , :mac => "443839000015"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:15",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9013',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8013',
+            :libvirt__iface_name => 'swp1',
+            auto_config: false
       # link for swp2 --> server02:eth2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net15", auto_config: false , :mac => "443839000018"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:18",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9015',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8015',
+            :libvirt__iface_name => 'swp2',
+            auto_config: false
       # link for swp45 --> leaf02:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net8", auto_config: false , :mac => "44383900000d"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:0d",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8008',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9008',
+            :libvirt__iface_name => 'swp45',
+            auto_config: false
       # link for swp46 --> leaf02:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net8", auto_config: false , :mac => "44383900000e"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:0e",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9008',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8008',
+            :libvirt__iface_name => 'swp46',
+            auto_config: false
       # link for swp47 --> leaf02:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net55", auto_config: false , :mac => "443839000058"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:58",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8055',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9055',
+            :libvirt__iface_name => 'swp47',
+            auto_config: false
       # link for swp48 --> leaf02:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net55", auto_config: false , :mac => "443839000059"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:59",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9055',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8055',
+            :libvirt__iface_name => 'swp48',
+            auto_config: false
       # link for swp49 --> leaf01:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net10", auto_config: false , :mac => "443839000011"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:11",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9010',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8010',
+            :libvirt__iface_name => 'swp49',
+            auto_config: false
       # link for swp50 --> leaf01:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net1", auto_config: false , :mac => "443839000002"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:02",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9001',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8001',
+            :libvirt__iface_name => 'swp50',
+            auto_config: false
       # link for swp51 --> spine01:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net25", auto_config: false , :mac => "443839000028"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:28",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8025',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9025',
+            :libvirt__iface_name => 'swp51',
+            auto_config: false
       # link for swp52 --> spine02:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net58", auto_config: false , :mac => "44383900005d"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:5d",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8058',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9058',
+            :libvirt__iface_name => 'swp52',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -1128,9 +1598,8 @@ end
     device.vm.hostname = "leaf03" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_leaf03"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -1140,53 +1609,117 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp8
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net28", auto_config: false , :mac => "a00000000013"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:13",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8028',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9028',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for swp1 --> server03:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net22", auto_config: false , :mac => "443839000023"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:23",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9022',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8022',
+            :libvirt__iface_name => 'swp1',
+            auto_config: false
       # link for swp2 --> server04:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net19", auto_config: false , :mac => "44383900001f"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:1f",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9019',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8019',
+            :libvirt__iface_name => 'swp2',
+            auto_config: false
       # link for swp45 --> leaf03:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net26", auto_config: false , :mac => "44383900002a"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:2a",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8026',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9026',
+            :libvirt__iface_name => 'swp45',
+            auto_config: false
       # link for swp46 --> leaf03:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net26", auto_config: false , :mac => "44383900002b"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:2b",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9026',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8026',
+            :libvirt__iface_name => 'swp46',
+            auto_config: false
       # link for swp47 --> leaf03:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net51", auto_config: false , :mac => "443839000051"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:51",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8051',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9051',
+            :libvirt__iface_name => 'swp47',
+            auto_config: false
       # link for swp48 --> leaf03:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net51", auto_config: false , :mac => "443839000052"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:52",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9051',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8051',
+            :libvirt__iface_name => 'swp48',
+            auto_config: false
       # link for swp49 --> leaf04:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net29", auto_config: false , :mac => "44383900002e"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:2e",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8029',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9029',
+            :libvirt__iface_name => 'swp49',
+            auto_config: false
       # link for swp50 --> leaf04:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net4", auto_config: false , :mac => "443839000005"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:05",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8004',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9004',
+            :libvirt__iface_name => 'swp50',
+            auto_config: false
       # link for swp51 --> spine01:swp3
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net50", auto_config: false , :mac => "44383900004f"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:4f",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8050',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9050',
+            :libvirt__iface_name => 'swp51',
+            auto_config: false
       # link for swp52 --> spine02:swp3
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net17", auto_config: false , :mac => "44383900001b"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:1b",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8017',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9017',
+            :libvirt__iface_name => 'swp52',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -1268,9 +1801,8 @@ end
     device.vm.hostname = "leaf01" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_leaf01"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -1280,53 +1812,117 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp6
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net20", auto_config: false , :mac => "a00000000011"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:11",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8020',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9020',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for swp1 --> server01:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net2", auto_config: false , :mac => "443839000003"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:03",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9002',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8002',
+            :libvirt__iface_name => 'swp1',
+            auto_config: false
       # link for swp2 --> server02:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net12", auto_config: false , :mac => "443839000014"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:14",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9012',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8012',
+            :libvirt__iface_name => 'swp2',
+            auto_config: false
       # link for swp45 --> leaf01:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net18", auto_config: false , :mac => "44383900001d"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:1d",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8018',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9018',
+            :libvirt__iface_name => 'swp45',
+            auto_config: false
       # link for swp46 --> leaf01:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net18", auto_config: false , :mac => "44383900001e"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:1e",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9018',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8018',
+            :libvirt__iface_name => 'swp46',
+            auto_config: false
       # link for swp47 --> leaf01:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net41", auto_config: false , :mac => "443839000041"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:41",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8041',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9041',
+            :libvirt__iface_name => 'swp47',
+            auto_config: false
       # link for swp48 --> leaf01:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net41", auto_config: false , :mac => "443839000042"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:42",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '9041',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '8041',
+            :libvirt__iface_name => 'swp48',
+            auto_config: false
       # link for swp49 --> leaf02:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net10", auto_config: false , :mac => "443839000010"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:10",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8010',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9010',
+            :libvirt__iface_name => 'swp49',
+            auto_config: false
       # link for swp50 --> leaf02:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net1", auto_config: false , :mac => "443839000001"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:01",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8001',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9001',
+            :libvirt__iface_name => 'swp50',
+            auto_config: false
       # link for swp51 --> spine01:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net52", auto_config: false , :mac => "443839000053"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:53",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8052',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9052',
+            :libvirt__iface_name => 'swp51',
+            auto_config: false
       # link for swp52 --> spine02:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net23", auto_config: false , :mac => "443839000024"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:24",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8023',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9023',
+            :libvirt__iface_name => 'swp52',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc5', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc6', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc7', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc8', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc9', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc10', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc11', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc12', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -1407,9 +2003,9 @@ end
   config.vm.define "edge01" do |device|
     device.vm.hostname = "edge01" 
     device.vm.box = "yk0/ubuntu-xenial"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_edge01"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
+      v.nic_model_type = 'e1000' 
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -1419,21 +2015,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp14
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net40", auto_config: false , :mac => "a00000000051"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:51",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8040',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9040',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for eth1 --> exit01:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net46", auto_config: false , :mac => "44383900004a"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:4a",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8046',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9046',
+            :libvirt__iface_name => 'eth1',
+            auto_config: false
       # link for eth2 --> exit02:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net7", auto_config: false , :mac => "44383900000b"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:0b",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8007',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9007',
+            :libvirt__iface_name => 'eth2',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -1485,9 +2097,9 @@ end
   config.vm.define "server01" do |device|
     device.vm.hostname = "server01" 
     device.vm.box = "yk0/ubuntu-xenial"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_server01"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
+      v.nic_model_type = 'e1000' 
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -1497,21 +2109,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net42", auto_config: false , :mac => "a00000000031"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:31",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8042',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9042',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for eth1 --> leaf01:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net2", auto_config: false , :mac => "000300111101"
-      
+      device.vm.network "private_network",
+            :mac => "00:03:00:11:11:01",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8002',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9002',
+            :libvirt__iface_name => 'eth1',
+            auto_config: false
       # link for eth2 --> leaf02:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net13", auto_config: false , :mac => "000300111102"
-      
+      device.vm.network "private_network",
+            :mac => "00:03:00:11:11:02",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8013',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9013',
+            :libvirt__iface_name => 'eth2',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -1563,9 +2191,9 @@ end
   config.vm.define "server03" do |device|
     device.vm.hostname = "server03" 
     device.vm.box = "yk0/ubuntu-xenial"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_server03"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
+      v.nic_model_type = 'e1000' 
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -1575,21 +2203,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp4
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net3", auto_config: false , :mac => "a00000000033"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:33",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8003',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9003',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for eth1 --> leaf03:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net22", auto_config: false , :mac => "000300333301"
-      
+      device.vm.network "private_network",
+            :mac => "00:03:00:33:33:01",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8022',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9022',
+            :libvirt__iface_name => 'eth1',
+            auto_config: false
       # link for eth2 --> leaf04:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net57", auto_config: false , :mac => "000300333302"
-      
+      device.vm.network "private_network",
+            :mac => "00:03:00:33:33:02",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8057',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9057',
+            :libvirt__iface_name => 'eth2',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -1641,9 +2285,9 @@ end
   config.vm.define "server02" do |device|
     device.vm.hostname = "server02" 
     device.vm.box = "yk0/ubuntu-xenial"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_server02"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
+      v.nic_model_type = 'e1000' 
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -1653,21 +2297,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp3
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net47", auto_config: false , :mac => "a00000000032"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:32",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8047',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9047',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for eth1 --> leaf01:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net12", auto_config: false , :mac => "000300222201"
-      
+      device.vm.network "private_network",
+            :mac => "00:03:00:22:22:01",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8012',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9012',
+            :libvirt__iface_name => 'eth1',
+            auto_config: false
       # link for eth2 --> leaf02:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net15", auto_config: false , :mac => "000300222202"
-      
+      device.vm.network "private_network",
+            :mac => "00:03:00:22:22:02",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8015',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9015',
+            :libvirt__iface_name => 'eth2',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -1719,9 +2379,9 @@ end
   config.vm.define "server04" do |device|
     device.vm.hostname = "server04" 
     device.vm.box = "yk0/ubuntu-xenial"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_server04"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
+      v.nic_model_type = 'e1000' 
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -1731,21 +2391,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp5
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net49", auto_config: false , :mac => "a00000000034"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:34",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8049',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9049',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for eth1 --> leaf03:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net19", auto_config: false , :mac => "000300444401"
-      
+      device.vm.network "private_network",
+            :mac => "00:03:00:44:44:01",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8019',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9019',
+            :libvirt__iface_name => 'eth1',
+            auto_config: false
       # link for eth2 --> leaf04:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net27", auto_config: false , :mac => "000300444402"
-      
+      device.vm.network "private_network",
+            :mac => "00:03:00:44:44:02",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8027',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9027',
+            :libvirt__iface_name => 'eth2',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
@@ -1798,9 +2474,8 @@ end
     device.vm.hostname = "internet" 
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
-    device.vm.provider "virtualbox" do |v|
-      v.name = "1498240717_internet"
-      v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
+
+    device.vm.provider :libvirt do |v|
       v.memory = 512
     end
     #   see note here: https://github.com/pradels/vagrant-libvirt#synced-folders
@@ -1810,21 +2485,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp15
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net35", auto_config: false , :mac => "a00000000050"
-      
+      device.vm.network "private_network",
+            :mac => "a0:00:00:00:00:50",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8035',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9035',
+            :libvirt__iface_name => 'eth0',
+            auto_config: false
       # link for swp1 --> exit01:swp44
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net5", auto_config: false , :mac => "443839000007"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:07",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8005',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9005',
+            :libvirt__iface_name => 'swp1',
+            auto_config: false
       # link for swp2 --> exit02:swp44
-      device.vm.network "private_network", virtualbox__intnet: "1498240717_net39", auto_config: false , :mac => "44383900003e"
-      
+      device.vm.network "private_network",
+            :mac => "44:38:39:00:00:3e",
+            :libvirt__tunnel_type => 'udp',
+            :libvirt__tunnel_local_ip => '127.0.0.1',
+            :libvirt__tunnel_local_port => '8039',
+            :libvirt__tunnel_ip => '127.0.0.1',
+            :libvirt__tunnel_port => '9039',
+            :libvirt__iface_name => 'swp2',
+            auto_config: false
 
-    device.vm.provider "virtualbox" do |vbox|
-      vbox.customize ['modifyvm', :id, '--nicpromisc2', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc3', 'allow-all']
-      vbox.customize ['modifyvm', :id, '--nicpromisc4', 'allow-all']
-      vbox.customize ["modifyvm", :id, "--nictype1", "virtio"]
-    end
+
 
     # Fixes "stdin: is not a tty" and "mesg: ttyname failed : Inappropriate ioctl for device"  messages --> https://github.com/mitchellh/vagrant/issues/1673
     device.vm.provision :shell , inline: "(sudo grep -q 'mesg n' /root/.profile 2>/dev/null && sudo sed -i '/mesg n/d' /root/.profile  2>/dev/null) || true;", privileged: false
