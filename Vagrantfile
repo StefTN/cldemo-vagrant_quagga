@@ -2,7 +2,7 @@
 #    Template Revision: v4.6.2
 #    https://github.com/cumulusnetworks/topology_converter
 #    using topology data from: ./topology.dot
-#    built with the following args: ./topology_converter.py ./topology.dot -p virtualbox
+#    built with the following args: ./topology_converter.py ./topology.dot
 #
 #    NOTE: in order to use this Vagrantfile you will need:
 #       -Vagrant(v1.8.6+) installed: http://www.vagrantup.com/downloads
@@ -81,7 +81,7 @@ Vagrant.configure("2") do |config|
     device.vm.hostname = "oob-mgmt-server" 
     device.vm.box = "CumulusCommunity/vx_oob_server"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_oob-mgmt-server"
+      v.name = "1498240717_oob-mgmt-server"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 1024
     end
@@ -92,7 +92,7 @@ Vagrant.configure("2") do |config|
 
     # NETWORK INTERFACES
       # link for eth1 --> oob-mgmt-switch:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net54", auto_config: false , :mac => "443839000057"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net54", auto_config: false , :mac => "443839000057"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -141,7 +141,7 @@ end
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_oob-mgmt-switch"
+      v.name = "1498240717_oob-mgmt-switch"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -152,52 +152,52 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> NOTHING:NOTHING
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net61", auto_config: false , :mac => "443839000060"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net61", auto_config: false , :mac => "443839000060"
       
       # link for swp1 --> oob-mgmt-server:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net54", auto_config: false , :mac => "A00000000061"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net54", auto_config: false , :mac => "a00000000061"
       
       # link for swp2 --> server01:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net42", auto_config: false , :mac => "443839000043"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net42", auto_config: false , :mac => "443839000043"
       
       # link for swp3 --> server02:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net47", auto_config: false , :mac => "44383900004c"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net47", auto_config: false , :mac => "44383900004c"
       
       # link for swp4 --> server03:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net3", auto_config: false , :mac => "443839000004"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net3", auto_config: false , :mac => "443839000004"
       
       # link for swp5 --> server04:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net49", auto_config: false , :mac => "44383900004e"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net49", auto_config: false , :mac => "44383900004e"
       
       # link for swp6 --> leaf01:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net20", auto_config: false , :mac => "443839000020"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net20", auto_config: false , :mac => "443839000020"
       
       # link for swp7 --> leaf02:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net38", auto_config: false , :mac => "44383900003d"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net38", auto_config: false , :mac => "44383900003d"
       
       # link for swp8 --> leaf03:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net28", auto_config: false , :mac => "44383900002d"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net28", auto_config: false , :mac => "44383900002d"
       
       # link for swp9 --> leaf04:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net34", auto_config: false , :mac => "443839000037"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net34", auto_config: false , :mac => "443839000037"
       
       # link for swp10 --> spine01:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net31", auto_config: false , :mac => "443839000032"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net31", auto_config: false , :mac => "443839000032"
       
       # link for swp11 --> spine02:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net59", auto_config: false , :mac => "44383900005f"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net59", auto_config: false , :mac => "44383900005f"
       
       # link for swp12 --> exit01:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net9", auto_config: false , :mac => "44383900000f"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net9", auto_config: false , :mac => "44383900000f"
       
       # link for swp13 --> exit02:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net48", auto_config: false , :mac => "44383900004d"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net48", auto_config: false , :mac => "44383900004d"
       
       # link for swp14 --> edge01:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net40", auto_config: false , :mac => "443839000040"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net40", auto_config: false , :mac => "443839000040"
       
       # link for swp15 --> internet:eth0
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net35", auto_config: false , :mac => "443839000038"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net35", auto_config: false , :mac => "443839000038"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -242,8 +242,8 @@ echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:60 --> eth0"
 echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:00:00:60", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:61 --> swp1"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:61", NAME="swp1", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:61 --> swp1"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:61", NAME="swp1", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:43 --> swp2"
@@ -321,7 +321,7 @@ end
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_exit02"
+      v.name = "1498240717_exit02"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -332,37 +332,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp13
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net48", auto_config: false , :mac => "A00000000042"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net48", auto_config: false , :mac => "a00000000042"
       
       # link for swp1 --> edge01:eth2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net7", auto_config: false , :mac => "44383900000c"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net7", auto_config: false , :mac => "44383900000c"
       
       # link for swp44 --> internet:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net39", auto_config: false , :mac => "44383900003f"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net39", auto_config: false , :mac => "44383900003f"
       
       # link for swp45 --> exit02:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net30", auto_config: false , :mac => "443839000030"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net30", auto_config: false , :mac => "443839000030"
       
       # link for swp46 --> exit02:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net30", auto_config: false , :mac => "443839000031"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net30", auto_config: false , :mac => "443839000031"
       
       # link for swp47 --> exit02:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net33", auto_config: false , :mac => "443839000035"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net33", auto_config: false , :mac => "443839000035"
       
       # link for swp48 --> exit02:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net33", auto_config: false , :mac => "443839000036"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net33", auto_config: false , :mac => "443839000036"
       
       # link for swp49 --> exit01:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net24", auto_config: false , :mac => "443839000027"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net24", auto_config: false , :mac => "443839000027"
       
       # link for swp50 --> exit01:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net14", auto_config: false , :mac => "443839000017"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net14", auto_config: false , :mac => "443839000017"
       
       # link for swp51 --> spine01:swp29
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net21", auto_config: false , :mac => "443839000021"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net21", auto_config: false , :mac => "443839000021"
       
       # link for swp52 --> spine02:swp29
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net53", auto_config: false , :mac => "443839000055"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net53", auto_config: false , :mac => "443839000055"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -398,8 +398,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:42 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:42", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:42 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:42", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:0c --> swp1"
@@ -461,7 +461,7 @@ end
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_exit01"
+      v.name = "1498240717_exit01"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -472,37 +472,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp12
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net9", auto_config: false , :mac => "A00000000041"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net9", auto_config: false , :mac => "a00000000041"
       
       # link for swp1 --> edge01:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net46", auto_config: false , :mac => "44383900004b"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net46", auto_config: false , :mac => "44383900004b"
       
       # link for swp44 --> internet:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net5", auto_config: false , :mac => "443839000008"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net5", auto_config: false , :mac => "443839000008"
       
       # link for swp45 --> exit01:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net43", auto_config: false , :mac => "443839000044"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net43", auto_config: false , :mac => "443839000044"
       
       # link for swp46 --> exit01:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net43", auto_config: false , :mac => "443839000045"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net43", auto_config: false , :mac => "443839000045"
       
       # link for swp47 --> exit01:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net11", auto_config: false , :mac => "443839000012"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net11", auto_config: false , :mac => "443839000012"
       
       # link for swp48 --> exit01:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net11", auto_config: false , :mac => "443839000013"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net11", auto_config: false , :mac => "443839000013"
       
       # link for swp49 --> exit02:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net24", auto_config: false , :mac => "443839000026"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net24", auto_config: false , :mac => "443839000026"
       
       # link for swp50 --> exit02:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net14", auto_config: false , :mac => "443839000016"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net14", auto_config: false , :mac => "443839000016"
       
       # link for swp51 --> spine01:swp30
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net6", auto_config: false , :mac => "443839000009"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net6", auto_config: false , :mac => "443839000009"
       
       # link for swp52 --> spine02:swp30
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net56", auto_config: false , :mac => "44383900005a"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net56", auto_config: false , :mac => "44383900005a"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -538,8 +538,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:41 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:41", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:41 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:41", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:4b --> swp1"
@@ -601,7 +601,7 @@ end
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_spine02"
+      v.name = "1498240717_spine02"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -612,31 +612,31 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp11
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net59", auto_config: false , :mac => "A00000000022"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net59", auto_config: false , :mac => "a00000000022"
       
       # link for swp1 --> leaf01:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net23", auto_config: false , :mac => "443839000025"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net23", auto_config: false , :mac => "443839000025"
       
       # link for swp2 --> leaf02:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net58", auto_config: false , :mac => "44383900005e"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net58", auto_config: false , :mac => "44383900005e"
       
       # link for swp3 --> leaf03:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net17", auto_config: false , :mac => "44383900001c"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net17", auto_config: false , :mac => "44383900001c"
       
       # link for swp4 --> leaf04:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net44", auto_config: false , :mac => "443839000047"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net44", auto_config: false , :mac => "443839000047"
       
       # link for swp29 --> exit02:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net53", auto_config: false , :mac => "443839000056"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net53", auto_config: false , :mac => "443839000056"
       
       # link for swp30 --> exit01:swp52
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net56", auto_config: false , :mac => "44383900005b"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net56", auto_config: false , :mac => "44383900005b"
       
       # link for swp31 --> spine01:swp31
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net45", auto_config: false , :mac => "443839000049"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net45", auto_config: false , :mac => "443839000049"
       
       # link for swp32 --> spine01:swp32
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net36", auto_config: false , :mac => "44383900003a"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net36", auto_config: false , :mac => "44383900003a"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -670,8 +670,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:22 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:22", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:22 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:22", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:25 --> swp1"
@@ -725,7 +725,7 @@ end
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_spine01"
+      v.name = "1498240717_spine01"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -736,31 +736,31 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp10
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net31", auto_config: false , :mac => "A00000000021"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net31", auto_config: false , :mac => "a00000000021"
       
       # link for swp1 --> leaf01:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net52", auto_config: false , :mac => "443839000054"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net52", auto_config: false , :mac => "443839000054"
       
       # link for swp2 --> leaf02:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net25", auto_config: false , :mac => "443839000029"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net25", auto_config: false , :mac => "443839000029"
       
       # link for swp3 --> leaf03:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net50", auto_config: false , :mac => "443839000050"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net50", auto_config: false , :mac => "443839000050"
       
       # link for swp4 --> leaf04:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net37", auto_config: false , :mac => "44383900003c"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net37", auto_config: false , :mac => "44383900003c"
       
       # link for swp29 --> exit02:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net21", auto_config: false , :mac => "443839000022"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net21", auto_config: false , :mac => "443839000022"
       
       # link for swp30 --> exit01:swp51
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net6", auto_config: false , :mac => "44383900000a"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net6", auto_config: false , :mac => "44383900000a"
       
       # link for swp31 --> spine02:swp31
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net45", auto_config: false , :mac => "443839000048"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net45", auto_config: false , :mac => "443839000048"
       
       # link for swp32 --> spine02:swp32
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net36", auto_config: false , :mac => "443839000039"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net36", auto_config: false , :mac => "443839000039"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -794,8 +794,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:21 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:21", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:21 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:21", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:54 --> swp1"
@@ -849,7 +849,7 @@ end
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_leaf04"
+      v.name = "1498240717_leaf04"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -860,37 +860,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp9
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net34", auto_config: false , :mac => "A00000000014"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net34", auto_config: false , :mac => "a00000000014"
       
       # link for swp1 --> server03:eth2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net57", auto_config: false , :mac => "44383900005c"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net57", auto_config: false , :mac => "44383900005c"
       
       # link for swp2 --> server04:eth2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net27", auto_config: false , :mac => "44383900002c"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net27", auto_config: false , :mac => "44383900002c"
       
       # link for swp45 --> leaf04:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net16", auto_config: false , :mac => "443839000019"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net16", auto_config: false , :mac => "443839000019"
       
       # link for swp46 --> leaf04:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net16", auto_config: false , :mac => "44383900001a"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net16", auto_config: false , :mac => "44383900001a"
       
       # link for swp47 --> leaf04:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net32", auto_config: false , :mac => "443839000033"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net32", auto_config: false , :mac => "443839000033"
       
       # link for swp48 --> leaf04:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net32", auto_config: false , :mac => "443839000034"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net32", auto_config: false , :mac => "443839000034"
       
       # link for swp49 --> leaf03:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net29", auto_config: false , :mac => "44383900002f"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net29", auto_config: false , :mac => "44383900002f"
       
       # link for swp50 --> leaf03:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net4", auto_config: false , :mac => "443839000006"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net4", auto_config: false , :mac => "443839000006"
       
       # link for swp51 --> spine01:swp4
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net37", auto_config: false , :mac => "44383900003b"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net37", auto_config: false , :mac => "44383900003b"
       
       # link for swp52 --> spine02:swp4
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net44", auto_config: false , :mac => "443839000046"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net44", auto_config: false , :mac => "443839000046"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -926,8 +926,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:14 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:14", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:14 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:14", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:5c --> swp1"
@@ -989,7 +989,7 @@ end
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_leaf02"
+      v.name = "1498240717_leaf02"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -1000,37 +1000,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp7
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net38", auto_config: false , :mac => "A00000000012"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net38", auto_config: false , :mac => "a00000000012"
       
       # link for swp1 --> server01:eth2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net13", auto_config: false , :mac => "443839000015"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net13", auto_config: false , :mac => "443839000015"
       
       # link for swp2 --> server02:eth2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net15", auto_config: false , :mac => "443839000018"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net15", auto_config: false , :mac => "443839000018"
       
       # link for swp45 --> leaf02:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net8", auto_config: false , :mac => "44383900000d"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net8", auto_config: false , :mac => "44383900000d"
       
       # link for swp46 --> leaf02:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net8", auto_config: false , :mac => "44383900000e"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net8", auto_config: false , :mac => "44383900000e"
       
       # link for swp47 --> leaf02:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net55", auto_config: false , :mac => "443839000058"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net55", auto_config: false , :mac => "443839000058"
       
       # link for swp48 --> leaf02:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net55", auto_config: false , :mac => "443839000059"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net55", auto_config: false , :mac => "443839000059"
       
       # link for swp49 --> leaf01:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net10", auto_config: false , :mac => "443839000011"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net10", auto_config: false , :mac => "443839000011"
       
       # link for swp50 --> leaf01:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net1", auto_config: false , :mac => "443839000002"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net1", auto_config: false , :mac => "443839000002"
       
       # link for swp51 --> spine01:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net25", auto_config: false , :mac => "443839000028"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net25", auto_config: false , :mac => "443839000028"
       
       # link for swp52 --> spine02:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net58", auto_config: false , :mac => "44383900005d"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net58", auto_config: false , :mac => "44383900005d"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -1066,8 +1066,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:12 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:12", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:12 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:12", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:15 --> swp1"
@@ -1129,7 +1129,7 @@ end
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_leaf03"
+      v.name = "1498240717_leaf03"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -1140,37 +1140,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp8
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net28", auto_config: false , :mac => "A00000000013"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net28", auto_config: false , :mac => "a00000000013"
       
       # link for swp1 --> server03:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net22", auto_config: false , :mac => "443839000023"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net22", auto_config: false , :mac => "443839000023"
       
       # link for swp2 --> server04:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net19", auto_config: false , :mac => "44383900001f"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net19", auto_config: false , :mac => "44383900001f"
       
       # link for swp45 --> leaf03:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net26", auto_config: false , :mac => "44383900002a"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net26", auto_config: false , :mac => "44383900002a"
       
       # link for swp46 --> leaf03:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net26", auto_config: false , :mac => "44383900002b"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net26", auto_config: false , :mac => "44383900002b"
       
       # link for swp47 --> leaf03:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net51", auto_config: false , :mac => "443839000051"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net51", auto_config: false , :mac => "443839000051"
       
       # link for swp48 --> leaf03:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net51", auto_config: false , :mac => "443839000052"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net51", auto_config: false , :mac => "443839000052"
       
       # link for swp49 --> leaf04:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net29", auto_config: false , :mac => "44383900002e"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net29", auto_config: false , :mac => "44383900002e"
       
       # link for swp50 --> leaf04:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net4", auto_config: false , :mac => "443839000005"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net4", auto_config: false , :mac => "443839000005"
       
       # link for swp51 --> spine01:swp3
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net50", auto_config: false , :mac => "44383900004f"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net50", auto_config: false , :mac => "44383900004f"
       
       # link for swp52 --> spine02:swp3
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net17", auto_config: false , :mac => "44383900001b"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net17", auto_config: false , :mac => "44383900001b"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -1206,8 +1206,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:13 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:13", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:13 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:13", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:23 --> swp1"
@@ -1269,7 +1269,7 @@ end
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_leaf01"
+      v.name = "1498240717_leaf01"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -1280,37 +1280,37 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp6
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net20", auto_config: false , :mac => "A00000000011"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net20", auto_config: false , :mac => "a00000000011"
       
       # link for swp1 --> server01:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net2", auto_config: false , :mac => "443839000003"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net2", auto_config: false , :mac => "443839000003"
       
       # link for swp2 --> server02:eth1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net12", auto_config: false , :mac => "443839000014"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net12", auto_config: false , :mac => "443839000014"
       
       # link for swp45 --> leaf01:swp46
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net18", auto_config: false , :mac => "44383900001d"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net18", auto_config: false , :mac => "44383900001d"
       
       # link for swp46 --> leaf01:swp45
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net18", auto_config: false , :mac => "44383900001e"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net18", auto_config: false , :mac => "44383900001e"
       
       # link for swp47 --> leaf01:swp48
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net41", auto_config: false , :mac => "443839000041"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net41", auto_config: false , :mac => "443839000041"
       
       # link for swp48 --> leaf01:swp47
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net41", auto_config: false , :mac => "443839000042"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net41", auto_config: false , :mac => "443839000042"
       
       # link for swp49 --> leaf02:swp49
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net10", auto_config: false , :mac => "443839000010"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net10", auto_config: false , :mac => "443839000010"
       
       # link for swp50 --> leaf02:swp50
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net1", auto_config: false , :mac => "443839000001"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net1", auto_config: false , :mac => "443839000001"
       
       # link for swp51 --> spine01:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net52", auto_config: false , :mac => "443839000053"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net52", auto_config: false , :mac => "443839000053"
       
       # link for swp52 --> spine02:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net23", auto_config: false , :mac => "443839000024"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net23", auto_config: false , :mac => "443839000024"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -1346,8 +1346,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:11 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:11", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:11 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:11", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:03 --> swp1"
@@ -1408,7 +1408,7 @@ end
     device.vm.hostname = "edge01" 
     device.vm.box = "yk0/ubuntu-xenial"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_edge01"
+      v.name = "1498240717_edge01"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -1419,13 +1419,13 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp14
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net40", auto_config: false , :mac => "A00000000051"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net40", auto_config: false , :mac => "a00000000051"
       
       # link for eth1 --> exit01:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net46", auto_config: false , :mac => "44383900004a"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net46", auto_config: false , :mac => "44383900004a"
       
       # link for eth2 --> exit02:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net7", auto_config: false , :mac => "44383900000b"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net7", auto_config: false , :mac => "44383900000b"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -1456,8 +1456,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:51 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:51", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:51 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:51", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:4a --> eth1"
@@ -1486,7 +1486,7 @@ end
     device.vm.hostname = "server01" 
     device.vm.box = "yk0/ubuntu-xenial"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_server01"
+      v.name = "1498240717_server01"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -1497,13 +1497,13 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net42", auto_config: false , :mac => "A00000000031"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net42", auto_config: false , :mac => "a00000000031"
       
       # link for eth1 --> leaf01:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net2", auto_config: false , :mac => "000300111101"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net2", auto_config: false , :mac => "000300111101"
       
       # link for eth2 --> leaf02:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net13", auto_config: false , :mac => "000300111102"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net13", auto_config: false , :mac => "000300111102"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -1534,8 +1534,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:31 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:31", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:31 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:31", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 00:03:00:11:11:01 --> eth1"
@@ -1564,7 +1564,7 @@ end
     device.vm.hostname = "server03" 
     device.vm.box = "yk0/ubuntu-xenial"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_server03"
+      v.name = "1498240717_server03"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -1575,13 +1575,13 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp4
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net3", auto_config: false , :mac => "A00000000033"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net3", auto_config: false , :mac => "a00000000033"
       
       # link for eth1 --> leaf03:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net22", auto_config: false , :mac => "000300333301"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net22", auto_config: false , :mac => "000300333301"
       
       # link for eth2 --> leaf04:swp1
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net57", auto_config: false , :mac => "000300333302"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net57", auto_config: false , :mac => "000300333302"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -1612,8 +1612,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:33 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:33", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:33 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:33", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 00:03:00:33:33:01 --> eth1"
@@ -1642,7 +1642,7 @@ end
     device.vm.hostname = "server02" 
     device.vm.box = "yk0/ubuntu-xenial"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_server02"
+      v.name = "1498240717_server02"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -1653,13 +1653,13 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp3
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net47", auto_config: false , :mac => "A00000000032"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net47", auto_config: false , :mac => "a00000000032"
       
       # link for eth1 --> leaf01:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net12", auto_config: false , :mac => "000300222201"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net12", auto_config: false , :mac => "000300222201"
       
       # link for eth2 --> leaf02:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net15", auto_config: false , :mac => "000300222202"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net15", auto_config: false , :mac => "000300222202"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -1690,8 +1690,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:32 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:32", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:32 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:32", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 00:03:00:22:22:01 --> eth1"
@@ -1720,7 +1720,7 @@ end
     device.vm.hostname = "server04" 
     device.vm.box = "yk0/ubuntu-xenial"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_server04"
+      v.name = "1498240717_server04"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -1731,13 +1731,13 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp5
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net49", auto_config: false , :mac => "A00000000034"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net49", auto_config: false , :mac => "a00000000034"
       
       # link for eth1 --> leaf03:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net19", auto_config: false , :mac => "000300444401"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net19", auto_config: false , :mac => "000300444401"
       
       # link for eth2 --> leaf04:swp2
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net27", auto_config: false , :mac => "000300444402"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net27", auto_config: false , :mac => "000300444402"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -1768,8 +1768,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:34 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:34", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:34 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:34", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 00:03:00:44:44:01 --> eth1"
@@ -1799,7 +1799,7 @@ end
     device.vm.box = "CumulusCommunity/cumulus-vx"
     device.vm.box_version = "3.3.1"
     device.vm.provider "virtualbox" do |v|
-      v.name = "1498188496_internet"
+      v.name = "1498240717_internet"
       v.customize ["modifyvm", :id, '--audiocontroller', 'AC97', '--audio', 'Null']
       v.memory = 512
     end
@@ -1810,13 +1810,13 @@ end
 
     # NETWORK INTERFACES
       # link for eth0 --> oob-mgmt-switch:swp15
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net35", auto_config: false , :mac => "A00000000050"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net35", auto_config: false , :mac => "a00000000050"
       
       # link for swp1 --> exit01:swp44
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net5", auto_config: false , :mac => "443839000007"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net5", auto_config: false , :mac => "443839000007"
       
       # link for swp2 --> exit02:swp44
-      device.vm.network "private_network", virtualbox__intnet: "1498188496_net39", auto_config: false , :mac => "44383900003e"
+      device.vm.network "private_network", virtualbox__intnet: "1498240717_net39", auto_config: false , :mac => "44383900003e"
       
 
     device.vm.provider "virtualbox" do |vbox|
@@ -1844,8 +1844,8 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: A0:00:00:00:00:50 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="A0:00:00:00:00:50", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
+echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:50 --> eth0"
+echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:50", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
      device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:07 --> swp1"
