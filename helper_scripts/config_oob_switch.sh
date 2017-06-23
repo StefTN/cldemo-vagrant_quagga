@@ -10,11 +10,8 @@ cat <<EOT > /etc/network/interfaces
 auto lo
 iface lo inet loopback
 
-auto vagrant
-iface vagrant inet dhcp
-
-#auto eth0
-#iface eth0 inet dhcp
+auto eth0
+iface eth0 inet dhcp
 
 source /etc/network/interfaces.d/*
 EOT
