@@ -1,20 +1,22 @@
 #!/bin/bash
 
-#This file is transferred to a Debian/Ubuntu Host and executed to re-map interfaces
-#Extra config COULD be added here but I would recommend against that to keep this file standard.
 echo "#################################"
-echo "  Running Server Post Config"
+echo "  Running $0"
 echo "#################################"
 sudo su
 
+install wget
+cd /etc/yum.repos.d/
+wget http://download.opensuse.org/repositories/home:vbernat/CentOS_7/home:vbernat.repo
+yum install lldpd
+echo "configure lldp portidsubtype ifname" > /etc/lldpd.d/port_info.con
+systemctl enable lldpd.service
+systemctl start lldpd.service
 
 
-useradd cumulus
-CUMULUS_HASH=`python -c 'import crypt; print(crypt.crypt("CumulusLinux!", "\$6\$saltsalt\$").replace("/","\\/"))'`
-sed "s/cumulus:!/cumulus:$CUMULUS_HASH/" -i /etc/shadow
-mkdir -p /home/cumulus/
+useradd cumulus -m -s /bin/bash
+echo "cumulus:CumulusLinux!" | chpasswd
 sed "s/PasswordAuthentication no/PasswordAuthentication yes/" -i /etc/ssh/sshd_config
-chsh -s /bin/bash cumulus
 
 ## Convenience code. This is normally done in ZTP.
 echo "cumulus ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/10_cumulus

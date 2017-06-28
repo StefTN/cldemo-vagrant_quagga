@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "#################################"
-echo "   Running OOB_Switch_Config.sh"
+echo "   Running $0"
 echo "#################################"
 sudo su
 

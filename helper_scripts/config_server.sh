@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "#################################"
-echo "  Running Server Post Config"
+echo "  Running $0"
 echo "#################################"
 sudo su
 
@@ -14,12 +14,9 @@ echo -e "iface lo inet loopback\n\n" >> /etc/network/interfaces
 echo -e "\n\nauto eth0" >> /etc/network/interfaces
 echo -e "iface eth0 inet dhcp\n\n" >> /etc/network/interfaces
 
-useradd cumulus
-CUMULUS_HASH=`python -c 'import crypt; print(crypt.crypt("CumulusLinux!", "\$6\$saltsalt\$").replace("/","\\/"))'`
-sed "s/cumulus:!/cumulus:$CUMULUS_HASH/" -i /etc/shadow
-mkdir /home/cumulus/
+useradd cumulus -m -s /bin/bash
+echo "cumulus:CumulusLinux!" | chpasswd
 sed "s/PasswordAuthentication no/PasswordAuthentication yes/" -i /etc/ssh/sshd_config
-chsh -s /bin/bash cumulus
 
 ## Convenience code. This is normally done in ZTP.
 echo "cumulus ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/10_cumulus
