@@ -20,6 +20,13 @@ tells Vagrant which devices to create and how to configure their networks.
 using Virtualbox. It will also use Ansible to configure the out-of-band
 management network.
 
+## Getting Started
+
+#### Instructions for:
+* [Windows](./documentation/windows)
+* MacOS
+* Linux
+
 Using the Framework
 ========================
 The Cumulus Linux Demo Framework is built upon a Vagrantfile which builds the Reference Topology (pictured above). Using this topology, it is possible to demonstrate any feature in Cumulus Linux. It may not be necessary to use all links or all devices but they're present if needed by a particular demo.
