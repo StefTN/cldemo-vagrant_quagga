@@ -21,4 +21,4 @@ cp ./Vagrantfile ./Vagrantfile-centos
 python ./topology_converter.py ./topology.dot
 cp ./Vagrantfile ./Vagrantfile-vbox
 
-
+rm -rfv ./templates ./topology_converter.py
