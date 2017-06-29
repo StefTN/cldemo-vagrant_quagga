@@ -157,6 +157,8 @@ that project's [documentation](https://github.com/CumulusNetworks/topology_conve
 
     vagrant destroy -f
     wget https://raw.githubusercontent.com/CumulusNetworks/topology_converter/master/topology_converter.py
+    mkdir ./templates/
+    wget -O ./templates/Vagrantfile.j2 https://raw.githubusercontent.com/CumulusNetworks/topology_converter/master/templates/Vagrantfile.j2
     # edit topology.dot as desired
     python topology_converter.py topology.dot
 
