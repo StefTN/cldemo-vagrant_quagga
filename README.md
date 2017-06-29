@@ -162,7 +162,7 @@ that project's [documentation](https://github.com/CumulusNetworks/topology_conve
     # edit topology.dot as desired
     python topology_converter.py topology.dot
 
-![Cumulus icon](http://cumulusnetworks.com/static/cumulus/img/logo_2014.png)
+![Cumulus icon](https://avatars3.githubusercontent.com/u/4306877?v=3&s=200)
 
 ### Cumulus Linux
 
