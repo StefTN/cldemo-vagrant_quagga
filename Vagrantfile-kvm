@@ -1,5 +1,5 @@
 # Created by Topology-Converter v4.6.3
-#    Template Revision: v4.6.2
+#    Template Revision: v4.6.3
 #    https://github.com/cumulusnetworks/topology_converter
 #    using topology data from: ./topology.dot
 #    built with the following args: ./topology_converter.py ./topology.dot -p libvirt
@@ -99,7 +99,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "oob-mgmt-server" do |device|
     device.vm.hostname = "oob-mgmt-server" 
     device.vm.box = "CumulusCommunity/vx_oob_server"
-    device.vm.box_version = "1.0.1"
+    device.vm.box_version = "1.0.2"
 
     device.vm.provider :libvirt do |v|
       v.memory = 1024
@@ -173,16 +173,6 @@ end
 
 
     # NETWORK INTERFACES
-      # link for eth0 --> NOTHING:NOTHING
-      device.vm.network "private_network",
-            :mac => "44:38:39:00:00:60",
-            :libvirt__tunnel_type => 'udp',
-            :libvirt__tunnel_local_ip => '127.0.0.1',
-            :libvirt__tunnel_local_port => '8061',
-            :libvirt__tunnel_ip => '127.0.0.1',
-            :libvirt__tunnel_port => '9061',
-            :libvirt__iface_name => 'eth0',
-            auto_config: false
       # link for swp1 --> oob-mgmt-server:eth1
       device.vm.network "private_network",
             :mac => "a0:00:00:00:00:61",
@@ -354,10 +344,6 @@ rm -rfv /etc/udev/rules.d/70-persistent-net.rules &> /dev/null
 delete_udev_directory
 
 device.vm.provision :shell , :inline => <<-udev_rule
-echo "  INFO: Adding UDEV Rule: 44:38:39:00:00:60 --> eth0"
-echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="44:38:39:00:00:60", NAME="eth0", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
-udev_rule
-     device.vm.provision :shell , :inline => <<-udev_rule
 echo "  INFO: Adding UDEV Rule: a0:00:00:00:00:61 --> swp1"
 echo 'ACTION=="add", SUBSYSTEM=="net", ATTR{address}=="a0:00:00:00:00:61", NAME="swp1", SUBSYSTEMS=="pci"' >> /etc/udev/rules.d/70-persistent-net.rules
 udev_rule
