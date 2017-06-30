@@ -31,8 +31,34 @@ chmod 700 /home/cumulus/.ssh
 
 # Other stuff
 sudo apt-get update -qy
-sudo apt-get install lldpd -qy
+sudo apt-get install lldpd ntp -qy
 
+cat << EOT > /etc/ntp.conf
+# /etc/ntp.conf, configuration for ntpd; see ntp.conf(5) for help
+
+driftfile /var/lib/ntp/ntp.drift
+
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+
+server 192.168.0.254 iburst
+
+# By default, exchange time with everybody, but don't allow configuration.
+restrict -4 default kod notrap nomodify nopeer noquery
+restrict -6 default kod notrap nomodify nopeer noquery
+
+# Local users may interrogate the ntp server more closely.
+restrict 127.0.0.1
+restrict ::1
+
+# Specify interfaces, don't listen on switch ports
+interface listen eth0
+EOT
+
+sudo systemctl enable ntp.service
+sudo systemctl start ntp.service
 
 echo "#################################"
 echo "   Finished"

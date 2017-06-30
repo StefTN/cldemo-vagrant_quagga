@@ -24,6 +24,34 @@ iface eth1
 
 EOT
 
+cat << EOT > /etc/ntp.conf
+# /etc/ntp.conf, configuration for ntpd; see ntp.conf(5) for help
+
+driftfile /var/lib/ntp/ntp.drift
+
+statistics loopstats peerstats clockstats
+filegen loopstats file loopstats type day enable
+filegen peerstats file peerstats type day enable
+filegen clockstats file clockstats type day enable
+
+server 0.cumulusnetworks.pool.ntp.org iburst
+server 1.cumulusnetworks.pool.ntp.org iburst
+server 2.cumulusnetworks.pool.ntp.org iburst
+server 3.cumulusnetworks.pool.ntp.org iburst
+
+
+# By default, exchange time with everybody, but don't allow configuration.
+restrict -4 default kod notrap nomodify nopeer noquery
+restrict -6 default kod notrap nomodify nopeer noquery
+
+# Local users may interrogate the ntp server more closely.
+restrict 127.0.0.1
+restrict ::1
+
+# Specify interfaces, don't listen on switch ports
+interface listen eth1
+EOT
+
 echo " ### Pushing Ansible Hosts File ###"
 mkdir -p /etc/ansible
 cat << EOT > /etc/ansible/hosts
@@ -244,7 +272,7 @@ function error() {
 }
 trap error ERR
 
-#Setup SSH key authentication for Ansible
+# Setup SSH key authentication for Ansible
 mkdir -p /home/cumulus/.ssh
 #wget -O /home/cumulus/.ssh/authorized_keys http://192.168.0.254/authorized_keys
 echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzH+R+UhjVicUtI0daNUcedYhfvgT1dbZXgY33Ibm4MOo+X84Iwuzirm3QFnYf2O3uyZjNyrA6fj9qFE7Ekul4bD6PCstQupXPwfPMjns2M7tkHsKnLYjNxWNql/rCUxoH2B6nPyztcRCass3lIc2clfXkCY9Jtf7kgC2e/dmchywPV5PrFqtlHgZUnyoPyWBH7OjPLVxYwtCJn96sFkrjaG9QDOeoeiNvcGlk4DJp/g9L4f2AaEq69x8+gBTFUqAFsD8ecO941cM8sa1167rsRPx7SK3270Ji5EUF3lZsgpaiIgMhtIB/7QNTkN9ZjQBazxxlNVN6WthF8okb7OSt" >> /home/cumulus/.ssh/authorized_keys
@@ -252,6 +280,10 @@ chmod 700 -R /home/cumulus/.ssh
 chown cumulus:cumulus -R /home/cumulus/.ssh
 
 echo "cumulus ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/10_cumulus
+
+# Setup NTP
+sed -i '/^server [1-3]/d' /etc/ntp.conf
+sed -i 's/^server 0.cumulusnetworks.pool.ntp.org iburst/server 192.168.0.254 iburst/g' /etc/ntp.conf
 
 nohup bash -c 'sleep 2; shutdown now -r "Rebooting to Complete ZTP"' &
 exit 0
