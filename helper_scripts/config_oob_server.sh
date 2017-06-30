@@ -279,12 +279,18 @@ echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCzH+R+UhjVicUtI0daNUcedYhfvgT1dbZXgY
 chmod 700 -R /home/cumulus/.ssh
 chown cumulus:cumulus -R /home/cumulus/.ssh
 
+
 echo "cumulus ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/10_cumulus
 
 # Setup NTP
 sed -i '/^server [1-3]/d' /etc/ntp.conf
 sed -i 's/^server 0.cumulusnetworks.pool.ntp.org iburst/server 192.168.0.254 iburst/g' /etc/ntp.conf
 
+ping 8.8.8.8 -c2
+if [ "$?" == "0" ]; then
+  apt-get update -qy
+  apt-get install ntpdate -qy
+fi
 nohup bash -c 'sleep 2; shutdown now -r "Rebooting to Complete ZTP"' &
 exit 0
 #CUMULUS-AUTOPROVISIONING

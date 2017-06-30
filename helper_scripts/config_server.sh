@@ -28,10 +28,12 @@ chmod 600 /home/cumulus/.ssh/*
 chmod 700 /home/cumulus/.ssh
 
 
-
 # Other stuff
-sudo apt-get update -qy
-sudo apt-get install lldpd ntp -qy
+ping 8.8.8.8 -c2
+if [ "$?" == "0" ]; then
+  apt-get update -qy
+  apt-get install lldpd ntp ntpdate -qy
+fi
 
 cat << EOT > /etc/ntp.conf
 # /etc/ntp.conf, configuration for ntpd; see ntp.conf(5) for help
