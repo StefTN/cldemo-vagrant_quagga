@@ -99,7 +99,7 @@ Vagrant.configure("2") do |config|
   config.vm.define "oob-mgmt-server" do |device|
     device.vm.hostname = "oob-mgmt-server" 
     device.vm.box = "CumulusCommunity/vx_oob_server"
-    device.vm.box_version = "1.0.2"
+    device.vm.box_version = "1.0.3"
 
     device.vm.provider :libvirt do |v|
       v.memory = 1024
