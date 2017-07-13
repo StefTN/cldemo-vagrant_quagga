@@ -16,7 +16,7 @@ instructions below to get started.
 * [Frequently Asked Questions](#frequently-asked-questions)
   * [What is CLdemo-Vagrant?](#what-is-cldemo-vagrant)
   * [What is the Reference Topology?](#what-is-the-reference-topology)
-  * [What is Cumulus Vx?](#what-is-cumulus-vx)
+  * [What is Cumulus VX?](#what-is-cumulus-vx)
   * [What is Vagrant?](#what-is-vagrant)
   * [What is a Vagrantfile?](#what-is-a-vagrantfile)
   * [What is Libvirt/KVM?](#what-is-libvirtkvm)i
