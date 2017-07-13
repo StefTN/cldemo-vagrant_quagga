@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "#################################"
-echo "  Running Switch Post Config"
+echo "  Running Switch Post Config (config_switch.sh)"
 echo "#################################"
 sudo su
 

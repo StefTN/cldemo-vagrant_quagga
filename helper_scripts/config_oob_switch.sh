@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "#################################"
-echo "   Running $0"
+echo "   Running config_oob_switch.sh"
 echo "#################################"
 sudo su
 
@@ -13,17 +13,12 @@ iface lo inet loopback
 auto eth0
 iface eth0 inet dhcp
 
-source /etc/network/interfaces.d/*
+auto bridge-untagged
+iface bridge-untagged inet dhcp
+    bridge-ports swp1 swp2 swp3 swp4 swp5 swp6 swp7 swp8 swp9 swp10 swp11 swp12 swp13 swp14 swp15
+    hwaddress a0:00:00:00:00:61
+    
 EOT
-
-/usr/share/doc/ifupdown2/examples/generate_interfaces.py -b | grep -v "#" >> /etc/network/interfaces.d/bridge
-
-sed -i 's/vagrant//g' /etc/network/interfaces.d/bridge
-sed -i 's/eth0//g' /etc/network/interfaces.d/bridge
-sed -i 's/iface bridge-untagged/iface bridge-untagged inet dhcp/' /etc/network/interfaces.d/bridge
-
-
-
 
 echo "#################################"
 echo "   Finished "

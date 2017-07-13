@@ -1,9 +1,7 @@
 #!/bin/bash
 
-SCRIPTNAME=`basename "$0"`
-
 echo "################################################"
-echo "  Running Management Server Setup ($SCRIPTNAME)..."
+echo "  Running Management Server Setup (config_oob_server.sh)..."
 echo "################################################"
 echo -e "\n This script was written for CumulusCommunity/vx_oob_server"
 echo " Detected vagrant user is: $username"

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "#################################"
-echo "  Running $0"
+echo "  Running config_server.sh"
 echo "#################################"
 sudo su
 
