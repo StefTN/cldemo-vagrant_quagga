@@ -32,7 +32,7 @@ instructions below to get started.
 
 ### Instructions for:
 * [Windows](./documentation/windows)
-* MacOS (Coming Soon!)
+* [MacOS](./documentation/macos)
 * [Linux (Ubuntu 16.04)](./documentation/linux/)
 
 ## Available Demos
