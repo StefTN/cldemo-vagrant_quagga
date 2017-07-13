@@ -1,7 +1,6 @@
 # Cumulus Linux Demo Framework
 ![Reference Topology](./documentation/cldemo_topology.png "Reference Topology")
 
-**[See the Layer 3 IP addressing on the Out of Band Network](./documentation/ipam.md)**
 
 Welcome to the Cumulus Linux Demo Framework, which provides virtual demos of features and 
 configurations with Cumulus Linux. Follow the [Prerequisites and Getting Started](#prerequisites-and-getting-started) 
@@ -20,7 +19,10 @@ instructions below to get started.
   * [What is Cumulus Vx?](#what-is-cumulus-vx)
   * [What is Vagrant?](#what-is-vagrant)
   * [What is a Vagrantfile?](#what-is-a-vagrantfile)
+  * [What is Libvirt/KVM?](#what-is-libvirtkvm)i
+  * [Which Software Versions should I use?](#which-software-versions-should-i-use)
   * [What is the Out of Band Server Doing?](#what-is-the-out-of-band-server-doing)
+  * [How are IP addresses Allocated?](#how-are-ip-addresses-allocated)
   * [Tips on Managing the VMs in the Topology](#tips-on-managing-the-vms-in-the-topology)
   * [Can I Preserve my Configuration?](#can-i-preserve-my-configuration)
   * [How Can I Customize the Topology?](#how-can-i-customize-the-topology)
@@ -66,13 +68,13 @@ device configuration on top.
 ### What is CLDEMO-VAGRANT?
 CLDEMO-VAGRANT is the name of this repository which provides a consistent 
 physical topology of VMs which are cabled together in a configuration 
-we refer to as the Reference Topology. This topology provides a 
+we refer to as the [Reference Topology](#what-is-the-reference-topology). This topology provides a 
 consistent simulation topology upon which lots of different configurations 
 can be overlaid. The [individual demos](#available-demos) provide interface and routing protocol 
 configurations which are applied to this simulation topology.
 
 ### What is the Reference Topology?
-The Cumulus Linux Demo Framework is built upon a Vagrantfile which builds 
+The Cumulus Linux Demo Framework is built upon a [Vagrantfile](#what-is-a-vagrantfile) which builds 
 the Reference Topology. Using this topology, it is possible to demonstrate 
 any feature in Cumulus Linux. It may not be necessary to use all links or 
 all devices but they're present if needed by a particular demo.
@@ -89,16 +91,36 @@ produced by Cumulus Networks to simulate the user experience of configuring a sw
 
 ### What is Vagrant?
 [Vagrant](https://www.vagrantup.com/) is an open source tool for quickly
-deploying large topologies of virtual machines. Vagrant and Cumulus VX can be
+deploying large topologies of virtual machines. Vagrant and [Cumulus VX](#what-is-cumulus-vx) can be
 used together to build virtual simulations of production networks to validate
 configurations, develop automation code, and simulate failure scenarios.
 
+Vagrant uses [Vagrantfiles](#what-is-a-vagrantfile) to represent the topology.
+
 ### What is a Vagrantfile?
-Vagrant topologies are described in a Vagrantfile, which is a Ruby program that
+Vagrant topologies are described in a text file called a "Vagrantfile," 
+which is also the filename. A Vagrantfile is a Ruby program that
 tells Vagrant which devices to create and how to configure their networks.
 `vagrant up` will execute the Vagrantfile and create the reference topology
-using Virtualbox. It will also use Ansible to configure the out-of-band
-management network.
+using Virtualbox. 
+
+### What is Libvirt/KVM?
+Libvirt/KVM is a high-performance hypervisor that is used on Linux systems **ONLY**.
+[Vagrantfiles](#what-is-a-vagrantfile) for the Libvirt/KVM hypervisor are also included in this repository.
+To use them you need to be using a Linux system and follow the [Linux setup instructions](./documentation/linux).
+
+Libvirt/KVM offers several notable advantages over Virtualbox:
+* There is no interface limit (virtualbox limits VMs to 36 interfaces)
+* VMs can be started in Parallel which greatly reduces simulation startup time
+
+As a result this tends to be the most common hypervisor for larger simulations.
+
+### Which Software Versions Should I Use?
+Software versions are always changing. At the time of this writing the following 
+versions are known to work well: 
+* Vagrant v1.9.5
+* Virtualbox v5.1.22
+* Libvirt v1.3.1
 
 ### What Is The Out Of Band Server Doing?
 The following tasks are completed to make using the topology more convenient.
@@ -121,6 +143,11 @@ the out of band management server as the `cumulus` user**.
 Note that due to the way we simulate the out of band network, it is not possible
 to use `vagrant ssh` to access in-band devices like leaf01 and leaf02. These
 devices **must** be accessed via the out-of-band management server.
+
+### How are IP addresses Allocated?
+The [Reference Topology](#what-is-the-reference-topology) only specifies the IP addresses used in the Out-of-Band network
+for maximum flexibility when creating new demos. To see the IP address allocation for the
+Out-of-Band Network check the [IPAM diagram](./documentation/ipam.md)
 
 ### Tips on Managing the VMs in the Topology
 The topology built using this Vagrantfile does not support `vagrant halt` or
@@ -188,7 +215,7 @@ conflict with Virtualbox's ability to create 64-bit VMs.**
     ssh leaf01
 
 ---
-![Cumulus Networks](cnlogo.png)
+![Cumulus Networks](./documentation/cnlogo.png)
 >©2017 Cumulus Networks. CUMULUS, the Cumulus Logo, CUMULUS NETWORKS, and the Rocket Turtle Logo 
 (the “Marks”) are trademarks and service marks of Cumulus Networks, Inc. in the U.S. and other 
 countries. You are not permitted to use the Marks without the prior written consent of Cumulus 
