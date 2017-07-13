@@ -79,14 +79,14 @@ the Reference Topology. Using this topology, it is possible to demonstrate
 any feature in Cumulus Linux. It may not be necessary to use all links or 
 all devices but they're present if needed by a particular demo.
 
-This framework of demos is built on a two-tier spine-leaf [CLOS network](https://en.wikipedia.org/wiki/Clos_network) with a
+This framework of demos is built on a two-tier spine-leaf [Clos network](https://en.wikipedia.org/wiki/Clos_network) with a
 dedicated out-of-band management network. The Reference Topology built in 
 this repository is used for all Cumulus Networks documentation, demos, 
 and course materials, so many demos will require you to build a topology 
 using the code available in this repository.
 
-### What is Cumulus Vx?
-This repository makes use of [Cumulus Vx](https://cumulusnetworks.com/cumulus-vx/) which is a virtual machine
+### What is Cumulus VX?
+This repository makes use of [Cumulus VX](https://cumulusnetworks.com/cumulus-vx/) which is a virtual machine
 produced by Cumulus Networks to simulate the user experience of configuring a switch using the Cumulus Linux network operating system.
 
 ### What is Vagrant?
