@@ -285,7 +285,7 @@ sed -i '/^server [1-3]/d' /etc/ntp.conf
 sed -i 's/^server 0.cumulusnetworks.pool.ntp.org iburst/server 192.168.0.254 iburst/g' /etc/ntp.conf
 
 ping 8.8.8.8 -c2
-if [ "$?" == "0" ]; then
+if [ "\$?" == "0" ]; then
   apt-get update -qy
   apt-get install ntpdate -qy
 fi
