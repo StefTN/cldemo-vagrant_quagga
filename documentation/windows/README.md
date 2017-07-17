@@ -139,11 +139,11 @@ Time to actually do some networking, well virtual networking, OK fine it's more 
 
 ![git_step3](./screenshots/ps03.png?raw=true)
 
- 5. Bring up your first VM the oob-mgmt-server with `vagrant up oob-mgmt-server`
+ 5a. Install the Out-of-Band Server (jumpserver) virtual machine image with `vagrant box add CumulusCommunity/vx_oob_server --insecure --box-version=1.0.3 --provider virtualbox`
 
-![git_step4](./screenshots/ps04.png?raw=true)
+What happens here is that Vagrant will automatically detect that you do not locally have the VM you are trying to create so it will connect to the Vagrant Cloud image store and download.  This feature is one of the really powerful features of Vagrant as there are hundreds if not thousands of pre-built VMs, including Cumulus VX, available.  The oob-mgmt-server is built on a customized version of Cumulus VX.
 
-What happens here is that Vagrant will automatically detect that you do not locally have the VM you are trying to create so it will connect to the ATLAS Vagrant box store and download.  This feature is one of the really powerful features of Vagrant as there are hundreds if not thousands of pre-built VMs, including Cumulus VX, available.  The oob-mgmt-server is built on Ubuntu 16.04 so the URL to retrieve this image is https://atlas.hashicorp.com/boxcutter/boxes/ubuntu1604
+ 5b. Bring up your first VM the oob-mgmt-server with `vagrant up oob-mgmt-server`
 
 Since this is the first time you bring up the VM the download may take a few mins to complete and then the demo sets up some tools on the server as part of the Vagrant setup.
 
@@ -151,13 +151,13 @@ Since this is the first time you bring up the VM the download may take a few min
 
 ![git_step6](./screenshots/ps06.png?raw=true)
 
- 7a. Install the Cumulus Vx image with `vagrant box add CumulusCommunity/cumulus-vx --insecure --box-version=3.2.0 --provider virtualbox`
+ 7a. Install the Cumulus Vx image with `vagrant box add CumulusCommunity/cumulus-vx --insecure --box-version=3.3.2 --provider virtualbox`
  
  7b. Now bring up the oob-mgmt-switch with `vagrant up oob-mgmt-switch`
 
 ![git_step7](./screenshots/ps07.png?raw=true)
 
-This step is very similar to step 5 in that Vagrant detects that the Cumulus VX image is not installed locally so it fetches the VM and installs it.  The download URL for Cumulus VX images is https://atlas.hashicorp.com/CumulusCommunity/boxes/cumulus-vx
+This step is very similar to step 5 in that Vagrant detects that the Cumulus VX image is not installed locally so it fetches the VM and installs it. 
 
  8. Finally once the oob-mgmt-switch has completed let's bring up some more nodes in the network: `vagrant up server01 leaf01 leaf02 spine01 spine02`
 
@@ -204,6 +204,6 @@ Now that we've deployed the VMs we can get to the actual networking fun.  For th
 
 ### More about Vagrant
 
-https://atlas.hashicorp.com/boxes/search
+https://app.vagrantup.com/boxes/search
 
 *Hyper-V locks VT-x/AMD-V on boot and therefore will not allow other hypervisors to leverage the hardware virtualization.  I will say it is possible to run both vBox and Hyper-V at the same time however if vBox tries to run a VM with VT-x support it will BSOD your server/workstation.  I'll write a followup article on using Hyper-V for your simulation environment once I get all the nested virtualization sorted.
