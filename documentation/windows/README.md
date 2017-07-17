@@ -155,9 +155,7 @@ Since this is the first time you bring up the VM the download may take a few min
  
  7b. Now bring up the oob-mgmt-switch with `vagrant up oob-mgmt-switch`
 
-![git_step7](./screenshots/ps07.png?raw=true)
-
-This step is very similar to step 5 in that Vagrant detects that the Cumulus VX image is not installed locally so it fetches the VM and installs it. 
+This step is very similar to step 5a in that Vagrant detects that the Cumulus VX image is not installed locally so it fetches the VM and installs it. 
 
  8. Finally once the oob-mgmt-switch has completed let's bring up some more nodes in the network: `vagrant up server01 leaf01 leaf02 spine01 spine02`
 
