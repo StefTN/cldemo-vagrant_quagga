@@ -198,9 +198,9 @@ To create your own arbitrary topology, we recommend using Topology Converter. Th
 Vagrantfile which is specific to your environment.For more details on how to make customized 
 topologies, read Topology Converter's [documentation](https://github.com/CumulusNetworks/topology_converter/tree/master/documentation).
 
-#### *Advanced Users* Editing the existing topology
-To edit the existing topologies you can bring in the required portions of [Topology Converter](https://github.com/cumulusnetworks/topology_converter) needed to get the job done.
-The process looks like this and is also featured in the `build.sh` script used to rebuild and update this environment.
+#### **Advanced Users ONLY: ** Editing the existing topology
+This can be a bit tricky, to edit the existing topologies you can bring in the required portions of [Topology Converter](https://github.com/cumulusnetworks/topology_converter) needed to get the job done.
+The process looks like what is featured below and is also found in the `build.sh` script used to rebuild and update this environment.
 
     vagrant destroy -f
     wget https://raw.githubusercontent.com/CumulusNetworks/topology_converter/master/topology_converter.py
