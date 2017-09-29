@@ -36,6 +36,15 @@ if [ "$?" == "0" ]; then
   echo "configure lldp portidsubtype ifname" > /etc/lldpd.d/port_info.conf 
 fi
 
+# Set Timezone
+cat << EOT > /etc/timezone
+Etc/UTC
+EOT
+
+# Apply Timezone Now
+# dpkg-reconfigure -f noninteractive tzdata
+
+# Write NTP Configuration
 cat << EOT > /etc/ntp.conf
 # /etc/ntp.conf, configuration for ntpd; see ntp.conf(5) for help
 
