@@ -27,6 +27,10 @@ echo -e "iface swp1" >> /etc/network/interfaces
 echo -e "auto swp2" >> /etc/network/interfaces
 echo -e "iface swp2" >> /etc/network/interfaces
 
+# Setup SSH key authentication for ODL [Ubuntu 16.04 Desktop]
+cat << EOT >> /home/cumulus/.ssh/authorized_keys
+ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQDee1uZVFHxptB43LP8dSR5rNjqmPhuzwYbB1KgDTbssc7fha4lB9rDLSjuiAGWSM3iq1RHrpzED0uTMc9i0wawDmPb2TglELIrPXas2mpx5c/j7GnjypMAX3NhBimKq5jZRd+AmfE4Y1bTl0nKeWjucZDgwnpP1x6gcR2xGDZzy1HHAHDP0JvE8QCbxKq/SgMl7nXE+j1cvXxTy9sjF4OBLIKtdw7P/Qqkc3GfsgzKSgSNp/s/crmr5SJ7fv2s20nZCw81hgJZ3orNpPRsFFAtRbP6QnX4o8JQVyJAEVVlb0gQbyKuTDmZj/FFhq46SYqo5kUx0loaYns9dPmitfy5 stefano@Ubuntu-VirtualBox
+EOT
 
 echo "#################################"
 echo "   Finished "

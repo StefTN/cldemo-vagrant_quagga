@@ -1,0 +1,41 @@
+new-session 'CUMULUS' ;
+
+new-window -n ssh_SOCKS_tunnel ssh -D 1080 cumulus@oob-mgmt-server ;
+
+new-window -n servers tsocks ssh cumulus@server01 ;
+
+split-window tsocks ssh cumulus@server02 ;
+
+split-window tsocks ssh cumulus@server03 ;
+
+split-window tsocks ssh cumulus@server04 ;
+
+select-layout tiled ;
+
+select-pane -t 0 ;
+
+new-window -n leaves tsocks ssh cumulus@leaf01 ;
+
+split-window tsocks ssh cumulus@leaf02 ;
+
+split-window tsocks ssh cumulus@leaf03 ;
+
+split-window tsocks ssh cumulus@leaf04 ;
+
+select-layout tiled ;
+
+new-window -n spine_&_exit tsocks ssh cumulus@spine01 ;
+
+split-window tsocks ssh cumulus@spine02 ;
+
+split-window tsocks ssh cumulus@exit01 ;
+
+split-window tsocks ssh cumulus@exit02 ;
+
+select-layout tiled ;
+
+new-window -n internet_&_edge tsocks ssh cumulus@edge01 ;
+
+split-window -v tsocks ssh cumulus@internet ;
+
+
